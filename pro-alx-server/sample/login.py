@@ -7,8 +7,7 @@ from api.v1.views import app_views
 #from models import storage
 from os import getenv
 import requests
-import base64
-from urllib.parse import quote, urlencode
+from urllib.parse import urlencode
 wakatime_url = "https://wakatime.com/api/v1/"
 
 CLIENT_ID =  getenv("CLIENT_ID")
@@ -18,7 +17,6 @@ CLIENT_SECRET = getenv("CLIENT_SECRET")
 def login():
     url = "https://wakatime.com/oauth/token"
     code = request.args.get('code');
-    credentials = f'{CLIENT_ID}:{CLIENT_SECRET}'
     data = {
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
@@ -26,11 +24,10 @@ def login():
         'redirect_uri' : "http://localhost:5174/",
         'grant_type' : "authorization_code",
     }
-    auth = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
+
     headers = {
      'Content-Type': "application/x-www-form-urlencoded",
      'Accept': 'application/json',
-     'Authorization' : f'Basic {auth}'
     }
     encoded_data = urlencode(data)
     response = requests.post(url,  data=encoded_data, headers=headers)
