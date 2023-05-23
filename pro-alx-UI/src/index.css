@@ -9,5 +9,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
-  width: 100vw;
+  width: 100%;
+  background-color: #fffffe;
+  color: #000;
 }

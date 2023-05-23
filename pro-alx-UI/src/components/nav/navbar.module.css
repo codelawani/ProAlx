@@ -1,15 +1,120 @@
-.nav_menu {
+.nav_wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 30%;
 }
 
 .list {
-    padding: 0.3rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }
 
-.list_items{
-    list-style-type: none;
+
+.nav_menu {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+}
+
+.list_items {
+    list-style-type: none;
+    display: inline-block;
+    padding-right: 1rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background-color: #0f0e17;
+    color: #fffffe;
+    position: relative;
+    border-bottom: 1px solid #e53170;
+}
+
+.list_items a {
+    color: #fffffe;
+}
+
+.desktop_view {
+    display: none;
+}
+
+ 
+.mobile_view{
+    background-color: #0f0e17;
+    padding: 0;
+    position: fixed;
+    top: 10%;
+    bottom:0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media screen and (min-width: 900px) {
+    .desktop_view {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav_menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      
+        flex-direction: row;
+    }
+    
+    .nav_wrapper {
+        animation: none;
+        position: relative;
+    }
+
+    .list {
+        display: inline-block;
+    }
+
+    .mobile_view {
+        display: none;
+    }
+    
+    .hamburger{
+        display: none;
+    }
+}
+
+@keyframes nav {
+    0% {
+        top: -100%;
+        height: 0;
+    }
+
+    50% {
+        top: 50%;
+        height: 50svh;
+    }
+
+    75% {
+        top: 70%;
+        height: 80svh;
+    }
+
+    100% {
+        top: 100%;
+        height: 100svh;
+    }
 }

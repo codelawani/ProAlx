@@ -1,7 +1,10 @@
 import styles from './dashboard.module.css';
+
 const Dashboard = () => {
+	
+
 	return (
-        <div className={styles.home}>
+		<div className={styles.dashboard}>
 			<h2>Dashboard</h2>
 		</div>
 	);

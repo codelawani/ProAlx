@@ -1,59 +1,33 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+//import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import PropTypes from 'prop-types';
+import { useUser } from '../../hooks/UseUserContext';
+//import { fetchData } from '../../hooks/fetch';
+//import styles from './login.module.css';
 
 const CLIENT_ID = 'KTSTb93yy7Ua2ykNW1gSClkr';
-const URL = 'http://127.0.0.1:5000/api/v1';
+//const URL = 'http://127.0.0.1:5000/api/v1';
 
-const Login = ({ setUser, setIsLoading }) => {
+const Login = ({setIsOpen}) => {
 	const navigate = useNavigate();
-	const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('user'));
-	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const code = urlParams.get('code');
-		if (code) {
-			let userData = JSON.parse(localStorage.getItem('user'));
-			if (userData) {
-				setUser(userData);
-			} else {
-				handleLogin(code);
-			}
-		}
-	}, []);
-
-  const handleRedirect = () => {
-    const values = {
-      scope: 'email read_stats read_logged_time',
-      redirectUrl: "http://localhost:5174/"
-    };
-    const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${values.redirectUrl}&scope=${values.scope}`;
-		window.location.assign(
-			`https://wakatime.com/oauth/authorize?${query}`
-		);
-	};
-
-	const handleLogin = async code => {
-		setIsLoading(true);
-		await axios
-			.get(`${URL}/user/login?code=${code}`)
-			.then(res => {
-				setUser(res.data);
-				localStorage.setItem('user', JSON.stringify(res.data));
-				setIsLoggedIn(true);
-				console.log(res.data);
-				navigate('/')
-				setIsLoading(false);
-			})
-			.catch(err => console.log(err));
+	//const { setUser, user, updateLoading } = useUser();
+	const { isLoggedIn, setUser, setIsLoggedIn } = useUser();
+	const handleRedirect = () => {
+		const values = {
+			scope: 'email read_stats read_logged_time',
+			redirectUrl: 'http://localhost:5174/',
+		};
+		const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${values.redirectUrl}&scope=${values.scope}`;
+		window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
 	};
 
 	const handleLogout = () => {
 		setUser({});
 		setIsLoggedIn(false);
 		localStorage.removeItem('user');
-		navigate('/')
+		navigate('/');
+		if (setIsOpen) { setIsOpen(false) }
 	};
 
 	return (
@@ -67,9 +41,8 @@ const Login = ({ setUser, setIsLoading }) => {
 	);
 };
 
-export default Login;
-
 Login.propTypes = {
-  setUser: PropTypes.func,
-  setIsLoading: PropTypes.func,
+	setIsOpen: PropTypes.func,
 };
+
+export default Login;

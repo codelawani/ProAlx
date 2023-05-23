@@ -1,7 +1,4 @@
-.home {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 2rem 0;
+.dashboard {
+    display: block;
+    
 }

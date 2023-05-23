@@ -1,9 +1,25 @@
-.header {
-    display: flex;
-    justify-content: space-between;
+.loader_overlay {
     align-items: center;
-    width: 100%;
-    padding: 2rem 1rem;
+    justify-content: center;
+    display: flex;
+    padding: 15px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6));
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.loader {
+    font-size: 4rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media screen and (min-width:900px) {
