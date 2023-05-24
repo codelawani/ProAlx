@@ -1,11 +1,14 @@
 # from api.v1.views import app_views
 import os
 from datetime import datetime, timedelta
+from flask import Flask
 from github import Github
 from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv('GIT_TOKEN')
 username = os.getenv('GIT_USERNAME')
+app = Flask(__name__)
+
 repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3', 'AirBnB_clone_v4',
          'alx-higher_level_programming', 'alx-low_level_programming',
          'alx-system_engineering-devops', 'simple_shell',
@@ -15,7 +18,24 @@ repos = [f'{username}/{repo}' for repo in repos]
 # @app_views.route('/github/commit_count/last_14_days')
 
 
-def get_commit_data():
+@app.route('/github/daily_commits/last_<n>_days')
+def get_daily_commits(n):
+    """
+    Calculate the daily commit count for each date based on the commit data.
+
+    Returns:
+        dict: A dictionary where the keys are dates and the values are the corresponding commit counts.
+    """
+    commit_data = get_commit_data(n)
+    daily_commits = {}
+    for date, repos in commit_data.items():
+        commit_count = sum([len(repo.get('commit_messages', []))
+                           for repo in repos])
+        daily_commits[str(date)] = commit_count
+    return daily_commits
+
+
+def get_commit_data(n):
     """
     Retrieves commit data for a specified number of days.
 
@@ -25,7 +45,7 @@ def get_commit_data():
             The commit information is represented as a dictionary with the following structure:
             {
                 'date': event_date:                 # Date of the commits
-                [{'repository': event.repo.name,      # Name of the repository
+                [{'repository': event.repo.name,      # List of repository(ies)
                 'commit_messages': []},...]               # List of commit messages
             }
 
@@ -34,19 +54,8 @@ def get_commit_data():
         It utilizes the GitHub API to fetch the user's events and filters out the PushEvent events within the specified timeframe.
         For each PushEvent, the function captures the repository name and commit messages.
         The commit data is organized by date, with each date having a list of commit information.
-
-    Usage:
-        - Ensure the environment variables 'TOKEN' and 'USERNAME' are set with the appropriate GitHub credentials.
-        - Call the function 'get_commit_data()' to retrieve the commit data.
-
-    Note:
-        - The default number of days is set to 14 if not explicitly provided.
-        - The function assumes the availability of the 'token' and 'username' variables from the environment.
-        - The 'token' should contain a valid GitHub Personal Access Token (PAT) with the necessary permissions.
-        - The 'username' should correspond to the GitHub username for which the commit data is fetched.
-        - The function requires the 'python-dateutil' library to be installed for date manipulation.
     """
-    num_days = 21  # Default number of days
+    num_days = int(n)  # Default number of days
 
     if token is None or username is None:
         print("Please set the environment variables TOKEN and USERNAME.")
@@ -65,7 +74,7 @@ def get_commit_data():
 
         # Check if the event is a commit event and within the last n days
         # Filter non- alx repos out
-        if event.type == 'PushEvent' and event_date >= last_n_days:
+        if event.type == 'PushEvent' and event_date >= last_n_days and event.repo.name in repos:
             if event_date not in commit_data:
                 commit_data[event_date] = []
 
@@ -76,22 +85,9 @@ def get_commit_data():
 
             for commit in event.payload['commits']:
                 commit_info['commit_messages'].append(commit['message'])
-            print(commit_info)
             commit_data[event_date].append(commit_info)
     return commit_data
 
 
-commits = get_commit_data()
-for k, v in commits.items():
-    print(f'{k}: {v}')
-
-
-def github_commits():
-    commit_data = {}
-    for key, value in commits.items():
-        count = sum([len(v.get('commit_messages', [])) for v in value])
-        commit_data[key] = count
-    return commit_data
-
-
-print(github_commits())
+if __name__ == '__main__':
+    app.run(debug=1)
