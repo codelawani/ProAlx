@@ -9,7 +9,8 @@ token = os.getenv('GIT_TOKEN')
 username = os.getenv('GIT_USERNAME')
 app = Flask(__name__)
 
-repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3', 'AirBnB_clone_v4',
+repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
+         'AirBnB_clone_v4',
          'alx-higher_level_programming', 'alx-low_level_programming',
          'alx-system_engineering-devops', 'simple_shell',
          'binary_trees', 'sorting_algorithms', 'alx-zero_day',
@@ -24,7 +25,8 @@ def get_daily_commits(n):
     Calculate the daily commit count for each date based on the commit data.
 
     Returns:
-        dict: A dictionary where the keys are dates and the values are the corresponding commit counts.
+        dict: A dictionary where the keys are dates and the values are the
+        corresponding commit counts.
     """
     commit_data = get_commit_data(n)
     daily_commits = {}
@@ -40,20 +42,18 @@ def get_commit_data(n):
     Retrieves commit data for a specified number of days.
 
     Returns:
-        commit_data (dict): A dictionary containing commit data organized by date.
-            Each key in the dictionary represents a date, and the corresponding value is a list of commit information.
-            The commit information is represented as a dictionary with the following structure:
-            {
-                'date': event_date:                 # Date of the commits
-                [{'repository': event.repo.name,      # List of repository(ies)
-                'commit_messages': []},...]               # List of commit messages
+        commit_data (dict): A dictionary containing commit data
+                organized by date.
+            Each key in the dictionary represents a date,
+            and the corresponding value is a list of repos
+            Each repo contains a list of commit msgs.
+            The commit data is represented as a dictionary
+            with the following structure:
+            {   # Date of the commits
+                'date': event_date:
+                [{'repository': event.repo.name, # List of repository(ies)
+                'commit_messages': []},...]      # List of commit messages
             }
-
-    Description:
-        This function retrieves commit data for a specified number of days from the current date.
-        It utilizes the GitHub API to fetch the user's events and filters out the PushEvent events within the specified timeframe.
-        For each PushEvent, the function captures the repository name and commit messages.
-        The commit data is organized by date, with each date having a list of commit information.
     """
     num_days = int(n)  # Default number of days
 
@@ -74,7 +74,9 @@ def get_commit_data(n):
 
         # Check if the event is a commit event and within the last n days
         # Filter non- alx repos out
-        if event.type == 'PushEvent' and event_date >= last_n_days and event.repo.name in repos:
+        if (event.type == 'PushEvent' and event_date >= last_n_days
+                and event.repo.name in repos):
+
             if event_date not in commit_data:
                 commit_data[event_date] = []
 
