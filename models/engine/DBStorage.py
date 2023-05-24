@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import User, Cohort
+from models.user import User
+from models.cohort import Cohort
 
 # Replace 'your_username', 'your_password', 'your_host', and 'your_database' with your MySQL credentials
 DATABASE_URI = 'mysql+mysqlconnector://pro_alx:pro_alx_pwd@localhost/pro_alx_db'
