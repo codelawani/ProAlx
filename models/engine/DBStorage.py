@@ -15,7 +15,7 @@ DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{host}/{database}".
                                                                                         database=db_name
                                                                                     )
 
-class StorageEngine:
+class DBStorage:
     def __init__(self):
         self.engine = create_engine(DATABASE_URI)
         self.Session = sessionmaker(bind=self.engine)
