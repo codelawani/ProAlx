@@ -5,7 +5,6 @@ import os
 from flask import jsonify
 import requests as rq
 from dotenv import load_dotenv
-
 load_dotenv('/home/nico/Documents/xcode/ProAlx/.env')
 token = os.getenv('WAKA_TOKEN')
 username = os.getenv('WAKA_USERNAME')
@@ -18,8 +17,7 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'monty', 'RSA-Factoring-Challenge']
 
 
-@app_views.route('/waka/last_<n>_days')
-def get_daily_logs(n):
+def get_daily_logs(n, token, username):
     """
     Get the daily wakatime log for each date.
 
@@ -27,12 +25,8 @@ def get_daily_logs(n):
         dict: A dictionary where the keys are dates and the values are the
         corresponding logs.
     """
-    load_dotenv('/home/nico/Documents/xcode/ProAlx/.env')
-    token = os.getenv('WAKA_TOKEN')
-    username = os.getenv('WAKA_USERNAME')
-    print(token)
     if not token or not username:
-        return {'err': 'Not found'}
+        return {'error': 'wakaTime token/username Not found'}
     days = get_waka_data(n, token, username)
     print(days['data'][0]['range'])
     daily_logs = {}
