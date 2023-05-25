@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer
-from sqlalchemy.orm import relationship
-from base_model import BaseModel
+from sqlalchemy import Column, VARCHAR
+from models.base_model import BaseModel
 
 class Cohort(BaseModel):
     __tablename__ = 'cohorts'
-    users = relationship('User', back_populates='cohort')
+
+    name = Column(VARCHAR(255), nullable=False)
