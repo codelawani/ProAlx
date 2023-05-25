@@ -1,10 +1,9 @@
-from .base_model import BaseModel
-from .user import User
-from .cohort import Cohort
-from .engine.DBStorage import DBStorage
+import os
 
-try:
-    from .engine.DBStorage import DBStorage
-except ImportError:
-    # Handle the ImportError gracefully, print an error message, or perform fallback actions
-    pass
+storage_type = os.getenv('STORAGE_TYPE')
+
+if storage_type == 'db':
+    from models.engine.DBStorage import DBStorage
+    storage = DBStorage()
+
+storage.reload()
