@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, Column, VARCHAR, ForeignKey
 from sqlalchemy.orm import relationship
-from models.base_model import BaseModel
+from .base_model import BaseModel
 
 class User(BaseModel):
     __tablename__ = 'users'
@@ -20,4 +20,4 @@ class User(BaseModel):
     interests = Column(VARCHAR(255))
     cohort_id = Column(Integer, ForeignKey('cohorts.id'))
 
-    cohort = relationship("Cohort")
+    cohort = relationship("Cohort", back_populates="users")
