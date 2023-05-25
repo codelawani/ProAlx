@@ -1,9 +1,19 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.base_model import Base
 
-# Replace 'your_username', 'your_password', 'your_host', and 'your_database' with your MySQL credentials
-DATABASE_URI = 'mysql+mysqlconnector://Pro_alx:Pro_alx_pwd01@localhost/pro_alx_db'
+db_username = os.getenv('DB_USERNAME')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST')
+db_name = os.getenv('DB_NAME')
+
+# Construct the database URI
+DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{host}/{database}".format(username=db_username,
+                                                                                        password=db_password,
+                                                                                        host=db_host,
+                                                                                        database=db_name
+                                                                                    )
 
 class StorageEngine:
     def __init__(self):
