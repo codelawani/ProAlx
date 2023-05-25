@@ -33,4 +33,4 @@ class DBStorage:
             self.session.delete(obj)
             self.session.commit()
 
-storage_engine = StorageEngine()
+storage_engine = DBStorage()
