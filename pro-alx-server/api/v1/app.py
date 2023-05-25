@@ -20,6 +20,11 @@ def print_urls():
         print(url)
 
 
+@app.route('/')
+def index():
+    return 'Home'
+
+
 @app.errorhandler(404)
 def not_found(error):
     """ 404 Error
