@@ -1,12 +1,11 @@
 from api.v1.views import app_views
-import json
 import os
 from datetime import datetime, timedelta
-from github import Github
 from flask import jsonify
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import requests
-load_dotenv()
+load_dotenv(find_dotenv())
+
 token = os.getenv('GIT_TOKEN')
 username = os.getenv('GIT_USERNAME')
 

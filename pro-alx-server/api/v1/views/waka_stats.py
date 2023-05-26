@@ -1,11 +1,9 @@
 import requests
 from api.v1.views import app_views
-import json
 import os
 from flask import jsonify
-import requests as rq
-from dotenv import load_dotenv
-load_dotenv('/home/nico/Documents/xcode/ProAlx/.env')
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 token = os.getenv('WAKA_TOKEN')
 username = os.getenv('WAKA_USERNAME')
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
@@ -25,7 +23,7 @@ def get_daily_logs(n=7):
         dict: A dictionary where the keys are dates and the values are the
         corresponding logs.
     """
-    return get_waka_data(n, token, username)
+    return get_waka_data(int(n), token, username)
 
 
 def get_waka_data(n, token, username):
@@ -75,7 +73,7 @@ def get_waka_data(n, token, username):
                         for project in projects if project['name'] in alx_repos}
         daily_logs[date] = project_info
 
-    return daily_logs
+    return jsonify(daily_logs)
 
 # soon to be deleted
 

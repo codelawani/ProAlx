@@ -7,15 +7,14 @@ from flask import jsonify, abort, redirect, request, Flask
 from os import getenv
 import requests
 from urllib.parse import urlencode
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import json
-load_dotenv('/home/nico/Documents/xcode/ProAlx/.env')
+
+load_dotenv(find_dotenv())
 wakatime_url = "https://wakatime.com/api/v1/"
 
 CLIENT_ID = getenv("WAKA_CLIENT_ID")
 CLIENT_SECRET = getenv("WAKA_CLIENT_SECRET")
-print('c', CLIENT_ID)
-print('cs', CLIENT_SECRET)
 app = Flask(__name__)
 
 
