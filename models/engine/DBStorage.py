@@ -24,6 +24,10 @@ class DBStorage:
         # Create the database tables if they do not exist
         Base.metadata.create_all(self.engine)
 
+    def all(self):
+        """Returns all objects in the database"""
+        return self.session.query(Base).all()
+
     def new(self, obj):
         try:
             self.session.add(obj)
