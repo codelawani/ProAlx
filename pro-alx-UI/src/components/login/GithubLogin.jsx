@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
 
+// env file in path ProAlx/pro-alx-UI
 const {
   VITE_GITHUB_ID: CLIENT_ID
 } = import.meta.env;
 const REDIRECT_URI = 'http://localhost:5173/';
 const GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize';
+const apiGithub = 'http://localhost:5000/api/v1/github/';
 const SCOPE = 'read:user';
 console.log(CLIENT_ID);
 
@@ -36,7 +38,7 @@ const LoginWithGithub = ({ setUser, setIsLoading }) => {
     setIsLoading(true);
     console.log(code);
     code = encodeURIComponent(code);
-    const loginEndpoint = `http://localhost:5000/github/login?code=${code}`;
+    const loginEndpoint = `${apiGithub}login?code=${code}`;
     console.log(loginEndpoint);
     axios.get(loginEndpoint)
       .then(res => {
@@ -56,15 +58,20 @@ const LoginWithGithub = ({ setUser, setIsLoading }) => {
     if (sessionToken) {
       sessionToken = JSON.parse(sessionToken);
       console.log(sessionToken);
-      axios.post('https://localhost:5000/github/logout', null, {
+      axios.post(`${apiGithub}logout`, null, {
         headers: {
           Authorization: `Bearer ${sessionToken}`
         }
       })
-        .then(() => {
-          setUser('');
-          setIsLoggedIn(false);
-          navigate('/');
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            setUser('');
+            setIsLoggedIn(false);
+            navigate('/');
+          } else {
+            console.log(res.data);
+          }
         })
         .catch(err => {
           console.log(err);
