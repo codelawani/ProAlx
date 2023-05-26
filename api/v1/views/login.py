@@ -23,7 +23,7 @@ def index():
     return jsonify({'msg': 'success'})
 
 
-@app.route('/waka/authorize', strict_slashes=False)
+@app.route('/github/authorize', strict_slashes=False)
 def authorize():
     url = "https://wakatime.com/oauth/token"
     code = request.args.get('code')
