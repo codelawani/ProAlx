@@ -9,4 +9,15 @@ venv.bak/
 
 #cache
 *.json
+pycache/
+
+# editor backup files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.cache
 *.pyc
+*.vscode
+.vscode/
