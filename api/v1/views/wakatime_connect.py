@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-This module contains a basic view for the github login route
+This module contains a basic view for the wakatime login route
 """
 from flask import jsonify, abort, redirect, request
 from api.v1.views import app_views
@@ -12,10 +12,10 @@ import json
 from uuid import uuid4
 import secrets
 load_dotenv(find_dotenv())
-CLIENT_ID = getenv("GITHUB_ID")
-CLIENT_SECRET = getenv("GITHUB_SECRET")
-TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
-USER_ENDPOINT = "https://api.github.com/user"
+CLIENT_ID = getenv("WAKATIME_ID")
+CLIENT_SECRET = getenv("WAKATIME_SECRET")
+TOKEN_ENDPOINT = "https://wakatime.com/oauth/token"
+USER_ENDPOINT = "https://api.wakatime.com/user"
 # app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -23,11 +23,9 @@ USER_ENDPOINT = "https://api.github.com/user"
 # @app_views.route('/', strict_slashes=False)
 # def index():
 #     return jsonify({'msg': 'success'})
-@app_views.route('github/login/status', strict_slashes=False)
-def check_login_status():
-    
 
-@app_views.route('/github/login', strict_slashes=False)
+
+@app_views.route('/wakatime/login', strict_slashes=False)
 def login():
     code = request.args.get('code')
     print(code)
@@ -78,7 +76,7 @@ def login():
     return res
 
 
-@app_views.route('/github/logout', strict_slashes=False, methods=['POST'])
+@app_views.route('/wakatime/logout', strict_slashes=False, methods=['POST'])
 def logout():
     auth = request.headers.get('Authorization')
     token = auth.split(' ')[1]

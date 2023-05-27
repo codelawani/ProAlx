@@ -1,12 +1,10 @@
 import Home from './pages/home/Home';
-function App() {
-	const test = import.meta.env.VITE_TEST;
-	console.log(test);
-	return (
-		<>
-			<Home />
+function App () {
+  return (
+  <>
+  <Home />
 		</>
-	);
+  );
 }
 
 export default App;

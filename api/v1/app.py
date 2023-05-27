@@ -6,8 +6,6 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
-print(app.url_map)
-
 
 def print_urls():
     urls = []
