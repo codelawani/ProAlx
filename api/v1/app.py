@@ -4,7 +4,7 @@ from flask_cors import CORS
 from os import getenv
 app = Flask(__name__)
 app.register_blueprint(app_views)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
 
 
 def print_urls():

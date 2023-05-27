@@ -17,8 +17,8 @@ const ConnectWakatime = ({ setWakaUser, setIsLoading }) => {
       handleConnect(code);
     }
   }, []);
-  console.log(!!localDataMgr.get('wakaUser'));
-  console.log(isConnected);
+  // console.log(!!localDataMgr.get('wakaUser'));
+  // console.log(isConnected);
   const handleAuth = () => {
     const scope = 'email read_stats read_logged_time';
     const redirectUrl = 'http://localhost:5173/';

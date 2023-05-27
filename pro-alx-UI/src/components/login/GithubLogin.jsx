@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
-
+import PropTypes from 'prop-types';
 // env file in path ProAlx/pro-alx-UI
 const {
   VITE_GITHUB_ID: CLIENT_ID
@@ -11,16 +11,11 @@ const REDIRECT_URI = 'http://localhost:5173/';
 const GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize';
 const apiGithub = 'http://localhost:5000/api/v1/github/';
 const SCOPE = 'read:user';
-console.log(CLIENT_ID);
 
-const LoginWithGithub = ({ setUser, setIsLoading }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!window.localStorage.getItem('user'));
+const LoginWithGithub = ({ isLoggedIn, setIsLoggedIn, setIsLoading }) => {
   const navigate = useNavigate();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (isLoggedIn) {
-      setUser(window.localStorage.getItem('user'));
-    }
     const code = urlParams.get('code');
     if (code) {
       handleLogin(code);
@@ -40,43 +35,30 @@ const LoginWithGithub = ({ setUser, setIsLoading }) => {
     code = encodeURIComponent(code);
     const loginEndpoint = `${apiGithub}login?code=${code}`;
     console.log(loginEndpoint);
-    axios.get(loginEndpoint)
+    axios.get(loginEndpoint, { withCredentials: true })
       .then(res => {
-        const sessionToken = res.data.session;
-        setUser(sessionToken);
-        window.localStorage.setItem('user', JSON.stringify(sessionToken));
-        setIsLoggedIn(true);
-        setIsLoading(false);
-        navigate('/');
+        if (res.status === 200) {
+          setIsLoggedIn(true);
+          setIsLoading(false);
+          navigate('/');
+        }
       })
       .catch(err => {
         console.log(err);
       });
   };
   const handleLogout = () => {
-    let sessionToken = window.localStorage.getItem('user');
-    if (sessionToken) {
-      sessionToken = JSON.parse(sessionToken);
-      console.log(sessionToken);
-      axios.post(`${apiGithub}logout`, null, {
-        headers: {
-          Authorization: `Bearer ${sessionToken}`
+    console.log('c', document.cookie);
+    axios.post(`${apiGithub}logout`, null, { withCredentials: true })
+      .then(res => {
+        if (res.status === 200) {
+          setIsLoggedIn(false);
+          navigate('/');
+        } else {
+          console.log(res.data);
         }
       })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.data);
-            setUser('');
-            setIsLoggedIn(false);
-            navigate('/');
-          } else {
-            console.log(res.data);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+      .catch(err => console.log(err));
   };
   return (
     isLoggedIn
@@ -90,3 +72,9 @@ const LoginWithGithub = ({ setUser, setIsLoading }) => {
 };
 
 export default LoginWithGithub;
+
+LoginWithGithub.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  setIsLoggedIn: PropTypes.func.isRequired,
+  setIsLoading: PropTypes.func.isRequired
+};
