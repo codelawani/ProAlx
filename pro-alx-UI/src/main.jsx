@@ -2,8 +2,8 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
+import "./index.css";
 import ErrorPage from './pages/error/ErrorPage.jsx';
-import './index.css';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Contact from './pages/contact/Contact.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

@@ -1,31 +1,24 @@
 import { Link } from 'react-router-dom';
-//import Login from '../login/Login';
-import styles from './navbar.module.css';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-
-const NavLinks = ({handleClick=null}) => {
+const NavLinks = ({color="white"}) => {
 	return (
-		<nav className={styles.nav_menu}>
-			<ul className={styles.list}>
-				<li className={styles.list_items} onClick={handleClick}>
-					<Link to={'/'}>About</Link>
-				</li>
-				<li className={styles.list_items} onClick={handleClick}>
-					<Link to={'contact'}>Contact</Link>
-				</li>
-				<li className={styles.list_items} onClick={handleClick}>
-					<Link to={'/'} onClick={handleClick}>
-						Setup Wakatime
-					</Link>
-				</li>
-			</ul>
-		</nav>
+		<ul className={`flex flex-col md:flex-row text-${color} justify-center content-center`}>
+			<li className='pr-2'>
+				<Link to={'/'}>About</Link>
+			</li>
+			<li className='pr-2'>
+				<Link to={'contact'}>Contact</Link>
+			</li>
+			<li className='pr-2'>
+				<Link to={'/'}>Setup Wakatime</Link>
+			</li>
+		</ul>
 	);
 };
 
 NavLinks.propTypes = {
-	handleClick: PropTypes.func,
+	color: PropTypes.string,
 }
 
 export default NavLinks;

@@ -1,15 +1,12 @@
-//import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../Button';
+import Button from './Button';
 import PropTypes from 'prop-types';
-import { useUser } from '../../hooks/UseUserContext';
-//import { fetchData } from '../../hooks/fetch';
-//import styles from './login.module.css';
+import { useUser } from '../hooks/UseUserContext';
 
 const CLIENT_ID = 'KTSTb93yy7Ua2ykNW1gSClkr';
 //const URL = 'http://127.0.0.1:5000/api/v1';
 
-const Login = ({setIsOpen}) => {
+const Login = ({ setIsOpen, style = 'text-white' }) => {
 	const navigate = useNavigate();
 	//const { setUser, user, updateLoading } = useUser();
 	const { isLoggedIn, setUser, setIsLoggedIn } = useUser();
@@ -27,22 +24,23 @@ const Login = ({setIsOpen}) => {
 		setIsLoggedIn(false);
 		localStorage.removeItem('user');
 		navigate('/');
-		if (setIsOpen) { setIsOpen(false) }
+		if (setIsOpen) {
+			setIsOpen(false);
+		}
 	};
 
 	return (
-		<>
-			{isLoggedIn ? (
-				<Button handleClick={handleLogout} value={'Logout'} />
-			) : (
-				<Button handleClick={handleRedirect} value={'Login'} />
-			)}
-		</>
+		<Button
+			handleClick={isLoggedIn ? handleLogout : handleRedirect}
+			value={isLoggedIn ? 'logout' : 'Sign in'}
+			style={style}
+		/>
 	);
 };
 
 Login.propTypes = {
 	setIsOpen: PropTypes.func,
+	style: PropTypes.string,
 };
 
 export default Login;

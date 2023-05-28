@@ -1,14 +1,15 @@
-import Hero from '../hero/Hero';
-import styles from './navbar.module.css';
-import Nav from './Nav';
+import Hero from '../Hero';
+import NavMenu from './NavMenu';
 
 const Header = () => {
 	return (
-		<header>
-			<div className={styles.header}>
-				<h1>ProAlx</h1>
-
-				<Nav />
+		<header className='relative'>
+			<div
+				className='flex  justify-between
+			bg-gradient-to-bl from-dark to-red-950 p-6  fixed inset-x-0 top-0'
+			>
+				<h1 className='text-white font-bold text-2xl'>ProAlx</h1>
+				<NavMenu />
 			</div>
 			<Hero />
 		</header>
