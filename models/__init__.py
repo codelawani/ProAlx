@@ -6,4 +6,4 @@ if storage_type == 'db':
     from models.engine.DBStorage import DBStorage
     storage = DBStorage()
 
-storage.reload()
+    storage.reload()

@@ -1,3 +1,6 @@
+import models
+from models.user import User
+from models.cohort import Cohort
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -7,6 +10,10 @@ db_username = os.getenv('DB_USERNAME')
 db_password = os.getenv('DB_PASSWORD')
 db_host = os.getenv('DB_HOST')
 db_name = os.getenv('DB_NAME')
+db_env = os.getenv('DB_ENV')
+
+classes = {"User": User, "Cohort": Cohort} 
+
 
 # Construct the database URI
 DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{host}/{database}".format(username=db_username,
@@ -24,13 +31,13 @@ class DBStorage:
         # Create the database tables if they do not exist
         Base.metadata.create_all(self.engine)
 
-    def all(self, cls=None):
-        """Returns all objects in the database"""
-        from models.user import User
-        from models.cohort import Cohort
+        if db_env == 'test':
+            Base.metadata.drop_all(self.engine)
 
+    def all(self, cls=None):
+        """Returns all objects in the database""" 
         result = {}
-        for model in (User, Cohort):
+        for model in classes.values():
             if cls and model != cls:
                 continue
             query_result = self.session.query(model).all()
