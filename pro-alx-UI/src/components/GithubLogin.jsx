@@ -27,7 +27,7 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   const handleLogout = () => {
     const token = localDataMgr.get('access_token');
     console.log(token);
-    axios.post(`${apiGithub}logout`, null, {
+    axios.get(`${apiGithub}logout`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {

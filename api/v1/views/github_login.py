@@ -26,17 +26,17 @@ key = getenv('JWT_SECRET_KEY')
 @jwt_required()
 def check_login_status():
     current_user = get_jwt_identity()
-    print(current_user)
-    authorization_header = request.headers.get('Authorization')
-    if not authorization_header:
-        return jsonify({'msg': 'Missing Authorization Header'}), 401
-    token = authorization_header.split(' ')[1]
-    session = decode_jwt_token(token)
-    print(session)
-    if True:
-        return jsonify({'name': current_user}), 200
-    # else:
-        # return jsonify({'msg': 'failed'}), 401
+    # print(current_user)
+    # authorization_header = request.headers.get('Authorization')
+    # if not authorization_header:
+    #     return jsonify({'msg': 'Missing Authorization Header'}), 401
+    # token = authorization_header.split(' ')[1]
+    # session = decode_jwt_token(token)
+    # print(session)
+    if current_user:
+        return jsonify({'msg': 'ok'}), 200
+    else:
+        return jsonify({'msg': 'failed'}), 401
 
 
 @app_views.route('/github/login', strict_slashes=False)
@@ -81,7 +81,7 @@ def login():
             }
             save_user(user_data)
         print('gs', user_data['github_session'])
-        access_token = create_access_token(identity=user.get('login'),
+        access_token = create_access_token(identity=user_data['github_session'],
                                            additional_claims={'github_session': user_data['github_session']})
         res = make_response({
             'access_token': access_token,
@@ -93,12 +93,11 @@ def login():
     return res
 
 
-@app_views.route('/github/logout', strict_slashes=False, methods=['POST'])
+@app_views.route('/github/logout', strict_slashes=False)
+@jwt_required()
 def logout():
     """Logout user"""
     authorization_header = request.headers.get('Authorization')
-    if not authorization_header:
-        return jsonify({'msg': 'Missing Authorization Header'}), 401
     token = authorization_header.split(' ')[1]
     session = decode_jwt_token(token)
     user_data = reload_user()
