@@ -1,10 +1,10 @@
-import models
 from models.user import User
 from models.cohort import Cohort
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import Base
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
+from models.base_model import *
+
 
 db_username = os.getenv('DB_USERNAME')
 db_password = os.getenv('DB_PASSWORD')
@@ -24,6 +24,7 @@ DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{host}/{database}".
 
 class DBStorage:
     def __init__(self):
+        """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI)
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
@@ -75,7 +76,8 @@ class DBStorage:
 
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
-        return self.session.query(model).get(id)
+        session = Session(bind=self.engine)
+        return session.get(model, id)
     
     def count(self, model):
         """Return the count of objects in the specified model"""
