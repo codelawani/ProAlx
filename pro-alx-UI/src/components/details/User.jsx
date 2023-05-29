@@ -1,4 +1,5 @@
 import { Bar } from 'react-chartjs-2';
+import localDataMgr from '../../hooks/localDataMgr';
 import PropTypes from 'prop-types';
 import {
   Chart as ChartJS,
@@ -9,7 +10,6 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { useUser } from '../../hooks/UseUserContext';
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 const User = ({ value }) => {
-  // const { user } = useUser();
+  const user = localDataMgr.get('user');
   const days = [
     'sunday',
     'monday',
@@ -82,7 +82,7 @@ const User = ({ value }) => {
       },
       title: {
         display: true,
-        text: '<User> stats'
+        text: `${user} stats`
       },
       tooltip: {
         callbacks: {
@@ -100,7 +100,7 @@ const User = ({ value }) => {
 
   return (
     <div className='w-full'>
-      <p>Welcome</p>
+      <p>Welcome {user}</p>
       <div className=''>
         <Bar options={options} data={data} />
       </div>

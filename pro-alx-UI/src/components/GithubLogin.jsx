@@ -26,11 +26,11 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   };
   const handleLogout = () => {
     console.log('c', document.cookie);
-    axios.post(`${apiGithub}logout`, null, { withCredentials: true })
+    axios.post(`${apiGithub}logout`)
       .then(res => {
         updateLoading(true);
         if (res.status === 200) {
-          localDataMgr.remove('user');
+          localDataMgr.clear();
           setIsLoggedIn(false);
           updateLoading(false);
           navigate('/');

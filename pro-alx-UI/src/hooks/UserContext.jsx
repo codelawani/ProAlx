@@ -8,9 +8,9 @@ import localDataMgr from './localDataMgr';
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(localDataMgr.get('user'));
+  // const [user, setUser] = useState(localDataMgr.get('name'));
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!user);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localDataMgr.get('access_token'));
   // useEffect(() => {
   //     //const data = await fetchData(url,{})
   //     //const data = ;
@@ -24,12 +24,12 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-			  user,
-			  setUser,
-			  isLoading,
-			  updateLoading,
-			  isLoggedIn,
-			  setIsLoggedIn
+        // user,
+        // setUser,
+        isLoading,
+        updateLoading,
+        isLoggedIn,
+        setIsLoggedIn
       }}
     >
       {children}

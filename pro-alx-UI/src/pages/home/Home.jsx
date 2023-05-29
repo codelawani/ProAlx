@@ -7,10 +7,12 @@ import { toast } from 'react-toastify';
 import Footer from '../../components/Footer';
 import Main from '../../components/Main';
 import localDataMgr from '../../hooks/localDataMgr';
+// import jwt from 'jsonwebtoken';
 const URL = 'http://127.0.0.1:5000/api/v1';
 
 const Home = () => {
   const navigate = useNavigate();
+
   const { setIsLoggedIn, updateLoading, isLoading } = useUser();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,8 +25,9 @@ const Home = () => {
           if (res.status === 200) {
             console.log(res.headers);
             const data = res.data;
-            console.log(data.name);
+            console.log(data);
             setIsLoggedIn(true);
+            localDataMgr.set('access_token', data.access_token);
             localDataMgr.set('user', data.name);
             updateLoading(false);
             navigate('dashboard');

@@ -3,6 +3,7 @@
 This module contains a basic view for the github login route
 """
 from flask import make_response, jsonify, request
+from flask_jwt_extended import create_access_token
 from api.v1.views import app_views
 from os import getenv
 import requests
@@ -49,7 +50,6 @@ def login():
         res = requests.get(USER_ENDPOINT, headers=dict(
             Authorization=f"token {token}"))
         user = res.json()
-        # print(user)
         old_user_data = reload_user()
         # Check if user already exists
         # print(old_user_data)
@@ -61,10 +61,8 @@ def login():
             }
             old_user_data.update(user_data)
             save_user(old_user_data)
-            # print(user_data)
             print('old_user')
         else:
-            # print(user)
             print('new_user')
             user_data = {
                 'id': str(uuid4()),
@@ -76,34 +74,24 @@ def login():
             }
             save_user(user_data)
         print('gs', user_data['github_session'])
-        res = make_response({'name': user['name']})
-        expires = datetime.utcnow() + timedelta(days=90)
-        res.delete_cookie('github_session')
-        res.set_cookie(
-            'github_session', user_data['github_session'], httponly=True, expires=expires, samesite='None')
-        res.set_cookie('user', user['name'],
-                       expires=expires, domain='127.0.0.1')
-        # res.headers.add('Access-Control-Allow-Credentials', 'true')
+        access_token = create_access_token(identity=user_data['github_session'],
+                                           expires_delta=timedelta(days=90))
+        res = make_response({
+            'access_token': access_token,
+            'name': user['name']})
     else:
         print('response is', res.text)
-        res = make_response({'msg': 'Failed'})
+        res = make_response({'msg': 'Login Failed'})
         res.status_code = 401
     return res
 
 
 @app_views.route('/github/logout', strict_slashes=False, methods=['POST'])
 def logout():
-    # token = request.cookies.get('github_session')
-    # print(token)
-    # user_data = reload_user()
-    # if token == user_data.get('github_session'):
-        # user_data.pop('github_session')
-        # save_user(user_data)
-    res = make_response({'msg': 'success'})
-    res.delete_cookie('github_session')
-    res.delete_cookie('user')
-    else:
-        return jsonify({'msg': 'failed'}), 401
+    """Logout user"""
+    if 'access_token' not in request.headers:
+        return jsonify({'msg': 'Missing Authorization Header'}), 401
+    res = make_response({'msg': 'Logout Successful'})
     return res
 
 

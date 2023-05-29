@@ -1,13 +1,18 @@
 from api.v1.views import app_views
 from flask import Flask, make_response, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, jwt_manager
+from flask_jwt_extended import JWTManager
 from os import getenv
+from dotenv import load_dotenv, find_dotenv
+from datetime import timedelta
+load_dotenv(find_dotenv())
+print(getenv('JWT_SECRET_KEY'))
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-app.config['JWT_secret_key'] = getenv('JWT_SECRET_KEY')
-jwt = jwt_manager(app)
+app.config['JWT_SECRET_KEY'] = getenv('JWT_SECRET_KEY')
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
+jwt = JWTManager(app)
 
 
 def print_urls():

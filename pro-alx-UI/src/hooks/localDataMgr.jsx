@@ -28,6 +28,9 @@ const localDataMgr = {
    */
   remove (item) {
     window.localStorage.removeItem(item);
+  },
+  clear () {
+    window.localStorage.clear();
   }
 };
 
