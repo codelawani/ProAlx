@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import Footer from '../../components/Footer';
 import Main from '../../components/Main';
 import localDataMgr from '../../hooks/localDataMgr';
-// import jwt from 'jsonwebtoken';
 const URL = 'http://127.0.0.1:5000/api/v1';
 
 const Home = () => {
@@ -20,7 +19,7 @@ const Home = () => {
     const handleLogin = (code) => {
       updateLoading(true);
       axios
-        .get(`${URL}/github/login?code=${code}`, { withCredentials: true })
+        .get(`${URL}/github/login?code=${code}`)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.headers);

@@ -25,8 +25,11 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
     window.location.assign(authUrl);
   };
   const handleLogout = () => {
-    console.log('c', document.cookie);
-    axios.post(`${apiGithub}logout`)
+    const token = localDataMgr.get('access_token');
+    console.log(token);
+    axios.post(`${apiGithub}logout`, null, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then(res => {
         updateLoading(true);
         if (res.status === 200) {
