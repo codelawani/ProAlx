@@ -4,18 +4,16 @@ import uuid
 from datetime import datetime
 from . import storage_type
 
-if storage_type != 'db':
-    ...
-else:
+if storage_type == 'db':
     Base = declarative_base()
 
 
 class BaseModel(Base):
     __abstract__ = True
 
-    id = Column(String(60), primary_key=True, autoincrement=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    id = Column(String(60), primary_key=True, default=uuid.uuid4)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """Initializes a new BaseModel"""
@@ -32,13 +30,11 @@ class BaseModel(Base):
     def to_dict(self):
         """Returns a dictionary containing all keys/values of the object"""
         dictionary = self.__dict__.copy()
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
+        dictionary.pop('_sa_instance_state', None)
         for key, value in dictionary.items():
             if isinstance(value, datetime):
                 dictionary[key] = value.strftime('%Y-%m-%dT%H:%M:%S.%f')
         return dictionary
-
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""

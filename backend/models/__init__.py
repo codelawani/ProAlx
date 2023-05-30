@@ -14,12 +14,9 @@ else:
     DB_NAME = getenv('DB_NAME')
     DB_HOST = getenv('DB_HOST')
 
-storage_type = getenv('STORAGE_TYPE')
-
+storage_type = getenv('STORAGE_TYPE', 'db')
 # db storage is default
-if storage_type != 'db':
-    ...
-else:
+if storage_type == 'db':
     from models.engine.DBStorage import DBStorage
     storage = DBStorage()
     storage.reload()
