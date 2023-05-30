@@ -1,21 +1,24 @@
 import PropTypes from 'prop-types';
 
-const Button = ({ type = 'button', handleClick = null, value }) => {
+const Button = ({ type = 'button', handleClick = null, value, style="" }) => {
 	return (
 		<button
 			type={type}
 			onClick={handleClick}
-			style={{ backgroundColor: 'inherit', border:"1px solid orange", borderRadius: "8px", padding: "0.5rem" }}
+			className={`rounded-md ${style}`}
 		>
 			{value}
 		</button>
 	);
 };
 
-export default Button;
-
 Button.propTypes = {
 	type: PropTypes.string,
 	handleClick: PropTypes.func,
-	value: PropTypes.string.isRequired,
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+	style: PropTypes.string,
 };
+
+
+export default Button;
+
