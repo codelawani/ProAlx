@@ -5,7 +5,6 @@ from models.engine.DBStorage import DBStorage
 from sqlalchemy import inspect
 
 
-
 class TestDBStorage(unittest.TestCase):
     def setUp(self):
         db = DBStorage()
@@ -15,14 +14,13 @@ class TestDBStorage(unittest.TestCase):
         db.session.query(Cohort).delete()
         db.session.commit()
 
-
     def tearDown(self):
         db = DBStorage()
         db.session.rollback()
         db.session.close()
 
-
     # Tests that the all() method returns all objects in the database.
+
     def test_all_returns_all_objects(self):
         cohort = Cohort(name="Test Cohort")
         user = User(name="Test User", email="test@test.com", cohort=cohort)
@@ -42,7 +40,7 @@ class TestDBStorage(unittest.TestCase):
 
     # Tests that the new() method adds a new object to the database.
     def test_new_adds_new_object(self):
-        cohort = Cohort(name="Test Cohort")
+        cohort = Cohort(name="Test Cohort", number=9)
         db = DBStorage()
         db.new(cohort)
         result = db.get(Cohort, cohort.id)
@@ -56,7 +54,7 @@ class TestDBStorage(unittest.TestCase):
 
     # Tests that the delete() method deletes an object from the database.
     def test_delete_deletes_object(self):
-        cohort = Cohort(name="Test Cohort")
+        cohort = Cohort(name="Test Cohort", number=9)
         db = DBStorage()
         db.new(cohort)
         db.delete(cohort)
@@ -68,5 +66,5 @@ class TestDBStorage(unittest.TestCase):
         db = DBStorage()
         db.reload()
         inspector = inspect(db.engine)
-        self.assertIn(Cohort.__tablename__.lower(), inspector.get_table_names())
-
+        self.assertIn(Cohort.__tablename__.lower(),
+                      inspector.get_table_names())
