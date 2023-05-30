@@ -42,14 +42,14 @@ const Home = () => {
 				handleLogin(code);
 			}
 		}
-	}, [code, setIsLoggedIn, navigate, user, updateLoading, setUser]);
+	}, [code]);
 	
 	
 	
 	if (isLoading)
 		return (
-			<div className="">
-				<h2 className="">🌀</h2>
+			<div className="fixed inset-x-0 inset-y-0 grid content-center justify-center bg-body">
+				<h2 className="animate-loader text-3xl">🌀</h2>
 			</div>
 		);
 
