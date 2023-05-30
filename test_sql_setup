@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# To run this script
+# sudo bash sql_setup.sh
+
+# shellcheck source=/dev/null
+source .env
+# set env variables
+# DB_USERNAME
+# DB_PASSWORD
+
+# Create project development database
+mysql -e "CREATE DATABASE IF NOT EXISTS test_palx_db;"
+
+# Create new user with privileges
+mysql -e "CREATE USER IF NOT EXISTS '$TEST_DB_USERNAME'@'localhost' IDENTIFIED BY '$TEST_DB_PASSWORD';"
+
+# Grant privileges to the new user
+mysql -e "GRANT ALL PRIVILEGES ON test_palx_db.* TO '$TEST_DB_USERNAME'@'localhost';"
+
+#Allow user to observe db server performance metrics
+mysql -e "GRANT SELECT ON performance_schema.* TO '$TEST_DB_USERNAME'@'localhost';"
+
+# Flush privileges
+mysql -e "FLUSH PRIVILEGES;"

@@ -1,8 +1,25 @@
-import os
+from os import getenv
+from dotenv import load_dotenv, find_dotenv
 
-storage_type = os.getenv('STORAGE_TYPE')
+load_dotenv(find_dotenv())
+DB_ENV = getenv('DB_ENV')
+if DB_ENV == 'test':
+    DB_USERNAME = getenv('TEST_DB_USERNAME')
+    DB_PASSWORD = getenv('TEST_DB_PASSWORD')
+    DB_NAME = getenv('TEST_DB_NAME')
+    DB_HOST = getenv('TEST_DB_HOST')
+else:
+    DB_USERNAME = getenv('DB_USERNAME')
+    DB_PASSWORD = getenv('DB_PASSWORD')
+    DB_NAME = getenv('DB_NAME')
+    DB_HOST = getenv('DB_HOST')
 
-if storage_type == 'db':
+storage_type = getenv('STORAGE_TYPE')
+
+# db storage is default
+if storage_type != 'db':
+    ...
+else:
     from models.engine.DBStorage import DBStorage
     storage = DBStorage()
-storage.reload()
+    storage.reload()

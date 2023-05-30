@@ -4,7 +4,9 @@ import uuid
 from datetime import datetime
 from . import storage_type
 
-if storage_type == 'db':
+if storage_type != 'db':
+    ...
+else:
     Base = declarative_base()
 
 
