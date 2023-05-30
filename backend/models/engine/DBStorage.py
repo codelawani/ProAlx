@@ -8,7 +8,6 @@ from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_ENV
 
 classes = {"User": User, "Cohort": Cohort}
 
-
 # Construct the database URI
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
                                                            DB_PASSWORD,

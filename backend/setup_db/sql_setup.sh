@@ -3,8 +3,15 @@
 # To run this script
 # sudo bash sql_setup.sh
 
-# shellcheck source=/dev/null
-source .env
+env_file=$(locate ProAlx/.env)
+
+if [ -f "$env_file" ]; then
+    # shellcheck source=/dev/null
+    source "$env_file"
+else
+    echo "Error: create ProAlx/.env file"
+    exit 1
+fi
 # set env variables
 # DB_USERNAME
 # DB_PASSWORD

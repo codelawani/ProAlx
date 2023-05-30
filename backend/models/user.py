@@ -7,7 +7,7 @@ class User(BaseModel):
     __tablename__ = 'users'
 
     # use github display name and photo by default
-    diplay_name = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=False)
     photo_url = Column(String(255))
 
     username = Column(String(50), unique=True)
@@ -27,6 +27,6 @@ class User(BaseModel):
     github_login = Column(String(255))
     wakatime_login = Column(String(255))
     interests = Column(String(255))
-    cohort_id = Column(Integer, ForeignKey('cohorts.id'))
+    cohort_id = Column(String(60), ForeignKey('cohorts.id'))
 
     cohort = relationship("Cohort", back_populates="users")

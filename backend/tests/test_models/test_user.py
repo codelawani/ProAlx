@@ -78,7 +78,7 @@ class TestUser(unittest.TestCase):
 
     def test_delete_user_from_database(self):
         """Test deleting a user from the database"""
-        user = User()
+        user = User(name='John Doe')
         user.save()  # Save the user to the database
         user.delete()
         with self.assertRaises(KeyError):

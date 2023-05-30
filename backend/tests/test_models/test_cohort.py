@@ -3,14 +3,14 @@ from models.user import User
 from models.cohort import Cohort
 from models import storage
 
-cohort_name = "Test Cohort"
+cohort_name = "Cohort 9"
 
 
 class TestCohort(unittest.TestCase):
     def test_create_cohort_with_name(self):
         """Tests creating a new Cohort instance with a name and adding it to the database"""
 
-        cohort = Cohort(name=cohort_name)
+        cohort = Cohort(name=cohort_name, number=9)
         self.assertEqual(cohort.name, cohort_name)
         self.assertIsNotNone(cohort.id)
         self.assertIsNotNone(cohort.created_at)
@@ -23,8 +23,8 @@ class TestCohort(unittest.TestCase):
 
     def test_update_cohort_name(self):
         """Tests updating the name of a Cohort instance and saving it to the database"""
-        new_cohort_name = "New Test Cohort"
-        cohort = Cohort(name=cohort_name)
+        new_cohort_name = "Cohort 10"
+        cohort = Cohort(name=cohort_name, number=9)
         # Save cohort to database
         cohort.save()
         # Update cohort name and save to database
@@ -44,7 +44,7 @@ class TestCohort(unittest.TestCase):
     def test_create_cohort_with_long_name(self):
         """Tests creating a new Cohort instance with a name longer than 255 characters and adding it to the database"""
         cohort_name = "a" * 256
-        cohort = Cohort(name=cohort_name)
+        cohort = Cohort(name=cohort_name, number=9)
         self.assertEqual(cohort.name, cohort_name)
         self.assertIsNotNone(cohort.id)
         self.assertIsNotNone(cohort.created_at)
@@ -63,7 +63,7 @@ class TestCohort(unittest.TestCase):
         user.save()
         self.assertIsNotNone(user.id)
         # Create a cohort with a valid ID
-        cohort = Cohort(name="Test Cohort")
+        cohort = Cohort(name="Test Cohort", number=9)
         cohort.save()
         # Assign the cohort ID to the user's cohort_id attribute
         user.cohort_id = cohort.id
@@ -72,7 +72,7 @@ class TestCohort(unittest.TestCase):
 
     def test_delete_cohort(self):
         """Tests deleting a cohort"""
-        cohort = Cohort(name="Test Cohort")
+        cohort = Cohort(name=cohort_name, number=9)
         cohort.save()
         self.assertIsNotNone(cohort.id)
         cohort.delete()
