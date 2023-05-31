@@ -1,5 +1,4 @@
 import { Bar } from 'react-chartjs-2';
-import localDataMgr from '../../hooks/localDataMgr';
 import PropTypes from 'prop-types';
 import {
   Chart as ChartJS,
@@ -10,6 +9,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { useUser } from '../../hooks/UseUserContext';
+import { useEffect } from 'react';
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +22,7 @@ ChartJS.register(
 );
 
 const UserChart = ({ value, isGithubData = false }) => {
-  const user = localDataMgr.get('user');
+  const { user } = useUser();
   const days = [
     'sunday',
     'monday',
@@ -82,7 +83,7 @@ const UserChart = ({ value, isGithubData = false }) => {
       },
       title: {
         display: true,
-        text: '<user> stats'
+        text: `${user.name} stats`
       },
       tooltip: {
         callbacks: {
@@ -116,14 +117,14 @@ const UserChart = ({ value, isGithubData = false }) => {
       },
       title: {
         display: true,
-        text: `${user} stats`
+        text: `${user.name} stats`
       }
     }
   };
 
   return (
     <div className='w-full'>
-      <p>Welcome user</p>
+      <p>Welcome {user.name}</p>
       <div className=''>
         <Bar options={isGithubData ? gitthubOptions : options} data={data} />
       </div>

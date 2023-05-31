@@ -77,3 +77,15 @@ class DBStorage:
     def count(self, model):
         """Return the count of objects in the specified model"""
         return len(self.all(model))
+
+    def github_uid_exists(self, g_uid):
+        """Check if a github uid exists in the database"""
+        query = self.session.query(User).filter(User.github_uid == g_uid)
+        user = query.first()
+        return user is not None
+
+    def clear_github_session(self, id):
+        """clear github session"""
+        user = self.get(User, id)
+        user.github_session = None
+        user.save()

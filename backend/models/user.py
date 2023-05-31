@@ -16,7 +16,7 @@ class User(BaseModel):
     twitter_username = Column(String(255))
     whatsapp = Column(String(25))
     email = Column(String(255))
-    github_uid = Column(Integer)
+    github_uid = Column(Integer, unique=True)
     wakatime_uid = Column(String(255))
     gh_access_token = Column(String(255))
     wk_access_token = Column(String(255))

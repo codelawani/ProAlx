@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Hero from "../../components/Hero";
+import Hero from '../../components/Hero';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../hooks/UseUserContext';
 import axios from 'axios';
@@ -7,13 +7,12 @@ import { toast } from 'react-toastify';
 import Main from '../../components/Main';
 import localDataMgr from '../../hooks/localDataMgr';
 import TempLoader from '../../components/TempLoader';
+
 const URL = 'http://127.0.0.1:5000/api/v1';
 
 const Home = () => {
-	
-	const navigate = useNavigate();
-	const { updateLoading, isLoading, setIsLoggedIn } = useUser();
-	
+  const navigate = useNavigate();
+  const { updateLoading, isLoading, setIsLoggedIn } = useUser();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -28,7 +27,6 @@ const Home = () => {
             console.log(data);
             setIsLoggedIn(true);
             localDataMgr.set('access_token', data.access_token);
-            localDataMgr.set('user', data.name);
             updateLoading(false);
             navigate('dashboard');
           }
@@ -44,13 +42,13 @@ const Home = () => {
     if (code) {
       handleLogin(code);
     }
-	}, []);
-	
-	
-	if (isLoading)
-		return (
-			<TempLoader/>
-		);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <TempLoader />
+    );
+  }
 
   return (
     <div className=''>

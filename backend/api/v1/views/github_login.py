@@ -6,8 +6,7 @@ import json
 import secrets
 from os import getenv
 from urllib.parse import parse_qs
-from uuid import uuid4
-
+from models import storage
 import jwt
 import requests
 from api.v1.views import app_views
@@ -15,6 +14,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import jsonify, make_response, request
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_required)
+from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidTokenError
 
 load_dotenv(find_dotenv())
 CLIENT_ID = getenv("GITHUB_ID")
@@ -28,16 +28,12 @@ api = 'http://localhost:5000/api/v1'
 @app_views.route('github/status', strict_slashes=False)
 @jwt_required()
 def check_login_status():
-    current_user = get_jwt_identity()
-    # print(current_user)
-    # authorization_header = request.headers.get('Authorization')
-    # if not authorization_header:
-    #     return jsonify({'msg': 'Missing Authorization Header'}), 401
-    # token = authorization_header.split(' ')[1]
-    # session = decode_jwt_token(token)
-    # print(session)
-    if current_user:
-        return jsonify({'msg': 'ok'}), 200
+    authorization_header = request.headers.get('Authorization')
+    token = authorization_header.split(' ')[1]
+    current_user_id = decode_jwt_token(token)
+    print(current_user_id)
+    if current_user_id:
+        return jsonify({'user_id': current_user_id}), 200
     else:
         return jsonify({'msg': 'failed'}), 401
 
@@ -51,7 +47,9 @@ def get_github_user_data(token):
 
 
 def create_user(user_data):
-    """Create a new user using the provided user data"""
+    """Create a new user if not exists using the provided user data"""
+    if check_user_exists(user_data.get('github_uid')):
+        return user_data
     res = requests.post(f'{api}/users', json=user_data)
     res.raise_for_status()
     return res.json()
@@ -82,6 +80,7 @@ def login():
             'gh_access_token': token,
             'github_session': secrets.token_hex(16)
         }
+        # Create a new user if one doesn't already exist
         created_user = create_user(user_data)
         public_user_data = {
             'name': created_user.get('name'),
@@ -107,19 +106,28 @@ def login():
         return jsonify({'msg': 'Unexpected server error'}), 500
 
 
+def check_user_exists(github_uid):
+    # Query the database to check if the user exists
+    if storage.github_uid_exists(github_uid):
+        return True
+    else:
+        return False
+
+
 @app_views.route('/github/logout', strict_slashes=False)
 @jwt_required()
 def logout():
     """Logout user"""
-    authorization_header = request.headers.get('Authorization')
-    token = authorization_header.split(' ')[1]
-    session = decode_jwt_token(token)
-    user_data = reload_user()
-    if session == user_data.get('github_session'):
-        user_data['github_session'] = None
-        save_user(user_data)
-    else:
-        return jsonify({'msg': 'Invalid Token'}), 401
+    user = get_jwt_identity()
+    storage.clear_github_session(user)
+    # authorization_header = request.headers.get('Authorization')
+    # print(authorization_header)
+    # token = authorization_header.split(' ')[1]
+    # session = decode_jwt_token(token)
+    # user_data = reload_user()
+    # if session == user_data.get('github_session'):
+    #     user_data['github_session'] = None
+    #     save_user(user_data)
     return make_response({'msg': 'Logout Successful'})
 
 
@@ -128,9 +136,9 @@ def decode_jwt_token(token):
         print('t', token)
         decoded_token = jwt.decode(token, key=key, algorithms=['HS256'])
         print('d', decoded_token)
-        session_token = decoded_token.get('github_session')
-        return session_token
-    except jwt.exceptions.DecodeError as e:
+        user_id = decoded_token.get('sub')
+        return user_id
+    except (InvalidTokenError, ExpiredSignatureError, DecodeError) as e:
         print(e)
         return None
 

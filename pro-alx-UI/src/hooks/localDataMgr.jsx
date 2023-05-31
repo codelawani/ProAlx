@@ -8,18 +8,20 @@ const localDataMgr = {
    * Retrieves the value(JSON parsed) associated with the given key from local storage.
    * @param {string} item - The key of the item to retrieve.
    * @returns {string|null} - The JSON parsed retrieved value, or null if not found.
+   * @param {boolean} jsonflag - The flag to set JSON string or not.
    */
   get (item) {
-    return JSON.parse(window.localStorage.getItem(item));
+    return window.localStorage.getItem(item);
   },
 
   /**
    * Sets the value(as JSON string) for the given key in local storage.
    * @param {string} item - The key of the item to set.
    * @param {string} value - The value to set.
+   * @param {boolean} jsonflag - The flag to set JSON string or not.
    */
   set (item, value) {
-    window.localStorage.setItem(item, JSON.stringify(value));
+    window.localStorage.setItem(item, value);
   },
 
   /**
