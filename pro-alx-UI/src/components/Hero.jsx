@@ -2,12 +2,12 @@ import Button from './Button';
 import img from "../assets/two.jpeg";
 
 const Hero = () => {
-	const style = 'border-2 p-2  text-black border-red-900 ';
+	const style = 'border-2 p-2  text-black border-red-900 w-60';
 	return (
 		<section className='md:h-screen justify-center md:content-center mt-16 p-4 md:grid grid-cols-3 lg:px-10'>
-			<div className='md:col-span-2'>
+			<div className='md:col-span-2 items-center flex flex-col md:block'>
 				<h2
-					className=' text-black text-3xl
+					className=' text-black text-2xl
 					text-center md:text-left  md:text-5xl font-bold leading-10 tracking-wide pb-4'
 				>
 					Teamwork Made Easy: Find Active Partners for Smooth Project

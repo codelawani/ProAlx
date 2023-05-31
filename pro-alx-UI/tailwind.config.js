@@ -11,10 +11,19 @@ export default {
 			keyframes: {
 				loader: {
 					to :{transform : 'rotate(360deg)'}
+				},
+				navMenu: {
+					from: {
+						transform: "translate(0,0)"
+					},
+					to: {
+						transform: "translateY(50%, -50%)"
+					},
 				}
 			},
 			animation: {
-				loader: 'loader 1s linear infinite'
+				loader: 'loader 1s linear infinite',
+				mobileMenu : "navMenu .3s ease-in .3s"
 			}
 		},
 	},

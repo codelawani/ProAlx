@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const NavLinks = ({color="white"}) => {
+const NavLinks = ({color="white", handleClick=()=>{}}) => {
 	return (
-		<ul className={`flex flex-col md:flex-row text-${color} justify-center content-center`}>
-			<li className='pr-2'>
+		<ul
+			className={`flex flex-col md:flex-row text-${color} justify-center content-center`}
+		>
+			<li className='pr-2' onClick={handleClick}>
 				<Link to={'/'}>About</Link>
 			</li>
-			<li className='pr-2'>
+			<li className='pr-2' onClick={handleClick}>
 				<Link to={'contact'}>Contact</Link>
 			</li>
-			<li className='pr-2'>
+			<li className='pr-2' onClick={handleClick}>
 				<Link to={'/'}>Setup Wakatime</Link>
 			</li>
 		</ul>
@@ -19,6 +21,7 @@ const NavLinks = ({color="white"}) => {
 
 NavLinks.propTypes = {
 	color: PropTypes.string,
+	handleClick: PropTypes.func,
 }
 
 export default NavLinks;
