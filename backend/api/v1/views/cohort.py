@@ -1,5 +1,7 @@
 from api.v1.views import app_views
-from flask import jsonify, abort
+from flask import jsonify, abort, request
+from models import storage
+from models.cohort import Cohort
 
 
 @app_views.route('/cohorts', strict_slashes=False)

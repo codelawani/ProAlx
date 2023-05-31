@@ -6,6 +6,8 @@ from github import Github
 from flask import jsonify
 from dotenv import load_dotenv
 import requests
+from models import storage
+from models.user import User
 load_dotenv()
 token = os.getenv('GIT_TOKEN')
 username = os.getenv('GIT_USERNAME')
@@ -18,22 +20,25 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'monty', 'RSA-Factoring-Challenge']
 
 
-@app_views.route('/github/daily_commits/last_<n>_days')
-def get_daily_commits(n=7):
+# @app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
+# def get_daily_commits(id, n=7):
+#     """
+#     Calculate the daily commit count for each date based on the commit data.
+
+#     Returns:
+#         dict: A dictionary where the keys are dates and the values are the
+#         corresponding commit counts.
+#     """
+#     return get_commits(id, n)
+
+
+def get_commits(id, n=7):
     """
-    Calculate the daily commit count for each date based on the commit data.
-
-    Returns:
-        dict: A dictionary where the keys are dates and the values are the
-        corresponding commit counts.
-    """
-    return get_commits(int(n), token, username)
-
-
-def get_commits(n, token, username):
-    """
-    Fetches the commit counts per day and repository for the last 7 days.
-
+    Fetches the commit counts per day and repository for the last n days.
+    U can also get this data using the github cli:
+    gh api -X GET /search/commits?q=author:username+author-date:2021-05-18..2021-05-25
+    or 'more dynamic' using the date command:
+    gh api "https://api.github.com/search/commits?q=author:angelofdeity+author-date:$(date -d '7 days ago' +%Y-%m-%d)..$(date +%Y-%m-%d)"
     Args:
         token (str): User access token for authentication.
         username (str): GitHub username.
@@ -53,6 +58,9 @@ def get_commits(n, token, username):
             ...
         }
     """
+    user = storage.get(User, id)
+    token = user.gh_access_token
+    username = user.github_login
     # Calculate the date range for the last 7 days
     today = datetime.now().date()
     week_ago = today - timedelta(days=n)
@@ -60,8 +68,6 @@ def get_commits(n, token, username):
     # Format the date strings
     today_str = today.isoformat()
     week_ago_str = week_ago.isoformat()
-
-    # Make the API request to get the contributions
     url = (
         f"https://api.github.com/search/commits?q=author:{username}"
         f"+author-date:{week_ago_str}..{today_str}"
