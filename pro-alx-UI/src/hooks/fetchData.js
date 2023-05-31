@@ -1,27 +1,37 @@
-import axios from 'axios';
 import { toast } from 'react-toastify';
-const apiUrl = 'http://127.0.0.1:5000/api/v1';
+import api from './api';
+import { useQuery } from "@tanstack/react-query";
 
-// function fetchUserData({ query, url }) {
-//      axios.get(`${apiUrl}${url}`).then((res)=> res.data).catch(err => {
-//     toast.error("something went wrong");
-//         toast.error(err);
-//      })
+const apiRequest = async (endpoint) => {
+  return api.get(endpoint);
+}
 
-//     return
-
-// }
-
-const fetchUserData = async () => {
-    try {
-		const response = await axios.get(`${apiUrl}/user/data`);
-		const data = response.data;
-		// Do something with the data
-		return data;
-	} catch (err) {
-		toast.error('Something went wrong');
-		toast.error(err.message);
-	}
+const fetchUserData =  (endpoint) => {
+  return {
+    queryFn: () => {
+      return apiRequest(endpoint);
+    }
+  }  
 };
 
-export { fetchUserData };
+export const useUserData = ({ queryKey, endpoint }) => {
+	const { queryFn } = fetchUserData(endpoint);
+	const results = useQuery({
+		queryKey: [queryKey],
+		queryFn : queryFn,
+		onError: err => {
+			if (err) {
+				console.log(err);
+			} else {
+				toast.error('something went wrong');
+			}
+		},
+		onSettled: () => {
+			return;
+		},
+	});
+	return {
+		...results,
+		value: results.data?.data,
+	};
+};

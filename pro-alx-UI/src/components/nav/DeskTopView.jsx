@@ -1,11 +1,12 @@
 import NavLinks from './NavLinks';
-import Login from '../Login';
+import LoginWithGithub from '../GithubLogin';
 
 const DeskTopView = () => {
+	const style = 'border border-main w-15 p-1';
 	return (
-		<div className='hidden md:flex'>
+		<div className='hidden md:grid content-center justify-center'>
 			<NavLinks />
-			<Login />
+			<LoginWithGithub style={style} />
 		</div>
 	);
 };

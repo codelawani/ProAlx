@@ -1,65 +1,63 @@
-import { useEffect, useRef } from 'react';
-import Header from '../../components/nav/Header';
+import { useEffect } from 'react';
+import Hero from "../../components/Hero";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../hooks/UseUserContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Footer from '../../components/Footer';
 import Main from '../../components/Main';
-
+import localDataMgr from '../../hooks/localDataMgr';
+import TempLoader from '../../components/TempLoader';
 const URL = 'http://127.0.0.1:5000/api/v1';
 
 const Home = () => {
 	
 	const navigate = useNavigate();
-	const { setUser, user, updateLoading, isLoading, setIsLoggedIn } = useUser();
-	let code = useRef(null);
-	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		code.current = urlParams.get('code');
-		
-		const handleLogin = async code => {
-			updateLoading(true);
-			try {
-				const res = await axios.get(`${URL}/user/login?code=${code.current}`);
-				const data = res.data;
-				localStorage.setItem('user', JSON.stringify(data));
-				setUser(data);
-				setIsLoggedIn(true);
-				toast.success('login successful!');
-				updateLoading(false);
-				navigate('dashboard');
-			} catch (err) {
-				toast.error('something went wrong');
-				toast.error(err.message);
-				updateLoading(false);
-				navigate('/');
-			}
-		};
-		
-		if (code.current) {
-			if (!user) {
-				handleLogin(code);
-			}
-		}
-	}, [code]);
+	const { updateLoading, isLoading, setIsLoggedIn } = useUser();
 	
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const handleLogin = (code) => {
+      updateLoading(true);
+      axios
+        .get(`${URL}/github/login?code=${code}`)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.headers);
+            const data = res.data;
+            console.log(data);
+            setIsLoggedIn(true);
+            localDataMgr.set('access_token', data.access_token);
+            localDataMgr.set('user', data.name);
+            updateLoading(false);
+            navigate('dashboard');
+          }
+        })
+        .catch((err) => {
+          toast.error('Something went wrong');
+          toast.error(err.message);
+          updateLoading(false);
+          navigate('/');
+        });
+    };
+
+    if (code) {
+      handleLogin(code);
+    }
+	}, []);
 	
 	
 	if (isLoading)
 		return (
-			<div className="fixed inset-x-0 inset-y-0 grid content-center justify-center bg-body">
-				<h2 className="animate-loader text-3xl">🌀</h2>
-			</div>
+			<TempLoader/>
 		);
 
-	return (
-		<div className=''>
-			<Header />
-			<Main/>
-			<Footer />
-		</div>
-	);
+  return (
+    <div className=''>
+      <Hero />
+      <Main />
+    </div>
+  );
 };
 
 export default Home;

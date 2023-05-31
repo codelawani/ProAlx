@@ -1,4 +1,4 @@
-import Hero from '../Hero';
+//import Hero from '../Hero';
 import NavMenu from './NavMenu';
 
 const Header = () => {
@@ -11,7 +11,6 @@ const Header = () => {
 				<h1 className='text-white font-bold text-2xl'>ProAlx</h1>
 				<NavMenu />
 			</div>
-			<Hero />
 		</header>
 	);
 };
