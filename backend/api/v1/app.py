@@ -6,7 +6,6 @@ from os import getenv
 from dotenv import load_dotenv, find_dotenv
 from datetime import timedelta
 load_dotenv(find_dotenv())
-print(getenv('JWT_SECRET_KEY'))
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)

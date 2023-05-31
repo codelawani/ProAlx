@@ -1,16 +1,11 @@
-from api.v1.views import app_views
-import json
-import os
 from datetime import datetime, timedelta
-from github import Github
-from flask import jsonify
+from flask import jsonify, abort
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from dotenv import load_dotenv
+from api.v1.views import app_views
 import requests
 from models import storage
-from models.user import User
 load_dotenv()
-token = os.getenv('GIT_TOKEN')
-username = os.getenv('GIT_USERNAME')
 
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'AirBnB_clone_v4',
@@ -20,25 +15,26 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'monty', 'RSA-Factoring-Challenge']
 
 
-# @app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
-# def get_daily_commits(id, n=7):
-#     """
-#     Calculate the daily commit count for each date based on the commit data.
+@jwt_required
+@app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
+def get_daily_commits(id, n=7):
+    """
+    Calculate the daily commit count for each date based on the commit data.
 
-#     Returns:
-#         dict: A dictionary where the keys are dates and the values are the
-#         corresponding commit counts.
-#     """
-#     return get_commits(id, n)
+    Returns:
+        dict: A dictionary containing the commit counts per day and repository.
+    """
+    if id != get_jwt_identity():
+        abort(401)
+    user = storage.get('User', id)
+    token = user.gh_access_token
+    username = user.github_login
+    return get_commits(token, username, n)
 
 
-def get_commits(id, n=7):
+def get_commits(token, username, n=7):
     """
     Fetches the commit counts per day and repository for the last n days.
-    U can also get this data using the github cli:
-    gh api -X GET /search/commits?q=author:username+author-date:2021-05-18..2021-05-25
-    or 'more dynamic' using the date command:
-    gh api "https://api.github.com/search/commits?q=author:angelofdeity+author-date:$(date -d '7 days ago' +%Y-%m-%d)..$(date +%Y-%m-%d)"
     Args:
         token (str): User access token for authentication.
         username (str): GitHub username.
@@ -58,9 +54,6 @@ def get_commits(id, n=7):
             ...
         }
     """
-    user = storage.get(User, id)
-    token = user.gh_access_token
-    username = user.github_login
     # Calculate the date range for the last 7 days
     today = datetime.now().date()
     week_ago = today - timedelta(days=n)

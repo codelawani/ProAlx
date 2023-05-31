@@ -15,9 +15,6 @@ from dotenv import find_dotenv, load_dotenv
 from flask import jsonify, make_response, request
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_required)
-from models import storage
-from models.user import User
-from api.v1.views.git_stats import get_commits
 
 load_dotenv(find_dotenv())
 CLIENT_ID = getenv("GITHUB_ID")
@@ -25,6 +22,7 @@ CLIENT_SECRET = getenv("GITHUB_SECRET")
 TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
+api = 'http://localhost:5000/api/v1'
 
 
 @app_views.route('github/status', strict_slashes=False)
@@ -54,7 +52,7 @@ def get_github_user_data(token):
 
 def create_user(user_data):
     """Create a new user using the provided user data"""
-    res = requests.post('/users', json=user_data)
+    res = requests.post(f'{api}/users', json=user_data)
     res.raise_for_status()
     return res.json()
 

@@ -70,6 +70,8 @@ class DBStorage:
 
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
+        if model in classes:
+            model = classes[model]
         return self.session.get(model, id)
 
     def count(self, model):

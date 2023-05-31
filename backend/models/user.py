@@ -1,8 +1,8 @@
-from sqlalchemy import Integer, Column, VARCHAR, ForeignKey, String
+import requests
+from sqlalchemy import Integer, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
-from backend.api.v1.views.git_stats import username
 from .base_model import BaseModel
-from api.v1.views.git_stats import get_commits
+api = 'http://localhost:5000/api/v1'
 
 
 class User(BaseModel):
@@ -34,9 +34,8 @@ class User(BaseModel):
     cohort = relationship("Cohort", back_populates="users")
 
     def fetch_github_data(self):
-        """Retrives daily commits of user from github api"""
-        token = self.gh_access_token
-        username = self.github_login
-        if not token or not username:
+        """Retrieves daily commits of user from github api"""
+        if not self.gh_access_token:
             return None
-        return get_commits(token, username)
+        res = requests.get(f'{api}/users/{self.id}/daily_commits')
+        return res.json()

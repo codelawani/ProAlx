@@ -1,10 +1,7 @@
 from api.v1.views import app_views
 from flask import jsonify, request, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.cohort import Cohort
 from models.user import User
 from models import storage
-import requests
 
 
 @app_views.route('/users', strict_slashes=False)
@@ -27,14 +24,14 @@ def get_users_daily_commits():
     return all_users_commits
 
 
-@jwt_required
-@app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
-def get_user_daily_commits(user_id):
-    current_user_id = get_jwt_identity()
-    if current_user_id != user_id:
-        abort(401)
-    user = storage.get(User, user_id)
-    return user.get_github_data
+# @jwt_required
+# @app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
+# def get_user_daily_commits(user_id):
+#     current_user_id = get_jwt_identity()
+#     if current_user_id != user_id:
+#         abort(401)
+#     user = storage.get(User, user_id)
+#     return user.get_github_data
 
 
 @app_views.route('/users/<id>', strict_slashes=False)

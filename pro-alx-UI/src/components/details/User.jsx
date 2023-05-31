@@ -21,7 +21,6 @@ ChartJS.register(
 );
 
 const User = ({ value }) => {
-  const user = localDataMgr.get('user');
   const days = [
     'sunday',
     'monday',
@@ -82,7 +81,7 @@ const User = ({ value }) => {
       },
       title: {
         display: true,
-        text: `${user} stats`
+        text: '<user> stats'
       },
       tooltip: {
         callbacks: {
@@ -100,7 +99,7 @@ const User = ({ value }) => {
 
   return (
     <div className='w-full'>
-      <p>Welcome {user}</p>
+      <p>Welcome user</p>
       <div className=''>
         <Bar options={options} data={data} />
       </div>
