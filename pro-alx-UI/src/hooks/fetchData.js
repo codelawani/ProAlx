@@ -1,28 +1,37 @@
 import { toast } from 'react-toastify';
 import api from './api';
+import { useQuery } from "@tanstack/react-query";
 
-// Json web token is being used
+const apiRequest = async (endpoint) => {
+  return api.get(endpoint);
+}
 
-// function fetchUserData({ query, url }) {
-//      axios.get(`${apiUrl}${url}`).then((res)=> res.data).catch(err => {
-//     toast.error("something went wrong");
-//         toast.error(err);
-//      })
-
-//     return
-
-// }
-
-const fetchUserData = async () => {
-  try {
-    const response = await api.get('/user/data');
-    const data = response.data;
-    // Do something with the data
-    return data;
-  } catch (err) {
-    toast.error('Something went wrong');
-    toast.error(err.message);
-  }
+const fetchUserData =  (endpoint) => {
+  return {
+    queryFn: () => {
+      return apiRequest(endpoint);
+    }
+  }  
 };
 
-export { fetchUserData };
+export const useUserData = ({ queryKey, endpoint }) => {
+	const { queryFn } = fetchUserData(endpoint);
+	const results = useQuery({
+		queryKey: [queryKey],
+		queryFn : queryFn,
+		onError: err => {
+			if (err) {
+				console.log(err);
+			} else {
+				toast.error('something went wrong');
+			}
+		},
+		onSettled: () => {
+			return;
+		},
+	});
+	return {
+		...results,
+		value: results.data?.data,
+	};
+};
