@@ -6,13 +6,16 @@ const NavLinks = ({color="white", handleClick=()=>{}}) => {
 		<ul
 			className={`flex flex-col md:flex-row text-${color} justify-center content-center`}
 		>
-			<li className='pr-2' onClick={handleClick}>
-				<Link to={'/'}>About</Link>
-			</li>
-			<li className='pr-2' onClick={handleClick}>
+			<li
+				className='pr-2 hover:border-b hover:border-main rounded hover:px-2'
+				onClick={handleClick}
+			>
 				<Link to={'contact'}>Contact</Link>
 			</li>
-			<li className='pr-2' onClick={handleClick}>
+			<li
+				className='pr-2 hover:border-b hover:border-main rounded hover:px-2'
+				onClick={handleClick}
+			>
 				<Link to={'/'}>Setup Wakatime</Link>
 			</li>
 		</ul>
