@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-const User = ({ value }) => {
+const UserChart = ({ value, isGithubData=false }) => {
   const user = localDataMgr.get('user');
   const days = [
     'sunday',
@@ -97,19 +97,43 @@ const User = ({ value }) => {
       }
     }
   };
+  const gitthubOptions = {
+		responsive: true,
+		scales: {
+			y: {
+				ticks: {
+					callback: value => {
+						const hours = Math.floor(value / 3600);
+						return `${hours} hrs`;
+					},
+				},
+			},
+		},
+		plugins: {
+			legend: {
+				display: false,
+				position: 'right',
+			},
+			title: {
+				display: true,
+				text: `${user} stats`,
+			},
+		},
+	};
 
   return (
     <div className='w-full'>
       <p>Welcome {user}</p>
       <div className=''>
-        <Bar options={options} data={data} />
+        <Bar options={isGithubData?gitthubOptions: options} data={data} />
       </div>
     </div>
   );
 };
 
-User.propTypes = {
-  value: PropTypes.object.isRequired
+UserChart.propTypes = {
+  value: PropTypes.object.isRequired,
+  isGithubData: PropTypes.bool,
 };
 
-export default User;
+export default UserChart;

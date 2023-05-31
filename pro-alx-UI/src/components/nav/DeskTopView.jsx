@@ -1,15 +1,14 @@
 import NavLinks from './NavLinks';
-import Login from '../Login';
 import LoginWithGithub from '../GithubLogin';
 
 const DeskTopView = () => {
-  return (
-    <div className='hidden md:flex'>
-      <NavLinks />
-      {/* <Login /> */}
-      <LoginWithGithub style='text-black text-left' />
-    </div>
-  );
+	const style = 'border border-main w-15 p-1';
+	return (
+		<div className='hidden md:flex items-center justify-center'>
+			<NavLinks />
+			<LoginWithGithub style={style} />
+		</div>
+	);
 };
 
 export default DeskTopView;

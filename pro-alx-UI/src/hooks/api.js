@@ -1,7 +1,7 @@
 import axios from 'axios';
 import localDataMgr from './localDataMgr';
 
-axios.create({
+export default axios.create({
   baseURL: 'http://localhost:5000/api/v1'
 });
 

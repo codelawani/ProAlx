@@ -2,15 +2,22 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
-import "./index.css";
+import './index.css';
 import ErrorPage from './pages/error/ErrorPage.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Contact from './pages/contact/Contact.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Authenticated from './components/layout/Authenticated.jsx';
+import { UserProvider } from './hooks/UserContext.jsx';
+import Home from './pages/home/Home.jsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
+			refetchOnWindowFocus: false,
+			refetchOnmount: false,
+			refetchOnReconnect: false,
+			retry: false,
 			staleTime: Infinity,
 			cacheTime: Infinity,
 		},
@@ -22,21 +29,35 @@ const router = createBrowserRouter([
 		path: '/',
 		element: <App />,
 		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: '',
+				element: <Home />,
+				index: true,
+			},
+			{
+				path: 'contact',
+				element: <Contact />,
+			},
+		],
 	},
 	{
-		path: 'dashboard',
-		element: <Dashboard />,
+		path: '/dashboard',
+		element: <Authenticated />,
 		errorElement: <ErrorPage />,
-	},
-	{
-		path: 'contact',
-		element: <Contact />,
-		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: '',
+				element: <Dashboard />,
+			},
+		],
 	},
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<QueryClientProvider client={queryClient}>
-		<RouterProvider router={router} />
+		<UserProvider>
+			<RouterProvider router={router} />
+		</UserProvider>
 	</QueryClientProvider>
 );

@@ -21,12 +21,10 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
       `?client_id=${CLIENT_ID}` +
       '&response_type=code' +
       `&scope=${SCOPE}`;
-    console.log(authUrl);
     window.location.assign(authUrl);
   };
   const handleLogout = () => {
     const token = localDataMgr.get('access_token');
-    console.log(token);
     axios.get(`${apiGithub}logout`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -46,7 +44,7 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   return (
     <Button
       handleClick={isLoggedIn ? handleLogout : handleAuth}
-      value={isLoggedIn ? 'logout' : 'Sign in with Github'}
+      value={isLoggedIn ? 'Logout' : 'Sign in with Github'}
       style={style}
     />
 
