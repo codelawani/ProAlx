@@ -15,7 +15,6 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'alx-system_engineering-devops', 'simple_shell',
              'binary_trees', 'sorting_algorithms', 'alx-zero_day',
              'monty', 'RSA-Factoring-Challenge']
-secret_key = os.getenv('JWT_SECRET_KEY')
 api = 'http://localhost:5000/api/v1'
 
 
@@ -28,7 +27,6 @@ def get_daily_commits(n=7):
     Returns:
         dict: A dictionary containing the commit counts per day and repository.
     """
-    print(request.headers.get('Authorization'))
     user_id = get_jwt_identity()
     user = storage.get('User', user_id)
     token = user.gh_access_token

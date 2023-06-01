@@ -20,8 +20,6 @@ class DBStorage:
     def __init__(self):
         """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI)
-        self.session = sessionmaker(bind=self.engine)
-        Base.metadata.create_all(self.engine)
 
         if DB_ENV == 'test':
             Base.metadata.drop_all(self.engine)
@@ -66,7 +64,7 @@ class DBStorage:
 
     def close(self):
         """Close the working SQLAlchemy session"""
-        self.session.remove()
+        self.session.close()
 
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
