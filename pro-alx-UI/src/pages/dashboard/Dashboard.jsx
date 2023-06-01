@@ -1,13 +1,13 @@
-import { useUserData } from "../../hooks/fetchData"
+import { useUserData } from '../../hooks/fetchData';
 import UserChart from '../../components/details/Chart';
 import TempLoader from '../../components/TempLoader';
 //import SideBar from "../../components/dashboard/SideBar";
 
 const Dashboard = () => {
-	const { value } = useUserData({
-	queryKey: 'userdata',
-	endpoint: '/github/daily_commits/last_20_days',
-	});
+  const { value, isInitialLoading } = useUserData({
+    queryKey: 'userdata',
+    endpoint: '/user/daily_commits'
+  });
   console.log(value);
   // const dataset = {
   //   '2023-05-14': {
@@ -45,68 +45,16 @@ const Dashboard = () => {
   //     'alx-low_level': 2903.1054,
   //     AirBnB_clone: 11766.9124
   //   }
-	// };
-	
-	
-	// if (isInitialLoading) return <TempLoader/>;
+  // };
+
+  if (isInitialLoading) return <TempLoader />;
 
   return (
-		<div className='w-full'>
-			<h2>Dashboard</h2>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
-				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
-				repellendus quia non labore illum neque dolore aut unde hic. Quo
-				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
-				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
-				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
-				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
-				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
-				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
-				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
-				perspiciatis quia voluptates. Mollitia, nostrum atque!
-			</p>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
-				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
-				repellendus quia non labore illum neque dolore aut unde hic. Quo
-				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
-				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
-				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
-				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
-				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
-				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
-				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
-				perspiciatis quia voluptates. Mollitia, nostrum atque!
-			</p>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
-				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
-				repellendus quia non labore illum neque dolore aut unde hic. Quo
-				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
-				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
-				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
-				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
-				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
-				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
-				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
-				perspiciatis quia voluptates. Mollitia, nostrum atque!
-			</p>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
-				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
-				repellendus quia non labore illum neque dolore aut unde hic. Quo
-				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
-				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
-				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
-				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
-				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
-				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
-				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
-				perspiciatis quia voluptates. Mollitia, nostrum atque!
-			</p>
-		</div>
-	);
+    <div className='w-full'>
+      <h2>Dashboard</h2>
+      <UserChart value={value} isGithubData />
+    </div>
+  );
 };
 
 export default Dashboard;

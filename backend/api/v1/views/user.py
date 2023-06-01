@@ -1,9 +1,8 @@
 from api.v1.views import app_views
-from flask import jsonify, request, abort, make_response
-from models.cohort import Cohort
+from flask import jsonify, request, abort
 from models.user import User
 from models import storage
-import requests
+
 
 @app_views.route('/users', strict_slashes=False)
 def get_users():
@@ -17,26 +16,36 @@ def get_users():
         list_users.append(user.to_dict())
     return jsonify(list_users)
 
+
 @app_views.route('/users/daily_commits', strict_slashes=False)
 def get_users_daily_commits():
-    # get github data
     all_users = storage.all(User).values()
     all_users_commits = [user.get_github_data for user in all_users]
     return all_users_commits
 
-@app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
-def get_user_daily_commits(user_id):
-    user = storage.get(User, user_id)
-    return user.get_github_data
+
+# @jwt_required
+# @app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
+# def get_user_daily_commits(user_id):
+#     current_user_id = get_jwt_identity()
+#     if current_user_id != user_id:
+#         abort(401)
+#     user = storage.get(User, user_id)
+#     return user.get_github_data
+
 
 @app_views.route('/users/<id>', strict_slashes=False)
 def get_user(id):
     """ Retrieves an user """
-    user = storage.get(User, user_id)
+    user = storage.get(User, id)
+    user_dict = user.to_dict()
+    user_dict.pop('gh_access_token', None)
+    user_dict.pop('github_session', None)
+    user_dict.pop('wk_access_token', None)
     if not user:
         abort(404)
 
-    return jsonify(user.to_dict())
+    return jsonify(user_dict)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
@@ -57,7 +66,7 @@ def delete_user(user_id):
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
-def post_user():
+def create_user():
     """
     Creates a user
     """
@@ -65,9 +74,31 @@ def post_user():
         abort(400, description="Not a JSON")
 
     data = request.get_json()
-    instance = User(**data)
+    expected_gh_keys = [
+        'github_login',
+        'gh_access_token',
+        'name',
+        'photo_url',
+        'twitter_username',
+        'github_session'
+    ]
+    # Check if the request contains GitHub login data
+    if all(key in data for key in expected_gh_keys):
+        instance = User(
+            github_login=data['github_login'],
+            gh_access_token=data['gh_access_token'],
+            name=data.get('name'),
+            photo_url=data.get('photo_url'),
+            twitter_username=data.get('twitter_username'),
+            github_session=data.get('github_session')
+        )
+    else:
+        instance = User(**data)
+    instance_dict = instance.to_dict()
+    instance_dict.pop('gh_access_token', None)
+    instance_dict.pop('github_session', None)
     instance.save()
-    return jsonify(instance.to_dict()), 201
+    return jsonify(instance_dict), 201
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
