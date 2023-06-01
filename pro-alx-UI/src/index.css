@@ -2,5 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
+.active {
+  @apply border-l-2 flex items-center pl-1 gap-1;
+}
+
+.inactive {
+  @apply flex items-center pl-1 gap-1;
+}
+
+.inactive:hover {
+  @apply border-l-2 opacity-5
 }

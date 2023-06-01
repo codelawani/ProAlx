@@ -61,7 +61,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 
   const data = {
     labels: weekDay,
-    datasets: datasets
+    datasets
   };
 
   const options = {

@@ -4,9 +4,9 @@ const Board = () => {
       <td>rank</td>
       <td>fullname</td>
       <td>Hours coded</td>
-      <td>projects</td>
+      <td>Average</td>
     </tr>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;

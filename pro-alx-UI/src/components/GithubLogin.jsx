@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 import { useUser } from '../hooks/UseUserContext';
 import localDataMgr from '../hooks/localDataMgr';
 // env file in path ProAlx/pro-alx-UI
-const {
-  VITE_GITHUB_ID: CLIENT_ID
-} = import.meta.env;
+const { VITE_GITHUB_ID: CLIENT_ID } = import.meta.env;
 // REDIRECT_URI used 'http://localhost:5173/';
 const GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize';
 const apiGithub = 'http://localhost:5000/api/v1/github/';

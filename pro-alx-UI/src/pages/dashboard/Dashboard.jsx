@@ -1,6 +1,7 @@
 import { useUserData } from '../../hooks/fetchData';
 import UserChart from '../../components/details/Chart';
 import TempLoader from '../../components/TempLoader';
+// import SideBar from "../../components/dashboard/SideBar";
 
 const Dashboard = () => {
   const { value, isInitialLoading } = useUserData({

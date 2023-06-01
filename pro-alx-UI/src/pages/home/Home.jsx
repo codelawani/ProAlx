@@ -50,6 +50,8 @@ const Home = () => {
     );
   }
 
+  if (isLoading) return <TempLoader />;
+
   return (
     <div className=''>
       <Hero />
