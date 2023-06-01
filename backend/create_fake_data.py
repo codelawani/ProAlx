@@ -1,10 +1,12 @@
 from faker import Faker
-import flask_jwt_extended
 from models.user import User
 from models import storage
 import random
 from models.cohort import Cohort
 fake = Faker()
+# If u want the fake data to be Nigeria specific
+# use this:
+# fake = Faker('en_NG')
 
 
 def create_fake_users():
