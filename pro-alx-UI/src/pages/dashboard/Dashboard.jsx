@@ -1,13 +1,13 @@
-import { useUserData } from "../../hooks/fetchData"
+import { useUserData } from '../../hooks/fetchData';
 import UserChart from '../../components/details/Chart';
 import TempLoader from '../../components/TempLoader';
 
 const Dashboard = () => {
-	const { value, isInitialLoading } = useUserData({
-		queryKey: 'userdata',
-		endpoint: '/github/daily_commits/last_20_days',
-	});
-  //console.log(value, isError, isLoading);
+  const { value, isInitialLoading } = useUserData({
+    queryKey: 'userdata',
+    endpoint: '/user/daily_commits'
+  });
+  console.log(value);
   // const dataset = {
   //   '2023-05-14': {
   //     'alx-higher_level': 9238.773577,
@@ -44,15 +44,14 @@ const Dashboard = () => {
   //     'alx-low_level': 2903.1054,
   //     AirBnB_clone: 11766.9124
   //   }
-	// };
-	
-	
-	if (isInitialLoading) return <TempLoader/>;
+  // };
+
+  if (isInitialLoading) return <TempLoader />;
 
   return (
     <div className='w-full'>
       <h2>Dashboard</h2>
-      <UserChart value={value} isGithubData={true} /> 
+      <UserChart value={value} isGithubData />
     </div>
   );
 };

@@ -1,6 +1,8 @@
-from sqlalchemy import Integer, Column, VARCHAR, ForeignKey, String
+import requests
+from sqlalchemy import Integer, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 from .base_model import BaseModel
+api = 'http://localhost:5000/api/v1'
 
 
 class User(BaseModel):
@@ -14,7 +16,7 @@ class User(BaseModel):
     twitter_username = Column(String(255))
     whatsapp = Column(String(25))
     email = Column(String(255))
-    github_uid = Column(Integer)
+    github_uid = Column(Integer, unique=True)
     wakatime_uid = Column(String(255))
     gh_access_token = Column(String(255))
     wk_access_token = Column(String(255))
@@ -30,3 +32,10 @@ class User(BaseModel):
     cohort_id = Column(String(60), ForeignKey('cohorts.id'))
 
     cohort = relationship("Cohort", back_populates="users")
+
+    def fetch_github_data(self):
+        """Retrieves daily commits of user from github api"""
+        if not self.gh_access_token:
+            return None
+        res = requests.get(f'{api}/users/{self.id}/daily_commits')
+        return res.json()

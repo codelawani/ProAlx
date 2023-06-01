@@ -1,16 +1,31 @@
 import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import useLocalStorageState from './useLocalStorageState';
-import { useCookies } from 'react-cookie';
 import localDataMgr from './localDataMgr';
 // import { fetchData } from "./fetch";
 
 export const UserContext = createContext(null);
-
+function decodeJWTToken (token) {
+  const tokenParts = token.split('.');
+  const encodedPayload = tokenParts[1];
+  const decodedPayload = atob(encodedPayload);
+  const payload = JSON.parse(decodedPayload);
+  return payload;
+}
+function getUser () {
+  const token = localDataMgr.get('access_token');
+  console.log(token);
+  if (token) {
+    const payload = decodeJWTToken(token);
+    console.log(payload.user_data);
+    return payload.user_data;
+  }
+  return null;
+}
 export const UserProvider = ({ children }) => {
-  // const [user, setUser] = useState(localDataMgr.get('name'));
+  const [user, setUser] = useState(getUser());
+  console.log(user);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localDataMgr.get('access_token'));
+  const [isLoggedIn, setIsLoggedIn] = useState(!!user);
   // useEffect(() => {
   //     //const data = await fetchData(url,{})
   //     //const data = ;
@@ -24,8 +39,8 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        // user,
-        // setUser,
+        user,
+        setUser,
         isLoading,
         updateLoading,
         isLoggedIn,

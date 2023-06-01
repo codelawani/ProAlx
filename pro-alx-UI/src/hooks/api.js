@@ -1,11 +1,11 @@
 import axios from 'axios';
 import localDataMgr from './localDataMgr';
 
-export default axios.create({
+const api = axios.create({
   baseURL: 'http://localhost:5000/api/v1'
 });
 
-axios.interceptors.request.use(
+api.interceptors.request.use(
   config => {
     const token = localDataMgr.get('access_token');
     if (token) {
@@ -17,3 +17,4 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+export default api;

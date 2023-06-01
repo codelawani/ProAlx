@@ -23,18 +23,26 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
       `&scope=${SCOPE}`;
     window.location.assign(authUrl);
   };
+  const clearUser = () => {
+    localDataMgr.clear();
+    setIsLoggedIn(false);
+    updateLoading(false);
+    navigate('/');
+  };
   const handleLogout = () => {
+    updateLoading(true);
     const token = localDataMgr.get('access_token');
+    if (!token) {
+      clearUser();
+      return;
+    }
     axios.get(`${apiGithub}logout`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
         updateLoading(true);
         if (res.status === 200) {
-          localDataMgr.clear();
-          setIsLoggedIn(false);
-          updateLoading(false);
-          navigate('/');
+          clearUser();
         } else {
           console.log(res.data);
         }

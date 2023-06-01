@@ -1,5 +1,7 @@
 from api.v1.views import app_views
-from flask import jsonify, abort
+from flask import jsonify, abort, request
+from models import storage
+from models.cohort import Cohort
 
 
 @app_views.route('/cohorts', strict_slashes=False)
@@ -36,11 +38,11 @@ def post_cohort():
     return jsonify(instance.to_dict()), 201
 
 
-@app_views.route('/cohort/<number>', methods=['PUT'], strict_slashes=False)
-def put_cohort(number):
+@app_views.route('/cohort/<id>', methods=['PUT'], strict_slashes=False)
+def put_cohort(id):
     if not request.get_json():
         abort(400, description="Not a JSON")
-    cohort = storage.get(Cohort, number)
+    cohort = storage.get(Cohort, id)
     if not cohort:
         abort(404)
     data = request.get_json()

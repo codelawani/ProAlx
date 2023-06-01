@@ -1,5 +1,4 @@
 import { Bar } from 'react-chartjs-2';
-import localDataMgr from '../../hooks/localDataMgr';
 import PropTypes from 'prop-types';
 import {
   Chart as ChartJS,
@@ -10,6 +9,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { useUser } from '../../hooks/UseUserContext';
+import { useEffect } from 'react';
 
 ChartJS.register(
   CategoryScale,
@@ -20,8 +21,8 @@ ChartJS.register(
   Legend
 );
 
-const UserChart = ({ value, isGithubData=false }) => {
-  const user = localDataMgr.get('user');
+const UserChart = ({ value, isGithubData = false }) => {
+  const { user } = useUser();
   const days = [
     'sunday',
     'monday',
@@ -82,7 +83,7 @@ const UserChart = ({ value, isGithubData=false }) => {
       },
       title: {
         display: true,
-        text: `${user} stats`
+        text: `${user.name} stats`
       },
       tooltip: {
         callbacks: {
@@ -98,34 +99,34 @@ const UserChart = ({ value, isGithubData=false }) => {
     }
   };
   const gitthubOptions = {
-		responsive: true,
-		scales: {
-			y: {
-				ticks: {
-					callback: value => {
-						const hours = Math.floor(value / 3600);
-						return `${hours} hrs`;
-					},
-				},
-			},
-		},
-		plugins: {
-			legend: {
-				display: false,
-				position: 'right',
-			},
-			title: {
-				display: true,
-				text: `${user} stats`,
-			},
-		},
-	};
+    responsive: true,
+    scales: {
+      y: {
+        ticks: {
+          callback: value => {
+            const hours = Math.floor(value / 3600);
+            return `${hours} hrs`;
+          }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false,
+        position: 'right'
+      },
+      title: {
+        display: true,
+        text: `${user.name} stats`
+      }
+    }
+  };
 
   return (
     <div className='w-full'>
-      <p>Welcome {user}</p>
+      <p>Welcome {user.name}</p>
       <div className=''>
-        <Bar options={isGithubData?gitthubOptions: options} data={data} />
+        <Bar options={isGithubData ? gitthubOptions : options} data={data} />
       </div>
     </div>
   );
@@ -133,7 +134,7 @@ const UserChart = ({ value, isGithubData=false }) => {
 
 UserChart.propTypes = {
   value: PropTypes.object.isRequired,
-  isGithubData: PropTypes.bool,
+  isGithubData: PropTypes.bool
 };
 
 export default UserChart;
