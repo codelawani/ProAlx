@@ -28,7 +28,7 @@ class User(BaseModel):
     waka_session = Column(String(255))
     github_login = Column(String(255))
     wakatime_login = Column(String(255))
-    requested_partners = Column(Integer, default=0)
+    requested_partners = Column(Integer, default=0, index=True)
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
 
     cohort = relationship("Cohort", back_populates="users")

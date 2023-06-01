@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
-from flask import jsonify, abort, request
 import jwt
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from dotenv import load_dotenv
 from api.v1.views import app_views
 import requests
-import os
 from models import storage
 load_dotenv()
 
@@ -38,8 +36,6 @@ def verify_token(token, secret_key):
     try:
         decoded_token = jwt.decode(token, secret_key, algorithms=['HS256'])
         return decoded_token
-    except jwt.ExpiredSignatureError:
-        return None
     except (jwt.InvalidTokenError):
         return None
 
@@ -96,5 +92,5 @@ def get_commits(token, username, n=7, page_size=100):
             else:
                 retries -= 1
                 print("Retrying...")
-
+    print(commit_counts)
     return commit_counts

@@ -122,3 +122,14 @@ def put_user(user_id):
             setattr(user, key, value)
     storage.save()
     return jsonify(user.to_dict()), 200
+
+
+@app_views.route('/users/needs_partners', strict_slashes=False)
+def get_users_who_needs_partners():
+    """
+    Retrieves the list of all users that need partners
+    Returns:
+        list of users(empty list if no users need partners)
+    """
+    users = storage.get_users_who_need_partners()
+    return jsonify(users)
