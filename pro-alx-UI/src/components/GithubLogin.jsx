@@ -60,5 +60,5 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
 export default LoginWithGithub;
 
 LoginWithGithub.propTypes = {
-	style: PropTypes.string,
+  style: PropTypes.string
 };

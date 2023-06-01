@@ -50,14 +50,14 @@ const Home = () => {
     );
   }
 
-	if (isLoading) return <TempLoader />;
+  if (isLoading) return <TempLoader />;
 
-	return (
-		<div className=''>
-			<Hero />
-			<Main />
-		</div>
-	);
+  return (
+    <div className=''>
+      <Hero />
+      <Main />
+    </div>
+  );
 };
 
 export default Home;
