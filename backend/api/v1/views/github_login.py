@@ -107,7 +107,7 @@ def login():
 
 
 def check_user_exists(github_uid):
-    # Query the database to check if the user exists
+    """Query the database to check if the user exists"""
     if storage.github_uid_exists(github_uid):
         return True
     else:
@@ -132,29 +132,11 @@ def logout():
 
 
 def decode_jwt_token(token):
+    """" Decode JWT token"""
     try:
-        print('t', token)
         decoded_token = jwt.decode(token, key=key, algorithms=['HS256'])
-        print('d', decoded_token)
         user_id = decoded_token.get('sub')
         return user_id
     except (InvalidTokenError, ExpiredSignatureError, DecodeError) as e:
         print(e)
         return None
-
-
-file = 'User.json'
-
-
-def save_user(data):
-    with open(file, 'w') as f:
-        json.dump(data, f, indent=2)
-
-
-def reload_user():
-    try:
-        with open(file) as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        data = {}
-    return data

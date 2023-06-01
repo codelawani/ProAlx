@@ -50,3 +50,21 @@ def put_cohort(id):
         setattr(cohort, 'number', data['number'])
     cohort.save()
     return jsonify(cohort.to_dict()), 200
+
+
+@app_views.route('cohort/<c_number>/users', strict_slashes=False)
+def get_users_by_cohort(c_number):
+    """
+    Retrieves all users in a cohort
+    """
+    cohort_users = storage.get_users_by_cohort(c_number)
+    return jsonify(cohort_users)
+
+
+@app_views.route('cohort/<c_number>/users/needs_partners', strict_slashes=False)
+def get_users_who_need_partners_by_cohort(c_number):
+    """
+    Retrieves all users in a cohort who need partners
+    """
+    cohort_users = storage.get_users_who_need_partners_by_cohort(c_number)
+    return jsonify(cohort_users)
