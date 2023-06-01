@@ -4,9 +4,10 @@ from models import storage
 import random
 from models.cohort import Cohort
 fake = Faker()
-# If u want the fake data to be Nigeria specific
+# If u want the fake data to be location specific
 # use this:
-# fake = Faker('en_NG')
+# fake = Faker('ja_JP') 🌚 -- maybe Uchiha Itachi will pop up
+# sadly Nigeria unavailable 😮‍💨
 
 
 def create_fake_users():
