@@ -1,11 +1,11 @@
-import { useForm } from "react-hook-form";
-import Button  from "../../components/Button";
+import { useForm } from 'react-hook-form';
+import Button from '../../components/Button';
 
 const ContactForm = () => {
 	const totalCohorts = 17;
 	const cohorts = [];
-	const style = "border border-main w-1/2 self-center "
-	
+	const style = 'border border-main w-1/2 self-center ';
+
 	for (let i = 0; i < totalCohorts; i++) {
 		cohorts.push(`cohort ${i + 1}`);
 	}
@@ -14,15 +14,22 @@ const ContactForm = () => {
 		<option key={cohort} value={cohort}>
 			{cohort}
 		</option>
-  ));
-  
-  const { register, handleSubmit , formState : {errors}} = useForm();
-  
-  const submitForm = (data) => {
-    console.log(data);
-  }
+	));
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
+
+	const submitForm = data => {
+		console.log(data);
+	};
 	return (
-		<form onSubmit={handleSubmit(submitForm)} className='w-full px-6 py-3 self-center flex flex-col justify-center md:w-2/4 border rounded'>
+		<form
+			onSubmit={handleSubmit(submitForm)}
+			className='w-full px-6 py-3 self-center flex flex-col justify-center md:w-2/4 border rounded'
+		>
 			<div className='mb-4'>
 				<label htmlFor='fullname'>Fullname</label>
 				<input

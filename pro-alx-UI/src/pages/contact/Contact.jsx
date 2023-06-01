@@ -1,5 +1,5 @@
-import ContactForm from "./ContactForm";
-import img from "../../assets/contact.png"
+import ContactForm from './ContactForm';
+import img from '../../assets/contact.png';
 
 const Contact = () => {
 	return (
@@ -10,8 +10,13 @@ const Contact = () => {
 				touch with our Team.
 			</p>
 
-			<div className="flex flex-col md:flex-row md:px-6 md:gap-8 md:items-center md:justify-center">
-				<img src={img} alt='contact icon' aria-hidden={true} className="w-3/4 mb-5 md:w-2/4" />
+			<div className='flex flex-col md:flex-row md:px-6 md:gap-8 md:items-center md:justify-center'>
+				<img
+					src={img}
+					alt='contact icon'
+					aria-hidden={true}
+					className='w-3/4 mb-5 md:w-2/4'
+				/>
 				<ContactForm />
 			</div>
 		</div>

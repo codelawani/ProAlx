@@ -1,13 +1,14 @@
 import { useUserData } from "../../hooks/fetchData"
 import UserChart from '../../components/details/Chart';
 import TempLoader from '../../components/TempLoader';
+//import SideBar from "../../components/dashboard/SideBar";
 
 const Dashboard = () => {
-	const { value, isInitialLoading } = useUserData({
-		queryKey: 'userdata',
-		endpoint: '/github/daily_commits/last_20_days',
+	const { value } = useUserData({
+	queryKey: 'userdata',
+	endpoint: '/github/daily_commits/last_20_days',
 	});
-  //console.log(value, isError, isLoading);
+  console.log(value);
   // const dataset = {
   //   '2023-05-14': {
   //     'alx-higher_level': 9238.773577,
@@ -47,14 +48,65 @@ const Dashboard = () => {
 	// };
 	
 	
-	if (isInitialLoading) return <TempLoader/>;
+	// if (isInitialLoading) return <TempLoader/>;
 
   return (
-    <div className='w-full'>
-      <h2>Dashboard</h2>
-      <UserChart value={value} isGithubData={true} /> 
-    </div>
-  );
+		<div className='w-full'>
+			<h2>Dashboard</h2>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
+				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
+				repellendus quia non labore illum neque dolore aut unde hic. Quo
+				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
+				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
+				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
+				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
+				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
+				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
+				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
+				perspiciatis quia voluptates. Mollitia, nostrum atque!
+			</p>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
+				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
+				repellendus quia non labore illum neque dolore aut unde hic. Quo
+				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
+				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
+				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
+				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
+				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
+				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
+				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
+				perspiciatis quia voluptates. Mollitia, nostrum atque!
+			</p>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
+				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
+				repellendus quia non labore illum neque dolore aut unde hic. Quo
+				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
+				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
+				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
+				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
+				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
+				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
+				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
+				perspiciatis quia voluptates. Mollitia, nostrum atque!
+			</p>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi rem
+				voluptatibus eligendi itaque sint, aspernatur doloremque nulla amet
+				repellendus quia non labore illum neque dolore aut unde hic. Quo
+				dignissimos non at quisquam nesciunt dolores nihil, fugiat veritatis
+				facilis consequatur est, repellat hic voluptate. Assumenda modi porro
+				rerum minus aliquam quisquam dolores totam voluptas aliquid culpa
+				consequatur laudantium deserunt saepe, dolorum exercitationem sint eum
+				quaerat quia explicabo amet quibusdam deleniti. Minima tempore assumenda
+				culpa a vel nesciunt aperiam labore rerum impedit dolores qui quod
+				iusto, illum veniam officiis, dolorum nihil perferendis sed illo odit
+				perspiciatis quia voluptates. Mollitia, nostrum atque!
+			</p>
+		</div>
+	);
 };
 
 export default Dashboard;
