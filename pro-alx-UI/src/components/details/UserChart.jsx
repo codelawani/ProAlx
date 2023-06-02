@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useUser } from '../../hooks/UseUserContext';
 import { BarChart, Bar, XAxis, Tooltip, Legend } from 'recharts';
 
 const getTime = value => {
@@ -9,20 +8,26 @@ const getTime = value => {
 };
 
 const updatedDataset = {};
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 	if (active && payload && payload.length) {
 		const tooltipItem = Object.entries(updatedDataset[payload[0].payload.name]);
-		console.log(typeof active);
 		return (
 			<div className='p-3 bg-black text-white'>
 				<p className=''>{`${label}`}</p>
 
-				{tooltipItem.map(([key, value], index) => (
-					<p key={index} className=''>{`${key}: ${getTime(value)}`}</p>
-				))}
-				{payload.map((entry, index) => (
-					<p key={index}>{`Total: ${getTime(entry.value)}`}</p>
-				))}
+				{!isGithubData &&
+					tooltipItem.map(([key, value], index) => (
+						<p key={index} className=''>{`${key}: ${getTime(value)}`}</p>
+					))}
+
+				{isGithubData &&
+					tooltipItem.map(([key, value], index) => (
+						<p key={index} className=''>{`${key}: ${value} commits`}</p>
+					))}
+				{!isGithubData &&
+					payload.map((entry, index) => (
+						<p key={index}>{`Total: ${getTime(entry.value)}`}</p>
+					))}
 			</div>
 		);
 	}
@@ -30,7 +35,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const UserChart = ({ value, isGithubData = false }) => {
-	const { user } = useUser();
+	const screenWidth = window.innerWidth;
+	const barWidth = screenWidth >= 768 ? 700 : 350;
 	const days = [
 		'sunday',
 		'monday',
@@ -60,25 +66,22 @@ const UserChart = ({ value, isGithubData = false }) => {
 
 	return (
 		<div className=''>
-			<p>Welcome {user.name}</p>
-			<div>
-				<BarChart
-					width={700}
-					height={400}
-					data={data}
-					margin={{
-						top: 5,
-						right: 30,
-						left: 20,
-						bottom: 5,
-					}}
-				>
-					<XAxis dataKey='name' />
-					<Tooltip content={<CustomTooltip />} />
-					<Legend />
-					<Bar dataKey='coding' barSize={50} fill='#0f0e17' />
-				</BarChart>
-			</div>
+			<BarChart
+				width={barWidth}
+				height={400}
+				data={data}
+				margin={{
+					top: 5,
+					right: 5,
+					left: 5,
+					bottom: 5,
+				}}
+			>
+				<XAxis dataKey='name' />
+				<Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
+				<Legend />
+				<Bar dataKey='coding' barSize={50} fill='#0f0e17' />
+			</BarChart>
 		</div>
 	);
 };
@@ -87,6 +90,7 @@ CustomTooltip.propTypes = {
 	payload: PropTypes.array,
 	active: PropTypes.bool,
 	label: PropTypes.string,
+	isGithubData: PropTypes.bool,
 };
 
 UserChart.propTypes = {

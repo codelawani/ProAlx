@@ -11,59 +11,64 @@ import Authenticated from './components/layout/Authenticated.jsx';
 import { UserProvider } from './hooks/UserContext.jsx';
 import Home from './pages/home/Home.jsx';
 import BoardList from './pages/leaderboards/BoardList.jsx';
+import ViewUser from './components/details/ViewUser.jsx';
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnmount: false,
-      refetchOnReconnect: false,
-      retry: true,
-      staleTime: 60 * 60 * 1000,
-      cacheTime: 60 * 60 * 1000,
-    }
-  }
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			refetchOnmount: false,
+			refetchOnReconnect: false,
+			retry: true,
+			staleTime: 60 * 60 * 1000,
+			cacheTime: 60 * 60 * 1000,
+		},
+	},
 });
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '',
-        element: <Home />,
-        index: true
-      },
-      {
-        path: 'contact',
-        element: <Contact />
-      }
-    ]
-  },
-  {
-    path: '',
-    element: <Authenticated />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: 'dashboard',
-        element: <Dashboard />,
-        index: true
-      },
-      {
-        path: 'leaderboard',
-        element: <BoardList />,
-      }
-    ]
-  }
+	{
+		path: '/',
+		element: <App />,
+		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: '',
+				element: <Home />,
+				index: true,
+			},
+			{
+				path: 'contact',
+				element: <Contact />,
+			},
+		],
+	},
+	{
+		path: '',
+		element: <Authenticated />,
+		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: 'dashboard',
+				element: <Dashboard />,
+				index: true,
+			},
+			{
+				path: 'leaderboard',
+				element: <BoardList />,
+			},
+			{
+				path: 'user/:id',
+				element: <ViewUser />,
+			},
+		],
+	},
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <QueryClientProvider client={queryClient}>
-    <UserProvider>
-      <RouterProvider router={router} />
-    </UserProvider>
-  </QueryClientProvider>
+	<QueryClientProvider client={queryClient}>
+		<UserProvider>
+			<RouterProvider router={router} />
+		</UserProvider>
+	</QueryClientProvider>
 );
