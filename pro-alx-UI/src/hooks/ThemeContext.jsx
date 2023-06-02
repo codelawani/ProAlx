@@ -5,30 +5,30 @@ import localDataMgr from './localDataMgr';
 export const ThemeContext = createContext(null);
 
 const initialState = () => {
-	const localTheme = localDataMgr.get('theme');
-	if (localTheme) return;
-	localDataMgr.set('theme', 'dark');
+  const localTheme = localDataMgr.get('theme');
+  if (localTheme) return;
+  localDataMgr.set('theme', 'dark');
 };
 export const ThemeProvider = ({ children }) => {
-	initialState();
-	const [theme, setTheme] = useState(localDataMgr.get('theme'));
-	const updateTheme = () => {
-		const newTheme = theme === 'light' ? 'dark' : 'light';
-		setTheme(newTheme);
-		localDataMgr.set('theme', newTheme);
-	};
-	return (
-		<ThemeContext.Provider
-			value={{
-				theme,
-				updateTheme,
-			}}
-		>
-			{children}
-		</ThemeContext.Provider>
-	);
+  initialState();
+  const [theme, setTheme] = useState(localDataMgr.get('theme'));
+  const updateTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localDataMgr.set('theme', newTheme);
+  };
+  return (
+    <ThemeContext.Provider
+      value={{
+			  theme,
+			  updateTheme
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
 ThemeProvider.propTypes = {
-	children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
