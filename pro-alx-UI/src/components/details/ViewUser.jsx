@@ -2,6 +2,7 @@ import { useUserData } from '../../hooks/fetchData';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import UserChart from './UserChart';
+import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 
 const dataset = {
 	'2023-05-14': {
@@ -42,8 +43,8 @@ const dataset = {
 };
 
 const ViewUser = () => {
-	// id : the user id
-	const { id } = useParams();
+	// id : the user id gotten from the route link
+	//const { id } = useParams();
 
 	// user Details endpoint will be something like this 'user/uid/details'
 	// please include a property to indicate if the user has connected wakatime
@@ -59,31 +60,30 @@ const ViewUser = () => {
 		endpoint: '/user/daily_commits',
 		enabled: userDetails,
 	});
-
 	const navigate = useNavigate();
 	return (
-		<>
+		<div className='w-full'>
 			<div className='flex items-center justify-between mb-11'>
 				<h3 className='text-lg'>user name</h3>
 				<Button
-					value={'Go back'}
+					value={<MdOutlineArrowBackIosNew />}
 					handleClick={() => navigate(-1)}
-					style='border border-red-950 p-2'
+					style='border border-red-950 p-2 hover:bg-red-950'
 				/>
 			</div>
-			<div className='md:grid grid-cols-4 mt-3 md:mt-0'>
-				<div id='user-details' className='col-span-1'>
+			<div className='flex flex-col md:flex-row md:justify-between'>
+				<div id='user-details' className='flex flex-col justify-center'>
 					<p className='border rounded h-32 w-fit p-3'>user image</p>
 					<p>name</p>
 					<p>total hours</p>
 					<p>location</p>
 					<p>social links</p>
 				</div>
-				<div className='col-span-3'>
+				<div className='w-fit'>
 					<UserChart value={userStats ? dataset : {}} isGithubData={false} />
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

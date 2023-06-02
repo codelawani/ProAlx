@@ -1,4 +1,4 @@
-import { useUser } from '../../hooks/UseUserContext';
+import { useUser, useTheme } from '../../hooks/customContexts';
 import { Navigate, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,18 +6,21 @@ import SideBar from '../dashboard/Bar';
 
 const Authenticated = () => {
 	const { isLoggedIn } = useUser();
+	const { theme } = useTheme();
 	return (
-		<div>
+		<div
+			className={`${theme} flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
+		>
 			{isLoggedIn ? (
-				<div className='relative'>
+				<>
 					<SideBar />
 					<ToastContainer />
-					<div className='md:absolute top-5 pt-20 left-36 md:pt-0 px-3 md:px-0'>
+					<div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-black dark:text-gray-300'>
 						<Outlet />
 					</div>
-				</div>
+				</>
 			) : (
-				<Navigate to='/' replace />
+				<Navigate to='/' replace={true} />
 			)}
 		</div>
 	);

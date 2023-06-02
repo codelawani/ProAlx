@@ -10,6 +10,7 @@
   @apply flex items-center p-2 gap-2;
 }
 
-.inactive:hover, .active:hover {
+.inactive:hover,
+.active:hover {
   @apply border-l-2 bg-blur bg-gradient-to-bl from-dark to-red-950 text-white rounded
 }

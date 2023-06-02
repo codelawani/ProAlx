@@ -2,13 +2,13 @@ import Button from '../Button';
 import DashboardNav from './DashboardNav';
 import { TfiClose } from 'react-icons/tfi';
 import PropTypes from 'prop-types';
-import { useUser } from '../../hooks/UseUserContext';
+import { useUser } from '../../hooks/customContexts';
+import Theme from '../Theme';
 
 const MobileBar = ({ handleClick }) => {
-  const { user } = useUser();
-   const style =
-			'text-white border px-3 py-1';
-  return (
+	const { user } = useUser();
+	const style = 'text-white border px-3 py-1';
+	return (
 		<>
 			<div
 				className='bg-black fixed top-0 bottom-0 left-0 right-0 z-10 opacity-50'
@@ -30,13 +30,14 @@ const MobileBar = ({ handleClick }) => {
 					/>
 					<span>{user.name}</span>
 				</div>
+				<Theme />
 			</div>
 		</>
 	);
 };
 
 MobileBar.propTypes = {
-  handleClick: PropTypes.func
+	handleClick: PropTypes.func,
 };
 
 export default MobileBar;

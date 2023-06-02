@@ -12,6 +12,7 @@ import { UserProvider } from './hooks/UserContext.jsx';
 import Home from './pages/home/Home.jsx';
 import BoardList from './pages/leaderboards/BoardList.jsx';
 import ViewUser from './components/details/ViewUser.jsx';
+import { ThemeProvider } from './hooks/ThemeContext.jsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -68,7 +69,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<QueryClientProvider client={queryClient}>
 		<UserProvider>
-			<RouterProvider router={router} />
+			<ThemeProvider>
+				<RouterProvider router={router} />
+			</ThemeProvider>
 		</UserProvider>
 	</QueryClientProvider>
 );

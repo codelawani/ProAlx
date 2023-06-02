@@ -44,7 +44,7 @@ const BoardList = () => {
 	return (
 		<div className=''>
 			<h3 className='pb-4 font-semibold text-lg'>Leaderboards</h3>
-			<table className='table-auto'>
+			<table className='table-auto flex flex-col'>
 				<thead className=''>
 					<tr className='grid grid-cols-7 content-center'>
 						<th className='col-span-1'>Rank</th>

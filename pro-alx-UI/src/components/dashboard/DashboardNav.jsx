@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const DashboardNav = ({ handleClick = () => {} }) => {
-  return (
-		<nav className=''>
-			<ul className='list-none'>
+	return (
+		<nav className='md:pt-3'>
+			<ul className='list-none text-gray-400'>
 				<li className='relative group flex w-fit pb-2'>
 					<NavLink
 						to='dashboard'
@@ -52,7 +52,7 @@ const DashboardNav = ({ handleClick = () => {} }) => {
 };
 
 DashboardNav.propTypes = {
-  handleClick: PropTypes.func
+	handleClick: PropTypes.func,
 };
 
 export default DashboardNav;

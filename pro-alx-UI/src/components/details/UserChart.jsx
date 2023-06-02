@@ -12,12 +12,15 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 	if (active && payload && payload.length) {
 		const tooltipItem = Object.entries(updatedDataset[payload[0].payload.name]);
 		return (
-			<div className='p-3 bg-black text-white'>
-				<p className=''>{`${label}`}</p>
+			<div
+				className='p-4 bg-black text-gray-300
+			'
+			>
+				<p className='border-b py-2 mb-2 capitalize'>{`${label}`}</p>
 
 				{!isGithubData &&
 					tooltipItem.map(([key, value], index) => (
-						<p key={index} className=''>{`${key}: ${getTime(value)}`}</p>
+						<p key={index} className='py-1'>{`${key}: ${getTime(value)}`}</p>
 					))}
 
 				{isGithubData &&
@@ -26,7 +29,9 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 					))}
 				{!isGithubData &&
 					payload.map((entry, index) => (
-						<p key={index}>{`Total: ${getTime(entry.value)}`}</p>
+						<p key={index} className='py-1'>{`Total: ${getTime(
+							entry.value
+						)}`}</p>
 					))}
 			</div>
 		);
@@ -36,7 +41,7 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 
 const UserChart = ({ value, isGithubData = false }) => {
 	const screenWidth = window.innerWidth;
-	const barWidth = screenWidth >= 768 ? 700 : 350;
+	const barWidth = screenWidth >= 768 ? 600 : 320;
 	const days = [
 		'sunday',
 		'monday',
@@ -64,8 +69,15 @@ const UserChart = ({ value, isGithubData = false }) => {
 		updatedDataset[getDate(key)] = value[key];
 	});
 
+	if (Object.keys(value).length === 0)
+		return (
+			<p className=' text-center self-center animate-bounce text-red-950'>
+				fetching stats...
+			</p>
+		);
+
 	return (
-		<div className=''>
+		<div className='w-fit'>
 			<BarChart
 				width={barWidth}
 				height={400}
@@ -80,7 +92,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 				<XAxis dataKey='name' />
 				<Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
 				<Legend />
-				<Bar dataKey='coding' barSize={50} fill='#0f0e17' />
+				<Bar dataKey='coding' barSize={50} fill='rgba(69, 10 ,10,0.8)' />
 			</BarChart>
 		</div>
 	);
