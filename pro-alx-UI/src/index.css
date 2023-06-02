@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 .active {
-  @apply border-l-2 flex items-center pl-1 gap-1;
+  @apply text-body border-x rounded-md p-2 flex items-center gap-2 bg-gradient-to-bl from-dark to-red-950 w-fit;
 }
 
 .inactive {
-  @apply flex items-center pl-1 gap-1;
+  @apply flex items-center p-2 gap-2;
 }
 
-.inactive:hover {
-  @apply border-l-2 opacity-5
+.inactive:hover, .active:hover {
+  @apply border-l-2 bg-blur bg-gradient-to-bl from-dark to-red-950 text-white rounded
 }

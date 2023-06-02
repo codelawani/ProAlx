@@ -7,6 +7,7 @@ export default {
 				dark: '#0f0e17',
 				main: '#ff8906',
 				body: '#fffffe',
+				blur : '#333333',
 			},
 			keyframes: {
 				loader: {

@@ -18,9 +18,9 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnmount: false,
       refetchOnReconnect: false,
-      retry: false,
-      staleTime: Infinity,
-      cacheTime: Infinity
+      retry: true,
+      staleTime: 60 * 60 * 1000,
+      cacheTime: 60 * 60 * 1000,
     }
   }
 });
@@ -55,7 +55,6 @@ const router = createBrowserRouter([
       {
         path: 'leaderboard',
         element: <BoardList />,
-        index: true
       }
     ]
   }

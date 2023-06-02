@@ -14,11 +14,13 @@ const fetchUserData = (endpoint) => {
   };
 };
 
-export const useUserData = ({ queryKey, endpoint }) => {
+export const useUserData = ({ queryKey, endpoint, ...rem }) => {
   const { queryFn } = fetchUserData(endpoint);
+  console.log(rem);
   const results = useQuery({
     queryKey: [queryKey],
     queryFn: queryFn,
+    rem,
     onError: err => {
       if (err) {
         console.log(err);
@@ -27,7 +29,7 @@ export const useUserData = ({ queryKey, endpoint }) => {
       }
     },
     onSettled: () => {
-      console.log(results.data?.data);
+      return;
     }
   });
   return {
