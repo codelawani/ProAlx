@@ -1,6 +1,5 @@
 import Button from './Button';
 import { useTheme } from '../hooks/customContexts';
-import { BsSun, BsFillMoonFill } from 'react-icons/bs';
 
 const Theme = () => {
 	const { updateTheme, theme } = useTheme();

@@ -21,11 +21,8 @@ export const useUserData = ({ queryKey, endpoint, ...others }) => {
 		queryFn: queryFn,
 		others,
 		onError: err => {
-			if (err) {
-				console.log(err);
-			} else {
-				toast.error('something went wrong');
-			}
+			toast.error('An error occurred');
+			return err;
 		},
 		onSettled: () => {
 			return;

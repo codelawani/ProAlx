@@ -1,6 +1,9 @@
 import Board from './Board';
 import { useUserData } from '../../hooks/fetchData';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Button from '../../components/Button';
+//import { toast } from 'react-toastify';
 
 const data = [
 	{
@@ -30,16 +33,30 @@ const data = [
 ];
 
 const BoardList = () => {
+	const [pageNumber, setPageNumber] = useState(1);
 	const { value } = useUserData({
-		queryKey: 'leaderboards',
-		endpoint: '/user/daily_commits',
+		queryKey: `leaderboard${pageNumber}`,
+		endpoint: `/users/${pageNumber}`,
 		keepPreviousData: true,
 	});
-	const navigate = useNavigate();
+
 	console.log(value);
+	const navigate = useNavigate();
 
 	const handleClick = id => {
 		navigate(`/user/${id}`);
+	};
+
+	const prevPage = () => {
+		// check if current pageNumber is less than 1
+		if (pageNumber <= 1) return;
+		setPageNumber(prev => prev - 1);
+	};
+
+	const nextPage = () => {
+		// check if current pageNumber is equal to total number of pages first
+
+		setPageNumber(prev => prev + 1);
 	};
 	return (
 		<div className=''>
@@ -60,6 +77,10 @@ const BoardList = () => {
 					))}
 				</tbody>
 			</table>
+			<div className='flex justify-between text-blue-500 dark:text-blue-300 w-full'>
+				{pageNumber > 1 && <Button value='PrevPage' handleClick={prevPage} />}
+				<Button value='NextPage' handleClick={nextPage} style='' />
+			</div>
 		</div>
 	);
 };
