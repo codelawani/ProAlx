@@ -153,3 +153,12 @@ def get_users_who_needs_partners():
     """
     users = storage.get_users_who_need_partners()
     return jsonify(users)
+
+
+@app_views.route('users/leaderboard', strict_slashes=False)
+def get_overall_leaderboard():
+    """
+    Retrieves overall leaderboard
+    """
+    users = storage.get_overall_leaderboard()
+    return jsonify(users)

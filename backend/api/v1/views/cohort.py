@@ -61,10 +61,19 @@ def get_users_by_cohort(c_number):
     return jsonify(cohort_users)
 
 
-@app_views.route('cohort/<c_number>/needs_partners', strict_slashes=False)
+@app_views.route('cohorts/<c_number>/needs_partners', strict_slashes=False)
 def get_users_who_need_partners_by_cohort(c_number):
     """
     Retrieves all users in a cohort who need partners
     """
     cohort_users = storage.get_users_who_need_partners_by_cohort(c_number)
+    return jsonify(cohort_users)
+
+
+@app_views.route('cohorts/<c_number>/leaderboard', strict_slashes=False)
+def get_cohort_leaderboard(c_number):
+    """
+    Retrieves all users in a cohort who need partners
+    """
+    cohort_users = storage.get_cohort_leaderboard(c_number)
     return jsonify(cohort_users)

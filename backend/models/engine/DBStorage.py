@@ -119,11 +119,11 @@ class DBStorage:
         return wrapper
 
     @filter_necessary_data
-    def get_users_by_cohort(self, cohort_number):
+    def get_users_by_cohort(self, n):
         """Get users by cohort"""
         try:
             query = self.session.query(User).filter(
-                User.cohort_number == cohort_number)
+                User.cohort_number == n)
             return query
         except Exception as e:
             print(f"An error occurred while retrieving users: {e}")
@@ -142,14 +142,41 @@ class DBStorage:
             return []
 
     @filter_necessary_data
-    def get_users_who_need_partners_by_cohort(self, cohort_number):
+    def get_users_who_need_partners_by_cohort(self, n):
         """Get users who need partners by cohort"""
         try:
             query = self.session.query(User).filter(
-                User.requested_partners > 0, User.cohort_number == cohort_number)
+                User.requested_partners > 0, User.cohort_number == n)
             return query
         except Exception as e:
             print(
                 f"An error occurred while retrieving"
                 f"users who need partners by cohort: {e}")
+            return []
+
+    @filter_necessary_data
+    def get_cohort_leaderboard(self, n):
+        """Get leaderboard for cohort n"""
+        try:
+            query = self.session.query(User).filter(
+                User.cohort_number == n).order_by(
+                    User.waka_week_total_seconds.desc())
+            return query
+        except Exception as e:
+            print(
+                f"An error occurred while retrieving"
+                f"cohort leaderboard: {e}")
+            return []
+
+    @filter_necessary_data
+    def get_overall_leaderboard(self):
+        """Get overall leaderboard"""
+        try:
+            query = self.session.query(User).order_by(
+                User.waka_week_total_seconds.desc())
+            return query
+        except Exception as e:
+            print(
+                f"An error occurred while retrieving"
+                f"overall leaderboard data: {e}")
             return []
