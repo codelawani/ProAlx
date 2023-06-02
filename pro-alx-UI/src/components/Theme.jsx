@@ -12,7 +12,7 @@ const Theme = () => {
 
 	return (
 		<Button
-			value={<span className={value}></span>}
+			value={<span className={value} />}
 			handleClick={updateTheme}
 			style={style}
 		/>

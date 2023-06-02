@@ -5,16 +5,16 @@ import Header from './components/nav/Header';
 import Footer from './components/Footer';
 import { useTheme } from './hooks/customContexts';
 
-function App() {
-	const { theme } = useTheme();
-	return (
-		<div className={`${theme} dark:bg-dark`}>
-			<Header />
-			<ToastContainer />
-			<Outlet />
-			<Footer />
-		</div>
-	);
+function App () {
+  const { theme } = useTheme();
+  return (
+    <div className={`${theme} dark:bg-dark`}>
+      <Header />
+      <ToastContainer />
+      <Outlet />
+      <Footer />
+    </div>
+  );
 }
 
 export default App;

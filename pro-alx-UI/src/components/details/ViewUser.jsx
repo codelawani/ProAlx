@@ -44,7 +44,7 @@ const dataset = {
 
 const ViewUser = () => {
 	// id : the user id gotten from the route link
-	//const { id } = useParams();
+	// const { id } = useParams();
 
 	// user Details endpoint will be something like this 'user/uid/details'
 	// please include a property to indicate if the user has connected wakatime

@@ -29,9 +29,9 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 					))}
 				{!isGithubData &&
 					payload.map((entry, index) => (
-						<p key={index} className='py-1'>{`Total: ${getTime(
-							entry.value
-						)}`}</p>
+						<p key={index} className='py-1'>
+							{`Total: ${getTime(entry.value)}`}
+						</p>
 					))}
 			</div>
 		);
@@ -69,12 +69,13 @@ const UserChart = ({ value, isGithubData = false }) => {
 		updatedDataset[getDate(key)] = value[key];
 	});
 
-	if (Object.keys(value).length === 0)
+	if (Object.keys(value).length === 0) {
 		return (
 			<p className=' text-center self-center animate-bounce text-red-950'>
 				fetching stats...
 			</p>
 		);
+	}
 
 	return (
 		<div className='w-fit'>
