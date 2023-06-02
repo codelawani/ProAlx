@@ -7,7 +7,7 @@ from models.cohort import Cohort
 @app_views.route('/cohorts', strict_slashes=False)
 def get_cohorts():
     cohorts = storage.all(Cohort).values()
-    return jsonify(cohorts)
+    return jsonify([cohort.to_dict() for cohort in cohorts])
 
 
 @app_views.route('/cohort/<id>', strict_slashes=False)
@@ -18,7 +18,7 @@ def get_cohort(id):
     return jsonify(cohort)
 
 
-@app_views.route('/cohort/<id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/cohorts/<id>', methods=['DELETE'], strict_slashes=False)
 def delete_cohort(id):
     cohort = storage.get(Cohort, id)
     if not cohort:
@@ -28,7 +28,7 @@ def delete_cohort(id):
     return jsonify({}), 200
 
 
-@app_views.route('/cohort', methods=['POST'], strict_slashes=False)
+@app_views.route('/cohorts', methods=['POST'], strict_slashes=False)
 def post_cohort():
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -52,7 +52,7 @@ def put_cohort(id):
     return jsonify(cohort.to_dict()), 200
 
 
-@app_views.route('cohort/<c_number>/users', strict_slashes=False)
+@app_views.route('cohorts/<c_number>', strict_slashes=False)
 def get_users_by_cohort(c_number):
     """
     Retrieves all users in a cohort
@@ -61,7 +61,7 @@ def get_users_by_cohort(c_number):
     return jsonify(cohort_users)
 
 
-@app_views.route('cohort/<c_number>/users/needs_partners', strict_slashes=False)
+@app_views.route('cohort/<c_number>/needs_partners', strict_slashes=False)
 def get_users_who_need_partners_by_cohort(c_number):
     """
     Retrieves all users in a cohort who need partners

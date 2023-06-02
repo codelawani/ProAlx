@@ -63,7 +63,6 @@ class DBStorage:
     def save(self):
         """Commit all changes of the current db session"""
         try:
-            print('='*30)
             self.session.commit()
         except SQLAlchemyError as e:
             self.session.rollback()
@@ -111,7 +110,8 @@ class DBStorage:
             # for attribute in attributes:
             # query = query.options(defer(attribute))
             entities = (User.id, User.name, User.cohort_number,
-                        User.photo_url, User.requested_partners)
+                        User.photo_url, User.requested_partners,
+                        User.waka_week_total_seconds, User.waka_week_daily_average)
             query = query.options(load_only(*entities))
             users = query.all()
             users_dict = [user.to_dict() for user in users if user is not None]
