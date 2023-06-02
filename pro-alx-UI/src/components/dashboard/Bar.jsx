@@ -4,14 +4,20 @@ import DashboardNav from './DashboardNav';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Button from '../Button';
 import MobileBar from './MobileBar';
+import { useUser } from '../../hooks/UseUserContext';
 
 // we'll need a property that checks if user has connected wakatime and conditionally display the connect wakatime button only when it's false e.g user.wakatimeConnected
-
+const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
 const Bar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const style =
-		'text-white fixed md:block bottom-10 border border-main bg-dark p-2';
-
+  const { wakaConnected } = useUser();
+  const style = 'text-white fixed md:block bottom-10 border border-main bg-dark p-2';
+  const handleRedirect = () => {
+    const scope = 'email read_stats read_logged_time';
+    const redirectUrl = 'http://localhost:5173/dashboard';
+    const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;
+    window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
+  };
   const handleClick = () => {
     setShowSidebar(prev => !prev);
   };
@@ -28,8 +34,12 @@ const Bar = () => {
           value={<GiHamburgerMenu />}
           style='md:hidden'
         />
-
-        <Button value='connect wakatime' style={style} />
+        {!wakaConnected &&
+          <Button
+            value='connect wakatime'
+            style={style}
+            handleClick={handleRedirect}
+          />}
       </div>
       <div className='hidden fixed bg-dark text-white top-0 bottom-0 left-0 px-1 z-20  md:flex flex-col justify-between'>
         <h2 className=''>ProAlx</h2>

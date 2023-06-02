@@ -9,3 +9,4 @@ class Cohort(BaseModel):
     number = Column(Integer, nullable=False, unique=True)
     name = Column(String(50))
     users = relationship("User", back_populates="cohort")
+

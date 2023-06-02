@@ -2,6 +2,7 @@ from faker import Faker
 from models.user import User
 from models import storage
 import random
+from datetime import datetime
 from models.cohort import Cohort
 fake = Faker()
 # If u want the fake data to be location specific
@@ -13,6 +14,9 @@ fake = Faker()
 def create_fake_users():
     users = []
     for _ in range(30):
+        total_seconds = random.randint(0, 1000000)
+        daily_average = total_seconds // 7
+        end_date = datetime.datetime.now() + datetime.timedelta(days=90)
         user = User(
             name=fake.name(),
             photo_url=fake.image_url(),
@@ -25,6 +29,10 @@ def create_fake_users():
             gh_access_token=str(fake.uuid4()),
             wk_access_token=str(fake.uuid4()),
             wk_refresh_token=str(fake.uuid4()),
+            waka_token_expires=fake.date_time_between(
+                start_date=datetime.now(), end_date=end_date),
+            waka_week_total_seconds=total_seconds,
+            waka_week_daily_average=daily_average,
             likes_interests=' '.join(fake.words()),
             most_active_time=fake.random_element(
                 elements=('morning', 'afternoon', 'evening', 'night')),

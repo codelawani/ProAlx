@@ -7,7 +7,7 @@ from models.cohort import Cohort
 @app_views.route('/cohorts', strict_slashes=False)
 def get_cohorts():
     cohorts = storage.all(Cohort).values()
-    return jsonify([cohort for cohort in cohorts.to_dict()])
+    return jsonify(cohorts)
 
 
 @app_views.route('/cohort/<id>', strict_slashes=False)
@@ -15,7 +15,7 @@ def get_cohort(id):
     cohort = storage.get(Cohort, id)
     if not cohort:
         abort(404)
-    return jsonify(cohort.to_dict())
+    return jsonify(cohort)
 
 
 @app_views.route('/cohort/<id>', methods=['DELETE'], strict_slashes=False)

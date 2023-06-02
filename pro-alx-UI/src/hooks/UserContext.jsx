@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import localDataMgr from './localDataMgr';
+import Cookies from 'js-cookie';
 // import { fetchData } from "./fetch";
 
 export const UserContext = createContext(null);
@@ -26,6 +27,7 @@ export const UserProvider = ({ children }) => {
   console.log(user);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!user);
+  const [wakaConnected, setWakaconnected] = useState(!!Cookies.get('wakatime'));
   // useEffect(() => {
   //     //const data = await fetchData(url,{})
   //     //const data = ;
@@ -39,6 +41,8 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
+        wakaConnected,
+        setWakaconnected,
         user,
         setUser,
         isLoading,

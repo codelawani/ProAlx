@@ -42,13 +42,17 @@ def get_github_user_data(token):
     """Retrieve GitHub user data using the provided access token"""
     headers = {'Authorization': f"token {token}"}
     res = requests.get(USER_ENDPOINT, headers=headers)
+    print('failed to get github data')
     res.raise_for_status()  # Raise an exception for non-2xx status codes
     return res.json()
 
 
 def create_user(user_data):
     """Create a new user if not exists using the provided user data"""
-    if check_user_exists(user_data.get('github_uid')):
+    user_id = storage.github_uid_exists(user_data.get('github_uid'))
+    print(user_id)
+    if user_id:
+        user_data.update({'id': user_id})
         return user_data
     res = requests.post(f'{api}/users', json=user_data)
     res.raise_for_status()
@@ -78,9 +82,10 @@ def login():
             'photo_url': user.get('avatar_url'),
             'twitter_username': user.get('twitter_username'),
             'gh_access_token': token,
-            'github_session': secrets.token_hex(16)
+            'github_session': True
         }
         # Create a new user if one doesn't already exist
+        print(user_data)
         created_user = create_user(user_data)
         public_user_data = {
             'name': created_user.get('name'),

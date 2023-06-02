@@ -2,12 +2,20 @@ import { useUserData } from '../../hooks/fetchData';
 import UserChart from '../../components/details/Chart';
 import TempLoader from '../../components/TempLoader';
 // import SideBar from "../../components/dashboard/SideBar";
-
+import { useEffect } from 'react';
+import api from '../../hooks/api';
+import { useUser } from '../../hooks/UseUserContext';
+import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 const Dashboard = () => {
   const { value, isInitialLoading } = useUserData({
     queryKey: 'userdata',
     endpoint: '/user/daily_commits'
   });
+  const { setWakaconnected } = useUser();
+  const { updateLoading } = useUser();
+  const API = 'http://127.0.0.1:5000/api/v1';
+
   console.log(value);
   // const dataset = {
   //   '2023-05-14': {
@@ -47,6 +55,37 @@ const Dashboard = () => {
   //   }
   // };
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const handleConnect = (code) => {
+      updateLoading(true);
+      api
+        .get(`${API}/waka/authorize?code=${code}`)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.headers);
+            const data = res.data;
+            console.log(data);
+            const futureDate = new Date();
+            futureDate.setDate(futureDate.getDate() + 200);
+            Cookies.set('wakatime', 'true', { expires: futureDate, path: '/' });
+            setWakaconnected(true);
+            // localDataMgr.set('access_token', data.access_token);
+            updateLoading(false);
+          }
+        })
+        .catch((err) => {
+          toast.error('Something went wrong');
+          toast.error(err.message);
+          updateLoading(false);
+          // navigate('/');
+        });
+    };
+    if (code) {
+      handleConnect(code);
+    }
+  }, []);
   if (isInitialLoading) return <TempLoader />;
 
   return (
