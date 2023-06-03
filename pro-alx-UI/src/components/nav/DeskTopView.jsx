@@ -3,7 +3,8 @@ import LoginWithGithub from '../GithubLogin';
 import Theme from '../Theme';
 
 const DeskTopView = () => {
-  const style = 'border border-main w-15 p-1';
+  const style =
+		'border border-main w-15 p-1 hover:bg-main transition-all duration-200 ';
   return (
     <div className='hidden md:flex items-center justify-center'>
       <NavLinks />
