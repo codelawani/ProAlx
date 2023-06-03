@@ -9,7 +9,7 @@ import requests
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
 import json
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models import storage
 from datetime import datetime
 from secrets import token_hex
@@ -65,7 +65,7 @@ def authorize():
         user = response.json()
         # expiration_string = user.get('expires_at')
         # expiration_datetime = datetime.strptime(
-            # expiration_string, '%Y-%m-%dT%H:%M:%SZ')
+        # expiration_string, '%Y-%m-%dT%H:%M:%SZ')
         waka_data = {
             'wk_access_token': user.get('access_token'),
             'wk_refresh_token': user.get('refresh_token'),
@@ -75,15 +75,18 @@ def authorize():
         }
         user_id = get_jwt_identity()
         user = update_user(user_id, waka_data)
-        # with open('user.json', 'w') as f:
-        #     json.dump(user, f, indent=2)
         print(user)
-        h = {
-            'Authorization': f'Bearer {user.get("access_token")}'
+        public_user_data = {
+            'name': user.get('name'),
+            'photo_url': user.get('photo_url'),
+            'github_login': user.get('github_login'),
+            'waka': user.get('waka_connected')
         }
-        # re = requests.get(f"{waka}users/current/all_time_since_today", headers=h)
-        # re = re.json()
-        res = jsonify(user)
+        access_token = create_access_token(
+            identity=user_id,
+            additional_claims={'user_data': public_user_data}
+        )
+        res = jsonify({'access_token': access_token})
     else:
         # Request failed
         print('POST request failed')

@@ -7,15 +7,22 @@ import MobileBar from './MobileBar';
 import { useUser } from '../../hooks/customContexts';
 import Login from '../GithubLogin';
 import Theme from '../Theme';
-
+const API = 'http://127.0.0.1:5000/api/v1';
 const Bar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const { user } = useUser();
+
   const style =
 		'border border-red-950 p-2 w-fit hover:bg-red-950 hover:text-white hover:border-white text-gray-400 dark:border-gray-400';
-
+  const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
   const handleClick = () => {
     setShowSidebar(prev => !prev);
+  };
+  const handleConnect = () => {
+    const scope = 'email read_stats read_logged_time';
+    const redirectUrl = 'http://localhost:5173/dashboard';
+    const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;
+    window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
   };
   return (
     <header className=''>
@@ -39,7 +46,10 @@ const Bar = () => {
 
           <div className='flex flex-col gap-2 items-center mb-2 w-fit'>
             <Theme />
-            <Button value='connect wakatime' style={style} />
+            <Button
+              value='connect wakatime' style={style}
+              handleClick={handleConnect}
+            />
             <img
               src={user.photo_url}
               alt='profile photo'
@@ -54,5 +64,4 @@ const Bar = () => {
     </header>
   );
 };
-
 export default Bar;
