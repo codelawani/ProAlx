@@ -36,18 +36,14 @@ def get_users_daily_commits():
 #     return user.get_github_data
 
 
-@app_views.route('/users/<id>', strict_slashes=False)
+@app_views.route('/user/<id>/details', strict_slashes=False)
 def get_user(id):
-    """ Retrieves an user """
-    user = storage.get(User, id)
-    user_dict = user.to_dict()
-    user_dict.pop('gh_access_token', None)
-    user_dict.pop('github_session', None)
-    user_dict.pop('wk_access_token', None)
+    """ Retrieves a user's details"""
+    user = storage.get_user_public_data(id)
+    print(user)
     if not user:
         abort(404)
-
-    return jsonify(user_dict)
+    return jsonify(user.to_dict())
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
@@ -151,7 +147,7 @@ def get_users_who_needs_partners():
     Returns:
         list of users(empty list if no users need partners)
     """
-    users = storage.get_users_who_need_partners()
+    users = storage.get_users_who_needs_partners()
     return jsonify(users)
 
 

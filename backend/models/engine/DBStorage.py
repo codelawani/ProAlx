@@ -87,6 +87,22 @@ class DBStorage:
             model = classes[model]
         return self.session.get(model, id)
 
+    def get_user_public_data(self, id):
+        try:
+            secrets = (
+                'gh_access_token',
+                'wk_access_token',
+                'wk_refresh_token',
+                'github_session',
+                'waka_token_expires'
+            )
+            query = self.session.query(User).filter(User.id == id)
+            for secret in secrets:
+                query = query.options(defer(secret))
+            return query.one()
+        except NoResultFound:
+            return None
+
     def count(self, model):
         """Return the count of objects in the specified model"""
         return len(self.all(model))
@@ -114,14 +130,14 @@ class DBStorage:
     def filter_necessary_data(method):
         def wrapper(self, *args, **kwargs):
             query = method(self, *args, **kwargs)
-            # attributes = ['gh_access_token',
-            #               'wk_access_token', 'wk_refresh_token',]
-            # for attribute in attributes:
-            # query = query.options(defer(attribute))
-            entities = (User.id, User.name, User.cohort_number,
-                        User.photo_url, User.requested_partners,
-                        User.waka_week_total_seconds, User.waka_week_daily_average)
-            query = query.options(load_only(*entities))
+            attributes = ['gh_access_token',
+                          'wk_access_token', 'wk_refresh_token',]
+            for attribute in attributes:
+                query = query.options(defer(attribute))
+            # entities = (User.id, User.name, User.cohort_number,
+            #             User.photo_url, User.requested_partners,
+            #             User.waka_week_total_seconds, User.waka_week_daily_average)
+            # query = query.options(load_only(*entities))
             users = query.all()
             users_dict = [user.to_dict() for user in users if user is not None]
             return users_dict
