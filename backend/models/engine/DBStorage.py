@@ -117,7 +117,6 @@ class DBStorage:
         except NoResultFound:
             return None
         except Exception as e:
-            # Handle any other exceptions that might occur during the database query
             print(f"An error occurred while checking GitHub UID: {e}")
             return None
 
@@ -125,19 +124,19 @@ class DBStorage:
         """clear github session"""
         user = self.get(User, id)
         user.github_session = False
-        user.save()
+        self.save()
 
     def filter_necessary_data(method):
         def wrapper(self, *args, **kwargs):
             query = method(self, *args, **kwargs)
-            attributes = ['gh_access_token',
-                          'wk_access_token', 'wk_refresh_token',]
-            for attribute in attributes:
-                query = query.options(defer(attribute))
-            # entities = (User.id, User.name, User.cohort_number,
-            #             User.photo_url, User.requested_partners,
-            #             User.waka_week_total_seconds, User.waka_week_daily_average)
-            # query = query.options(load_only(*entities))
+            # attributes = ['gh_access_token',
+            #               'wk_access_token', 'wk_refresh_token',]
+            # for attribute in attributes:
+            #     query = query.options(defer(attribute))
+            entities = (User.id, User.name, User.cohort_number,
+                        User.photo_url, User.requested_partners,
+                        User.waka_week_total_seconds, User.waka_week_daily_average)
+            query = query.options(load_only(*entities))
             users = query.all()
             users_dict = [user.to_dict() for user in users if user is not None]
             return users_dict

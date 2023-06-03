@@ -7,7 +7,6 @@ from api.v1.views import app_views
 import requests
 from models import storage
 load_dotenv()
-
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'AirBnB_clone_v4',
              'alx-higher_level_programming', 'alx-low_level_programming',
@@ -17,17 +16,15 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
 api = 'http://localhost:5000/api/v1'
 
 
-@app_views.route('/user/daily_commits', strict_slashes=False)
-@jwt_required()
-def get_daily_commits(n=7):
+@app_views.route('/user/<id>/git_stats', strict_slashes=False)
+def get_daily_commits(id, n=7):
     """
     Calculate the daily commit count for each date based on the commit data.
 
     Returns:
         dict: A dictionary containing the commit counts per day and repository.
     """
-    user_id = get_jwt_identity()
-    user = storage.get('User', user_id)
+    user = storage.get('User', id)
     if user:
         token = user.gh_access_token
         username = user.github_login

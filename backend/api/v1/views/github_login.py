@@ -2,8 +2,6 @@
 """
 This module contains a basic view for the github login route
 """
-import json
-import secrets
 from os import getenv
 from urllib.parse import parse_qs
 from models import storage
@@ -24,7 +22,7 @@ USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
 api = 'http://localhost:5000/api/v1'
 
-
+# just gonna leave this here 🙃
 @app_views.route('github/status', strict_slashes=False)
 @jwt_required()
 def check_login_status():
@@ -108,25 +106,14 @@ def login():
         res = make_response({'access_token': access_token}, 200)
         return res
     except requests.exceptions.RequestException as e:
-        # Handle request exceptions
         print('Request Exception:', e)
         return jsonify({'msg': 'Internal server error'}), 500
     except KeyError as e:
-        # Handle missing keys in response
         print('KeyError:', e)
         return jsonify({'msg': 'External server error'}), 500
     except Exception as e:
         print('Exception:', e)
         return jsonify({'msg': 'Unexpected server error'}), 500
-
-
-def check_user_exists(github_uid):
-    """Query the database to check if the user exists"""
-    if storage.github_uid_exists(github_uid):
-        return True
-    else:
-        return False
-
 
 @app_views.route('/github/logout', strict_slashes=False)
 @jwt_required()
@@ -134,14 +121,6 @@ def logout():
     """Logout user"""
     user = get_jwt_identity()
     storage.clear_github_session(user)
-    # authorization_header = request.headers.get('Authorization')
-    # print(authorization_header)
-    # token = authorization_header.split(' ')[1]
-    # session = decode_jwt_token(token)
-    # user_data = reload_user()
-    # if session == user_data.get('github_session'):
-    #     user_data['github_session'] = None
-    #     save_user(user_data)
     return make_response({'msg': 'Logout Successful'})
 
 

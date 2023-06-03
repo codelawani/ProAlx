@@ -102,7 +102,7 @@ def create_user():
     return jsonify(instance_dict), 201
 
 
-@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/user/<user_id>', methods=['PUT'], strict_slashes=False)
 def put_user(user_id):
     """
     Updates a user
@@ -123,7 +123,7 @@ def put_user(user_id):
                 print(value)
                 setattr(user, key, value)
 
-        user.save()
+        storage.save()
 
     except ValueError as e:
         abort(400, description="Invalid data format: " + str(e))

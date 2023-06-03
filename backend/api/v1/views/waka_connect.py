@@ -24,11 +24,6 @@ app = Flask(__name__)
 api = 'http://localhost:5000/api/v1'
 
 
-@app_views.route('/waka/status', strict_slashes=False)
-def index():
-    return jsonify({'msg': 'success'})
-
-
 def update_user(id, data):
     """Updates user in database"""
     res = requests.put(f'{api}/users/{id}', json=data)
@@ -94,24 +89,3 @@ def authorize():
         # abort(404)
         res = make_response(jsonify({'msg': "failed"}), 404)
     return res
-
-# not in use
-
-
-@app.route('/waka/login')
-def login():
-    waka_auth_url = 'https://wakatime.com/oauth/authorize'
-    params = {
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
-        'response_type': 'code',
-        'scope': 'read_stats, read_logged_time',
-        'redirect_uri': 'http://localhost:5000/waka/authorize'
-    }
-    encoded_params = urlencode(params)
-    redirect_url = f"{waka_auth_url}?{encoded_params}"
-    return redirect(redirect_url)
-
-
-if __name__ == '__main__':
-    app.run(debug=1)
