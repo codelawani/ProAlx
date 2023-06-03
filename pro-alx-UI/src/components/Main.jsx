@@ -8,8 +8,8 @@ const Main = () => {
 	});
 	return (
 		<main className='dark:bg-black dark:text-gray-300 relative'>
-			<section className='pt-7 lg:px-6 px-4 md:h-screen ")]'>
-				<h3 className='font-semibold py-4 text-center text-2xl md:pb-6'>
+			<section className='pt-7 lg:px-6 px-4 md:h-screen bg-[#f2fdff]'>
+				<h3 className='font-semibold py-4 text-center text-2xl md:pb-6 '>
 					Testimonials
 				</h3>
 				<p className='pb-4'>

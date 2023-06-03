@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const Box = ({ name, text, img }) => {
 	return (
-		<article className='p-4 rounded-lg before:content-[""] relative before:absolute  before:w-2 before:rounded-s-lg before:h-full before:bg-red-950 before:left-0 before:top-0 transition-all duration-200 hover:skew-x-2 hover:border-y hover:rotate-1 hover:translate-x-2 dark:border-y dark:border-y-pink-800 bg-white'>
+		<article className='after:content-[""] relative transition-all duration-200  dark:border-y dark:border-y-pink-800'>
 			<p className='pb-4'>{text}</p>
 			<div className='flex relative gap-3'>
 				<img
