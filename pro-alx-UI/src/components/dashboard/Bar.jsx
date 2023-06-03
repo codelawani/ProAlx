@@ -50,7 +50,9 @@ const Bar = () => {
         </div>
       </div>
 
-      {showSidebar && <MobileBar handleClick={handleClick} />}
+      {showSidebar && (
+        <MobileBar handleClick={handleClick} showSidebar={showSidebar} />
+      )}
     </header>
   );
 };
