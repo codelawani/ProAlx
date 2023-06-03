@@ -7,17 +7,16 @@ const Main = () => {
     return <Box key={review.id} {...review} />;
   });
   return (
-    <main>
+    <main className='dark:bg-black'>
       <section className='pt-7 lg:px-6 px-4'>
-        <h3 className='font-semibold py-4 text-center'>Testimonials</h3>
+        <h3 className='font-semibold py-4 text-center text-2xl md:py-2'>
+          Testimonials
+        </h3>
         <p className='pb-4'>
-          {/* We value your feedback and are committed to delivering the highest
-          level of satisfaction. */}
-          Hear directly from other students who have used
-          our service. Their success stories speak volumes about the quality of
-          our product.
+          Hear directly from other students who have used our web app. Their
+          success stories speak volumes about the quality of our product.
         </p>
-        <div className='grid px-6 lg:grid-cols-3 gap-4'>{review}</div>
+        <div className='grid px-6 lg:grid-cols-3 gap-4 pb-3'>{review}</div>
       </section>
     </main>
   );

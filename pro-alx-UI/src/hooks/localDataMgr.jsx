@@ -36,4 +36,20 @@ const localDataMgr = {
   }
 };
 
+function decodeJWTToken (token) {
+  const tokenParts = token.split('.');
+  const encodedPayload = tokenParts[1];
+  const decodedPayload = atob(encodedPayload);
+  const payload = JSON.parse(decodedPayload);
+  return payload;
+}
+export function getUser () {
+  const token = localDataMgr.get('access_token');
+  if (token) {
+    const payload = decodeJWTToken(token);
+    return payload.user_data;
+  }
+  return null;
+}
+
 export default localDataMgr;

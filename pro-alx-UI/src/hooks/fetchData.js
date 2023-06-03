@@ -2,11 +2,11 @@ import { toast } from 'react-toastify';
 import api from './api';
 import { useQuery } from '@tanstack/react-query';
 
-const apiRequest = async (endpoint) => {
+const apiRequest = async endpoint => {
   return api.get(endpoint);
 };
 
-const fetchUserData = (endpoint) => {
+const fetchUserData = endpoint => {
   return {
     queryFn: () => {
       return apiRequest(endpoint);
@@ -14,20 +14,18 @@ const fetchUserData = (endpoint) => {
   };
 };
 
-export const useUserData = ({ queryKey, endpoint }) => {
+export const useUserData = ({ queryKey, endpoint, ...others }) => {
   const { queryFn } = fetchUserData(endpoint);
   const results = useQuery({
     queryKey: [queryKey],
-    queryFn: queryFn,
+    queryFn,
+    others,
     onError: err => {
-      if (err) {
-        console.log(err);
-      } else {
-        toast.error('something went wrong');
-      }
+      toast.error('An error occurred');
+      return err;
     },
     onSettled: () => {
-      console.log(results.data?.data);
+
     }
   });
   return {

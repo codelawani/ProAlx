@@ -3,12 +3,11 @@ import Button from '../../components/Button';
 
 const ContactForm = () => {
   const totalCohorts = 17;
-  const cohorts = [];
+  const cohorts = Array.from(
+    { length: totalCohorts },
+    (_, idx) => `cohort ${idx + 1}`
+  );
   const style = 'border border-main w-1/2 self-center ';
-
-  for (let i = 0; i < totalCohorts; i++) {
-    cohorts.push(`cohort ${i + 1}`);
-  }
 
   const options = cohorts.map(cohort => (
     <option key={cohort} value={cohort}>

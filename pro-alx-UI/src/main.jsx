@@ -11,6 +11,8 @@ import Authenticated from './components/layout/Authenticated.jsx';
 import { UserProvider } from './hooks/UserContext.jsx';
 import Home from './pages/home/Home.jsx';
 import BoardList from './pages/leaderboards/BoardList.jsx';
+import ViewUser from './components/details/ViewUser.jsx';
+import { ThemeProvider } from './hooks/ThemeContext.jsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,8 +21,8 @@ const queryClient = new QueryClient({
       refetchOnmount: false,
       refetchOnReconnect: false,
       retry: false,
-      staleTime: Infinity,
-      cacheTime: Infinity
+      staleTime: 60 * 60 * 1000,
+      cacheTime: 60 * 60 * 1000
     }
   }
 });
@@ -54,8 +56,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'leaderboard',
-        element: <BoardList />,
-        index: true
+        element: <BoardList />
+      },
+      {
+        path: 'user/:id',
+        element: <ViewUser />
       }
     ]
   }
@@ -64,7 +69,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
     <UserProvider>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </UserProvider>
   </QueryClientProvider>
 );

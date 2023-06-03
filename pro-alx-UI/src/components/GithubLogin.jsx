@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import PropTypes from 'prop-types';
-import { useUser } from '../hooks/UseUserContext';
+import { useUser } from '../hooks/customContexts';
 import localDataMgr from '../hooks/localDataMgr';
 // env file in path ProAlx/pro-alx-UI
 const { VITE_GITHUB_ID: CLIENT_ID } = import.meta.env;
@@ -15,10 +15,11 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, updateLoading } = useUser();
   const handleAuth = () => {
-    const authUrl = GITHUB_AUTH_URL +
-      `?client_id=${CLIENT_ID}` +
-      '&response_type=code' +
-      `&scope=${SCOPE}`;
+    const authUrl =
+			GITHUB_AUTH_URL +
+			`?client_id=${CLIENT_ID}` +
+			'&response_type=code' +
+			`&scope=${SCOPE}`;
     window.location.assign(authUrl);
   };
   const clearUser = () => {
@@ -34,9 +35,10 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
       clearUser();
       return;
     }
-    axios.get(`${apiGithub}logout`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    axios
+      .get(`${apiGithub}logout`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .then(res => {
         updateLoading(true);
         if (res.status === 200) {
@@ -53,7 +55,6 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
       value={isLoggedIn ? 'Logout' : 'Sign in with Github'}
       style={style}
     />
-
   );
 };
 

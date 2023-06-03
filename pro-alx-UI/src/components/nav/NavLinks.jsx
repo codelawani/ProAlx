@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const NavLinks = ({ color = 'white', handleClick = () => {} }) => {
   return (
     <ul
-      className={`flex flex-col md:flex-row text-${color} justify-center content-center`}
+      className={`flex flex-col md:flex-row text-${color} justify-center content-center dark:text-gray-300 gap-2 md:gap-0`}
     >
       <li
         className='pr-2 hover:border-b hover:border-main rounded hover:px-2'

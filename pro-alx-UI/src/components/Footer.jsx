@@ -4,7 +4,7 @@ const Footer = () => {
   const date = new Date();
   const currentYear = date.getFullYear();
   return (
-    <footer className='pt-3 mt-3 bg-gradient-to-bl from-dark to-red-950 py-4 text-body px-3'>
+    <footer className='pt-3 bg-gradient-to-bl from-dark to-red-950 py-4 text-body px-3'>
       {/* <div className="px-3">
 				<h3>ProAlx</h3>
 				<p>Find project partner(s) easily</p>
