@@ -7,8 +7,8 @@ const Dashboard = () => {
     queryKey: 'userdata',
     endpoint: '/user/daily_commits'
   });
-  const { setWakaconnected } = useUser();
-  const { updateLoading } = useUser();
+  // const { setWakaconnected } = useUser();
+  // const { updateLoading } = useUser();
   const API = 'http://127.0.0.1:5000/api/v1';
 
   console.log(value);

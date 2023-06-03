@@ -11,7 +11,7 @@ import jwt
 import requests
 from api.v1.views import app_views
 from dotenv import find_dotenv, load_dotenv
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response, request, abort
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_required)
 from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidTokenError
@@ -42,9 +42,13 @@ def get_github_user_data(token):
     """Retrieve GitHub user data using the provided access token"""
     headers = {'Authorization': f"token {token}"}
     res = requests.get(USER_ENDPOINT, headers=headers)
-    print('failed to get github data')
-    res.raise_for_status()  # Raise an exception for non-2xx status codes
-    return res.json()
+    if res.ok:
+        print('successfull got user github data')
+        return res.json()
+    else:
+        res.raise_for_status()  # Raise an exception for non-2xx status codes
+        # abort(404)
+        print('user github data not found')
 
 
 def create_user(user_data):
@@ -53,10 +57,14 @@ def create_user(user_data):
     print(user_id)
     if user_id:
         user_data.update({'id': user_id})
+        print(user_data)
         return user_data
     res = requests.post(f'{api}/users', json=user_data)
-    res.raise_for_status()
-    return res.json()
+    if res.ok:
+        return res.json()
+    else:
+        res.raise_for_status()
+        print('create user failed')
 
 
 @app_views.route('/github/login', strict_slashes=False)
@@ -75,6 +83,7 @@ def login():
         parsed_res = parse_qs(res.content.decode('utf-8'))
         token = parsed_res['access_token'][0]
         user = get_github_user_data(token)
+        # print(user)
         user_data = {
             'github_login': user.get('login'),
             'github_uid': user.get('id'),

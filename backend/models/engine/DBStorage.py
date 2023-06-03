@@ -1,3 +1,4 @@
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
 from models.user import User
 from models.cohort import Cohort
@@ -91,10 +92,18 @@ class DBStorage:
         return len(self.all(model))
 
     def github_uid_exists(self, g_uid):
-        """Check if a github uid exists in the database"""
-        query = self.session.query(User).filter(User.github_uid == g_uid)
-        user = query.first()
-        return user.id
+        """Check if a GitHub UID exists in the database"""
+        try:
+            query = self.session.query(User).filter(User.github_uid == g_uid)
+            # Use .one() instead of .first() to raise an exception if no result is found
+            user = query.one()
+            return user.id
+        except NoResultFound:
+            return None
+        except Exception as e:
+            # Handle any other exceptions that might occur during the database query
+            print(f"An error occurred while checking GitHub UID: {e}")
+            return None
 
     def clear_github_session(self, id):
         """clear github session"""

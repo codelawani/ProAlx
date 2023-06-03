@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import jwt
+from flask import jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from dotenv import load_dotenv
 from api.v1.views import app_views
@@ -27,9 +28,12 @@ def get_daily_commits(n=7):
     """
     user_id = get_jwt_identity()
     user = storage.get('User', user_id)
-    token = user.gh_access_token
-    username = user.github_login
-    return get_commits(token, username, n)
+    if user:
+        token = user.gh_access_token
+        username = user.github_login
+        return get_commits(token, username, n)
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 def verify_token(token, secret_key):
