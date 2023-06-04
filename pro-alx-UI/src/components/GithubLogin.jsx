@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import PropTypes from 'prop-types';
@@ -8,24 +7,23 @@ import localDataMgr from '../hooks/localDataMgr';
 const { VITE_GITHUB_ID: CLIENT_ID } = import.meta.env;
 // REDIRECT_URI used 'http://localhost:5173/';
 const GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize';
-const apiGithub = 'http://localhost:5000/api/v1/github/';
 const SCOPE = 'read:user';
 
 const LoginWithGithub = ({ style = 'text-white' }) => {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, updateLoading } = useUser();
+  const { isLoggedIn, setIsLoggedIn, updateLoading, setUser } = useUser();
   const handleAuth = () => {
-    const authUrl =
-			GITHUB_AUTH_URL +
-			`?client_id=${CLIENT_ID}` +
-			'&response_type=code' +
-			`&scope=${SCOPE}`;
+    const authUrl = GITHUB_AUTH_URL +
+      `?client_id=${CLIENT_ID}` +
+      '&response_type=code' +
+      `&scope=${SCOPE}`;
     window.location.assign(authUrl);
   };
   const clearUser = () => {
     localDataMgr.clear();
     setIsLoggedIn(false);
     updateLoading(false);
+    setUser('');
     navigate('/');
   };
   const handleLogout = () => {

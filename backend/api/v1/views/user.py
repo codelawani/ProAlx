@@ -1,9 +1,12 @@
 from api.v1.views import app_views
 from flask import jsonify, request, abort
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user import User
 from models import storage
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
+import requests
+API = 'http://localhost:5000/api/v1'
 
 
 @app_views.route('/users', strict_slashes=False)
@@ -19,11 +22,17 @@ def get_users():
     return jsonify(list_users)
 
 
-@app_views.route('/users/daily_commits', strict_slashes=False)
+@app_views.route('/user/daily_commits', strict_slashes=False)
+@jwt_required()
 def get_users_daily_commits():
-    all_users = storage.all(User).values()
-    all_users_commits = [user.get_github_data for user in all_users]
-    return all_users_commits
+    """This route <was created for convenience🥲
+    It fetches github stats for a user based on their token"""
+    user_id = get_jwt_identity()
+    res = requests.get(f'{API}/users/{user_id}/git_stats')
+    if res.ok:
+        return res.json()
+    else:
+        return jsonify({'err': 'unable to fetch user github stats'}), 404
 
 
 # @jwt_required

@@ -1,6 +1,6 @@
 import { useUser, useTheme } from '../../hooks/customContexts';
 import { Navigate, Outlet } from 'react-router-dom';
-import toast, { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../dashboard/Bar';
 import { useEffect } from 'react';
