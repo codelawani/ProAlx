@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import jwt
 from flask import jsonify
-from flask_jwt_extended import get_jwt_identity, jwt_required
 from dotenv import load_dotenv
 from api.v1.views import app_views
 import requests
@@ -16,7 +15,7 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
 api = 'http://localhost:5000/api/v1'
 
 
-@app_views.route('/user/<id>/git_stats', strict_slashes=False)
+@app_views.route('/users/<id>/git_stats', strict_slashes=False)
 def get_daily_commits(id, n=7):
     """
     Calculate the daily commit count for each date based on the commit data.

@@ -7,7 +7,6 @@ import MobileBar from './MobileBar';
 import { useUser } from '../../hooks/customContexts';
 import Login from '../GithubLogin';
 import Theme from '../Theme';
-const API = 'http://127.0.0.1:5000/api/v1';
 const Bar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const { user } = useUser();

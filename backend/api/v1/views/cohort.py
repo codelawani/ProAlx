@@ -10,7 +10,7 @@ def get_cohorts():
     return jsonify([cohort.to_dict() for cohort in cohorts])
 
 
-@app_views.route('/cohort/<id>', strict_slashes=False)
+@app_views.route('/cohorts/<id>', strict_slashes=False)
 def get_cohort(id):
     cohort = storage.get(Cohort, id)
     if not cohort:
@@ -38,7 +38,7 @@ def post_cohort():
     return jsonify(instance.to_dict()), 201
 
 
-@app_views.route('/cohort/<id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/cohorts/<id>', methods=['PUT'], strict_slashes=False)
 def put_cohort(id):
     if not request.get_json():
         abort(400, description="Not a JSON")

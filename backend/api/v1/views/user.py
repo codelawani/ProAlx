@@ -36,7 +36,7 @@ def get_users_daily_commits():
 #     return user.get_github_data
 
 
-@app_views.route('/user/<id>/details', strict_slashes=False)
+@app_views.route('/users/<id>/details', strict_slashes=False)
 def get_user(id):
     """ Retrieves a user's details"""
     user = storage.get_user_public_data(id)
@@ -97,12 +97,12 @@ def create_user():
         return jsonify({'err': 'incomplete data'}), 401
     instance_dict = instance.to_dict()
     instance_dict.pop('gh_access_token', None)
-    instance_dict.pop('github_session', None)
+    instance_dict.pop('wk_access_token', None)
     instance.save()
     return jsonify(instance_dict), 201
 
 
-@app_views.route('/user/<user_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 def put_user(user_id):
     """
     Updates a user

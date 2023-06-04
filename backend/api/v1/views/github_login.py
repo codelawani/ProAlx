@@ -22,19 +22,6 @@ USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
 api = 'http://localhost:5000/api/v1'
 
-# just gonna leave this here 🙃
-@app_views.route('github/status', strict_slashes=False)
-@jwt_required()
-def check_login_status():
-    authorization_header = request.headers.get('Authorization')
-    token = authorization_header.split(' ')[1]
-    current_user_id = decode_jwt_token(token)
-    print(current_user_id)
-    if current_user_id:
-        return jsonify({'user_id': current_user_id}), 200
-    else:
-        return jsonify({'msg': 'failed'}), 401
-
 
 def get_github_user_data(token):
     """Retrieve GitHub user data using the provided access token"""
@@ -51,12 +38,12 @@ def get_github_user_data(token):
 
 def create_user(user_data):
     """Create a new user if not exists using the provided user data"""
-    user_id = storage.github_uid_exists(user_data.get('github_uid'))
-    print(user_id)
-    if user_id:
-        user_data.update({'id': user_id})
+    user = storage.github_uid_exists(user_data.get('github_uid'))
+    print(user)
+    if user:
+        user_data.update({'id': user.id, })
         print(user_data)
-        return user_data
+        return user.to_dict()
     res = requests.post(f'{api}/users', json=user_data)
     if res.ok:
         return res.json()
@@ -98,6 +85,7 @@ def login():
             'name': created_user.get('name'),
             'photo_url': created_user.get('photo_url'),
             'github_login': created_user.get('github_login'),
+            'waka': created_user.get('waka_connected')
         }
         access_token = create_access_token(
             identity=created_user['id'],
@@ -114,6 +102,7 @@ def login():
     except Exception as e:
         print('Exception:', e)
         return jsonify({'msg': 'Unexpected server error'}), 500
+
 
 @app_views.route('/github/logout', strict_slashes=False)
 @jwt_required()

@@ -113,7 +113,7 @@ class DBStorage:
             query = self.session.query(User).filter(User.github_uid == g_uid)
             # Use .one() instead of .first() to raise an exception if no result is found
             user = query.one()
-            return user.id
+            return user
         except NoResultFound:
             return None
         except Exception as e:

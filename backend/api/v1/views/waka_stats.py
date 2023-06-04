@@ -80,7 +80,7 @@ def get_waka_data(n, token, user):
             'waka_week_total_seconds': int(data['cumulative_total']['seconds']),
             'waka_week_daily_average': int(data['daily_average']['seconds'])
         }
-        res = requests.put(f'{API}/user/{user.id}', json=user_data)
+        res = requests.put(f'{API}/users/{user.id}', json=user_data)
         if res.ok:
             print('User waka stats updated successfully')
         else:
