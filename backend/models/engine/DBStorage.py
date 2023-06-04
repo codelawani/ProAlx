@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_ENV
 from sqlalchemy.orm import defer, load_only
+from sqlalchemy.exc import SQLAlchemyError, DataError, DatabaseError, IntegrityError
 from mysql.connector.errors import DataError, DatabaseError
 classes = {"User": User, "Cohort": Cohort}
 
@@ -23,9 +24,14 @@ class DBStorage:
     def __init__(self):
         """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI)
-
         if DB_ENV == 'test':
             Base.metadata.drop_all(self.engine)
+
+    def create_all(self):
+        Base.metadata.create_all(self.engine)
+
+    def drop_all(self):
+        Base.metadata.drop_all(self.engine)
 
     def all(self, cls=None):
         """Returns all objects in the database"""
@@ -44,9 +50,17 @@ class DBStorage:
         try:
             self.session.add(obj)
             self.session.commit()
-        except Exception as e:
-            print(f"Error occurred while adding object: {e}")
+            return True
+        except IntegrityError as e:
             self.session.rollback()
+            print(
+                f"Integrity error occurred while adding object: {obj.__class__.__name__}")
+            return False
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            print(
+                f"Error occurred while adding object: {obj.__class__.__name__}")
+            return False
 
     def delete(self, obj=None):
         """Delete an object from the database"""
@@ -87,6 +101,10 @@ class DBStorage:
             model = classes[model]
         return self.session.get(model, id)
 
+    def count(self, model):
+        """Return the count of objects in the specified model"""
+        return len(self.all(model))
+
     def get_user_public_data(self, id):
         try:
             secrets = (
@@ -102,10 +120,6 @@ class DBStorage:
             return query.one()
         except NoResultFound:
             return None
-
-    def count(self, model):
-        """Return the count of objects in the specified model"""
-        return len(self.all(model))
 
     def github_uid_exists(self, g_uid):
         """Check if a GitHub UID exists in the database"""
@@ -129,10 +143,6 @@ class DBStorage:
     def filter_necessary_data(method):
         def wrapper(self, *args, **kwargs):
             query = method(self, *args, **kwargs)
-            # attributes = ['gh_access_token',
-            #               'wk_access_token', 'wk_refresh_token',]
-            # for attribute in attributes:
-            #     query = query.options(defer(attribute))
             entities = (User.id, User.name, User.cohort_number,
                         User.photo_url, User.requested_partners,
                         User.waka_week_total_seconds, User.waka_week_daily_average)

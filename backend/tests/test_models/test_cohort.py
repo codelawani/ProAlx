@@ -1,12 +1,25 @@
 import unittest
 from models.user import User
 from models.cohort import Cohort
-from models import storage
+from models import DBStorage
 
 cohort_name = "Cohort 9"
 
 
 class TestCohort(unittest.TestCase):
+    def setUp(self):
+        """setUp method that instantiates a new DBStorage object and reloads the database."""
+        self.db = DBStorage()
+        self.db.reload()
+        # Delete all objects from the tables
+        self.db.session.query(Cohort).delete()
+        self.db.session.commit()
+
+    def tearDown(self):
+        """tearDown method that deletes all objects from the tables and rolls back the session."""
+        self.db.session.rollback()
+        self.db.session.close()
+
     def test_create_cohort_with_name(self):
         """Tests creating a new Cohort instance with a name and adding it to the database"""
 
@@ -18,7 +31,7 @@ class TestCohort(unittest.TestCase):
         # Save cohort to database
         cohort.save()
         # Retrieve cohort from database and check if it matches the original cohort
-        retrieved_cohort = storage.get(Cohort, cohort.id)
+        retrieved_cohort = self.db.get(Cohort, cohort.id)
         self.assertEqual(retrieved_cohort.name, cohort_name)
 
     def test_update_cohort_name(self):
@@ -31,7 +44,7 @@ class TestCohort(unittest.TestCase):
         cohort.name = new_cohort_name
         cohort.save()
         # Retrieve cohort from database and check if the name has been updated
-        retrieved_cohort = storage.get(Cohort, cohort.id)
+        retrieved_cohort = self.db.get(Cohort, cohort.id)
         self.assertEqual(retrieved_cohort.name, new_cohort_name)
 
     def test_create_cohort_without_name(self):

@@ -32,7 +32,6 @@ def get_github_user_data(token):
         return res.json()
     else:
         res.raise_for_status()  # Raise an exception for non-2xx status codes
-        # abort(404)
         print('user github data not found')
 
 
@@ -102,15 +101,6 @@ def login():
     except Exception as e:
         print('Exception:', e)
         return jsonify({'msg': 'Unexpected server error'}), 500
-
-
-# @app_views.route('/github/logout', strict_slashes=False)
-# @jwt_required()
-# def logout():
-#     """Logout user"""
-#     user = get_jwt_identity()
-#     storage.clear_github_session(user)
-#     return make_response({'msg': 'Logout Successful'})
 
 
 def decode_jwt_token(token):

@@ -5,6 +5,19 @@ from models import storage
 
 
 class TestUser(unittest.TestCase):
+    def setUp(self):
+        """setUp method that instantiates a new DBStorage object and reloads the database."""
+        self.db = storage
+        # Delete all objects from the tables
+        self.db.session.query(User).delete()
+        self.db.session.query(Cohort).delete()
+        self.db.session.commit()
+
+    def tearDown(self):
+        """tearDown method that deletes all objects from the tables and rolls back the session."""
+        self.db.session.rollback()
+        self.db.session.close()
+
     def test_create_user(self):
         user = User(name="John Doe",
                     email="johndoe@example.com",

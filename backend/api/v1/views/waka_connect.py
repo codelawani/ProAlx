@@ -58,9 +58,6 @@ def authorize():
         # Request was successful
         print('POST request succeeded')
         user = response.json()
-        # expiration_string = user.get('expires_at')
-        # expiration_datetime = datetime.strptime(
-        # expiration_string, '%Y-%m-%dT%H:%M:%SZ')
         waka_data = {
             'wk_access_token': user.get('access_token'),
             'wk_refresh_token': user.get('refresh_token'),

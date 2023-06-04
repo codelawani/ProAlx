@@ -35,16 +35,6 @@ def get_users_daily_commits():
         return jsonify({'err': 'unable to fetch user github stats'}), 404
 
 
-# @jwt_required
-# @app_views.route('/users/<user_id>/daily_commits', strict_slashes=False)
-# def get_user_daily_commits(user_id):
-#     current_user_id = get_jwt_identity()
-#     if current_user_id != user_id:
-#         abort(401)
-#     user = storage.get(User, user_id)
-#     return user.get_github_data
-
-
 @app_views.route('/users/<id>/details', strict_slashes=False)
 def get_user(id):
     """ Retrieves a user's details"""
@@ -66,8 +56,7 @@ def delete_user(user_id):
     if not user:
         abort(404)
 
-    storage.delete(user)
-    storage.save()
+    user.delete()
 
     return jsonify({}), 200
 
@@ -86,8 +75,8 @@ def create_user():
             'github_session': True
         }
     """
-    if not request.get_json():
-        abort(400, description="Not a JSON")
+    if not request.is_json:
+        return jsonify({'error': 'Invalid JSON format'}), 400
 
     data = request.get_json()
     expected_gh_keys = [
@@ -99,16 +88,18 @@ def create_user():
         'twitter_username',
         'github_session'
     ]
-    # Check if the request contains GitHub login data
-    if all(key in data for key in expected_gh_keys):
-        instance = User(**data)
-    else:
-        return jsonify({'err': 'incomplete data'}), 401
+    if not all(key in data for key in expected_gh_keys):
+        return jsonify({'error': 'Incomplete data'}), 400
+
+    instance = User(**data)
     instance_dict = instance.to_dict()
     instance_dict.pop('gh_access_token', None)
     instance_dict.pop('wk_access_token', None)
-    instance.save()
-    return jsonify(instance_dict), 201
+
+    if storage.new(instance):
+        return jsonify(instance_dict), 201
+    else:
+        return jsonify({'error': 'Failed to create user'}), 500
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
@@ -132,7 +123,7 @@ def put_user(user_id):
                 print(value)
                 setattr(user, key, value)
 
-        storage.save()
+        user.save()
 
     except ValueError as e:
         abort(400, description="Invalid data format: " + str(e))

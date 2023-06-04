@@ -23,8 +23,7 @@ def delete_cohort(id):
     cohort = storage.get(Cohort, id)
     if not cohort:
         abort(404)
-    storage.delete(cohort)
-    storage.save()
+    cohort.delete()
     return jsonify({}), 200
 
 
@@ -34,7 +33,7 @@ def post_cohort():
         abort(400, description="Not a JSON")
     data = request.get_json()
     instance = Cohort(**data)
-    instance.save()
+    storage.new(instance)
     return jsonify(instance.to_dict()), 201
 
 
