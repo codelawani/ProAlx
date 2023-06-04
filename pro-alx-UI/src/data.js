@@ -1,4 +1,4 @@
-import test from "./assets/sample.png"
+import test from './assets/sample.png';
 
 export const users = [
 	{
@@ -76,5 +76,128 @@ export const reviews = [
 		name: 'John Smith',
 		text: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias doloribus soluta inventore laborum. Exercitationem porro, dolores ut modi non, repellat dolore quas at commodi obcaecati harum culpa et maiores provident.',
 		img: test,
+	},
+];
+
+export const leaderboardList = [
+	{
+		rank: 1,
+		name: 'John doe',
+		hours: 4090.09,
+		average: 450.9,
+	},
+	{
+		rank: 2,
+		name: 'Jane doe',
+		hours: 5090.09,
+		average: 350.9,
+	},
+	{
+		rank: 3,
+		name: 'John smith',
+		hours: 2090.094,
+		average: 1450.9,
+	},
+	{
+		rank: 4,
+		name: 'Jane smith',
+		hours: 44090.09,
+		average: 2450.9,
+	},
+	{
+		rank: 5,
+		name: 'John doe',
+		hours: 4090.09,
+		average: 450.9,
+	},
+	{
+		rank: 6,
+		name: 'Jane doe',
+		hours: 5090.09,
+		average: 350.9,
+	},
+	{
+		rank: 7,
+		name: 'John smith',
+		hours: 2090.094,
+		average: 1450.9,
+	},
+	{
+		rank: 8,
+		name: 'Jane smith',
+		hours: 44090.09,
+		average: 2450.9,
+	},
+	{
+		rank: 9,
+		name: 'John doe',
+		hours: 4090.09,
+		average: 450.9,
+	},
+	{
+		rank: 10,
+		name: 'Jane doe',
+		hours: 5090.09,
+		average: 350.9,
+	},
+	{
+		rank: 11,
+		name: 'John smith',
+		hours: 2090.094,
+		average: 1450.9,
+	},
+	{
+		rank: 12,
+		name: 'Jane smith',
+		hours: 44090.09,
+		average: 2450.9,
+	},
+	{
+		rank: 13,
+		name: 'John doe',
+		hours: 4090.09,
+		average: 450.9,
+	},
+	{
+		rank: 14,
+		name: 'Jane doe',
+		hours: 5090.09,
+		average: 350.9,
+	},
+	{
+		rank: 15,
+		name: 'John smith',
+		hours: 2090.094,
+		average: 1450.9,
+	},
+	{
+		rank: 16,
+		name: 'Jane smith',
+		hours: 44090.09,
+		average: 2450.9,
+	},
+	{
+		rank: 17,
+		name: 'John doe',
+		hours: 4090.09,
+		average: 450.9,
+	},
+	{
+		rank: 18,
+		name: 'Jane doe',
+		hours: 5090.09,
+		average: 350.9,
+	},
+	{
+		rank: 19,
+		name: 'John smith',
+		hours: 2090.094,
+		average: 1450.9,
+	},
+	{
+		rank: 20,
+		name: 'Jane smith',
+		hours: 44090.09,
+		average: 2450.9,
 	},
 ];
