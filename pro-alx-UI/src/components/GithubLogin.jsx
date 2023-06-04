@@ -30,24 +30,7 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   };
   const handleLogout = () => {
     updateLoading(true);
-    const token = localDataMgr.get('access_token');
-    if (!token) {
-      clearUser();
-      return;
-    }
-    axios
-      .get(`${apiGithub}logout`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        updateLoading(true);
-        if (res.status === 200) {
-          clearUser();
-        } else {
-          console.log(res.data);
-        }
-      })
-      .catch(err => console.log(err));
+    clearUser();
   };
   return (
     <Button

@@ -104,13 +104,13 @@ def login():
         return jsonify({'msg': 'Unexpected server error'}), 500
 
 
-@app_views.route('/github/logout', strict_slashes=False)
-@jwt_required()
-def logout():
-    """Logout user"""
-    user = get_jwt_identity()
-    storage.clear_github_session(user)
-    return make_response({'msg': 'Logout Successful'})
+# @app_views.route('/github/logout', strict_slashes=False)
+# @jwt_required()
+# def logout():
+#     """Logout user"""
+#     user = get_jwt_identity()
+#     storage.clear_github_session(user)
+#     return make_response({'msg': 'Logout Successful'})
 
 
 def decode_jwt_token(token):
