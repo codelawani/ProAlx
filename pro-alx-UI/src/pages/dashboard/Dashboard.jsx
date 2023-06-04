@@ -1,6 +1,5 @@
 import { useUserData } from '../../hooks/fetchData';
 import TempLoader from '../../components/TempLoader';
-// import { useUser } from '../../hooks/UseUserContext';
 
 const Dashboard = () => {
   const { value, isInitialLoading } = useUserData({
@@ -8,7 +7,6 @@ const Dashboard = () => {
     endpoint: '/user/daily_commits'
   });
   console.log(value);
-  // const { user } = useUser();
   if (isInitialLoading) return <TempLoader />;
   return (
     <div className='w-full'>
