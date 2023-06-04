@@ -18,8 +18,6 @@ wakatime_url = "https://wakatime.com/api/v1/"
 
 CLIENT_ID = getenv("WAKATIME_ID")
 CLIENT_SECRET = getenv("WAKATIME_SECRET")
-print('c', CLIENT_ID)
-print('cs', CLIENT_SECRET)
 app = Flask(__name__)
 api = 'http://localhost:5000/api/v1'
 

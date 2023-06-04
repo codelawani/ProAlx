@@ -13,12 +13,13 @@ class TestCohort(unittest.TestCase):
         self.db.reload()
         # Delete all objects from the tables
         self.db.session.query(Cohort).delete()
+        print(self.db.session.query(Cohort).all())
         self.db.session.commit()
 
     def tearDown(self):
-        """tearDown method that deletes all objects from the tables and rolls back the session."""
-        self.db.session.rollback()
-        self.db.session.close()
+        """tearDown method that closes the database session and drops all tables."""
+        self.db.close()
+        self.db.drop_all()
 
     def test_create_cohort_with_name(self):
         """Tests creating a new Cohort instance with a name and adding it to the database"""
@@ -29,7 +30,7 @@ class TestCohort(unittest.TestCase):
         self.assertIsNotNone(cohort.created_at)
         self.assertIsNotNone(cohort.updated_at)
         # Save cohort to database
-        cohort.save()
+        self.db.new(cohort)
         # Retrieve cohort from database and check if it matches the original cohort
         retrieved_cohort = self.db.get(Cohort, cohort.id)
         self.assertEqual(retrieved_cohort.name, cohort_name)
@@ -39,7 +40,7 @@ class TestCohort(unittest.TestCase):
         new_cohort_name = "Cohort 10"
         cohort = Cohort(name=cohort_name, number=9)
         # Save cohort to database
-        cohort.save()
+        self.db.new(cohort)
         # Update cohort name and save to database
         cohort.name = new_cohort_name
         cohort.save()
@@ -73,11 +74,11 @@ class TestCohort(unittest.TestCase):
                     wk_access_token="def456",
                     wk_refresh_token="ghi789"
                     )
-        user.save()
+        self.db.new(user)
         self.assertIsNotNone(user.id)
         # Create a cohort with a valid ID
         cohort = Cohort(name="Test Cohort", number=9)
-        cohort.save()
+        self.db.new(cohort)
         # Assign the cohort ID to the user's cohort_id attribute
         user.cohort_id = cohort.id
         # Save the user to the database
@@ -86,6 +87,6 @@ class TestCohort(unittest.TestCase):
     def test_delete_cohort(self):
         """Tests deleting a cohort"""
         cohort = Cohort(name=cohort_name, number=9)
-        cohort.save()
+        self.db.new(cohort)
         self.assertIsNotNone(cohort.id)
         cohort.delete()
