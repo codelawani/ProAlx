@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.user import User
 from models.cohort import Cohort
 from flask import jsonify
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
@@ -10,8 +11,9 @@ from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_ENV
 from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError, DataError, DatabaseError, IntegrityError
 from mysql.connector.errors import DataError, DatabaseError
+from DBExceptions import DatabaseException
 classes = {"User": User, "Cohort": Cohort}
-
+logger = logging.getLogger(__name__)
 # Construct the database URI
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
                                                            DB_PASSWORD,
@@ -25,85 +27,132 @@ class DBStorage:
         """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI)
         if DB_ENV == 'test':
-            Base.metadata.drop_all(self.engine)
+            self.drop_all()
 
     def create_all(self):
-        Base.metadata.create_all(self.engine)
+        """Create all database tables"""
+        try:
+            Base.metadata.create_all(self.engine)
+        except SQLAlchemyError as e:
+            error_message = "An error occurred while creating the database tables: " + \
+                str(e.__class__.__name__)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def drop_all(self):
-        Base.metadata.drop_all(self.engine)
+        """Drop all database tables"""
+        try:
+            Base.metadata.drop_all(self.engine)
+        except SQLAlchemyError as e:
+            error_message = "An error occurred while dropping the database tables: " + \
+                str(e.__class__.__name__)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def all(self, cls=None):
         """Returns all objects in the database"""
-        result = {}
-        for model in classes.values():
-            if cls and model != cls:
-                continue
-            query_result = self.session.query(model).all()
-            for obj in query_result:
-                key = f"{obj.__class__.__name__}.{obj.id}"
-                result[key] = obj
-        return result
+        try:
+            result = {}
+            for model in classes.values():
+                if cls and model != cls:
+                    continue
+                query_result = self.session.query(model).all()
+                for obj in query_result:
+                    key = f"{obj.__class__.__name__}.{obj.id}"
+                    result[key] = obj
+            return result
+        except SQLAlchemyError as e:
+            error_message = "An error occurred while retrieving objects: " + \
+                str(e.__class__.__name__)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def new(self, obj):
-        """Create a new object in the database"""
+        """Create a new object in the database
+        Returns:
+            True if successful, False otherwise"""
         try:
             self.session.add(obj)
             self.session.commit()
             return True
         except IntegrityError as e:
             self.session.rollback()
-            print(
-                f"Integrity error occurred while adding object: {obj.__class__.__name__}")
+            error_message = f"Integrity error occurred while adding object: {obj.__class__.__name__}"
+            logging.exception(error_message)
             return False
         except SQLAlchemyError as e:
             self.session.rollback()
-            print(
-                f"Error occurred while adding object: {obj.__class__.__name__}")
+            error_message = f"Error occurred while adding object: {obj.__class__.__name__}"
+            logging.exception(error_message)
             return False
 
     def delete(self, obj=None):
         """Delete an object from the database"""
-        if obj:
-            self.session.delete(obj)
-            self.session.commit()
+        try:
+            if obj:
+                self.session.delete(obj)
+                self.session.commit()
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            error_message = "An error occurred while deleting the object: " + \
+                str(e.__class__.__name__)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def reload(self):
         """Reloads the database"""
-        Base.metadata.create_all(self.engine)
-        session_factory = sessionmaker(
-            bind=self.engine, expire_on_commit=False)
-        self.session = scoped_session(session_factory)()
+        try:
+            Base.metadata.create_all(self.engine)
+            session_factory = sessionmaker(
+                bind=self.engine, expire_on_commit=False)
+            self.session = scoped_session(session_factory)()
+        except SQLAlchemyError as e:
+            error_message = "An error occurred while reloading the database: " + \
+                str(e.__class__.__name__)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def save(self):
-        """Commit all changes of the current db session"""
+        """Commit all changes of the current db session
+        Returns:
+            True if successful, False otherwise"""
         try:
             self.session.commit()
+            return True
         except SQLAlchemyError as e:
             self.session.rollback()
             error_message = "Database error: " + str(e.__class__.__name__)
-            print(error_message)
-            raise SQLAlchemyError(error_message)
-        except DataError as e:
-            print('Data error', e)
-            raise DataError(e)
-        except DatabaseError as e:
-            print(e)
-            raise DatabaseError(e)
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def close(self):
         """Close the working SQLAlchemy session"""
-        self.session.close()
+        try:
+            self.session.close()
+        except Exception as e:
+            msg = "An error occurred while closing the session"
+            logger.exception(msg)
+            raise DatabaseException(msg)
 
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
-        if model in classes:
-            model = classes[model]
-        return self.session.get(model, id)
+        try:
+            if model in classes:
+                model = classes[model]
+            return self.session.get(model, id)
+        except Exception as e:
+            msg = "An error occurred while retrieving the object"
+            logger.exception(msg)
+            raise DatabaseException(msg)
 
     def count(self, model):
         """Return the count of objects in the specified model"""
-        return len(self.all(model))
+        try:
+            return self.session.query(model).count()
+        except Exception as e:
+            msg = "An error occurred while counting the objects"
+            logger.exception(msg)
+            raise DatabaseException(msg)
 
     def get_user_public_data(self, id):
         try:
@@ -119,7 +168,11 @@ class DBStorage:
                 query = query.options(defer(secret))
             return query.one()
         except NoResultFound:
-            return None
+            raise ValueError("No user found with the given ID")
+        except Exception as e:
+            logger.exception("An error occurred while retrieving user data")
+            raise DatabaseException(
+                "Error occurred while retrieving user data")
 
     def github_uid_exists(self, g_uid):
         """Check if a GitHub UID exists in the database"""
@@ -131,86 +184,70 @@ class DBStorage:
         except NoResultFound:
             return None
         except Exception as e:
-            print(f"An error occurred while checking GitHub UID: {e}")
-            return None
+            logger.exception("An error occurred while checking GitHub UID")
+            raise DatabaseException("Error occurred while checking GitHub UID")
 
     def clear_github_session(self, id):
-        """clear github session"""
-        user = self.get(User, id)
-        user.github_session = False
-        self.save()
+        """Clear GitHub session for a user"""
+        try:
+            user = self.get(User, id)
+            if user:
+                user.github_session = False
+                self.save()
+        except DatabaseException as e:
+            logger.exception("An error occurred while clearing GitHub session")
+            raise e
 
     def filter_necessary_data(method):
         def wrapper(self, *args, **kwargs):
-            query = method(self, *args, **kwargs)
-            entities = (User.id, User.name, User.cohort_number,
-                        User.photo_url, User.requested_partners,
-                        User.waka_week_total_seconds, User.waka_week_daily_average)
-            query = query.options(load_only(*entities))
-            users = query.all()
-            users_dict = [user.to_dict() for user in users if user is not None]
-            return users_dict
+            try:
+                query = method(self, *args, **kwargs)
+                entities = (User.id, User.name, User.cohort_number,
+                            User.photo_url, User.requested_partners,
+                            User.waka_week_total_seconds, User.waka_week_daily_average)
+                query = query.options(load_only(*entities))
+                users = query.all()
+                users_dict = [user.to_dict()
+                              for user in users if user is not None]
+                return users_dict
+            except Exception as e:
+                error_message = f"An error occurred while retrieving users: {e}"
+                logging.error(error_message)
+                # Custom exception class for database errors
+                raise DatabaseException(error_message)
         return wrapper
 
     @filter_necessary_data
     def get_users_by_cohort(self, n):
         """Get users by cohort"""
-        try:
-            query = self.session.query(User).filter(
-                User.cohort_number == n)
-            return query
-        except Exception as e:
-            print(f"An error occurred while retrieving users: {e}")
-            return []
+        query = self.session.query(User).filter(User.cohort_number == n)
+        return query
 
     @filter_necessary_data
     def get_users_who_needs_partners(self):
         """Get users who need partners"""
-        try:
-            query = self.session.query(User).filter(
-                User.requested_partners > 0)
-            return query
-        except Exception as e:
-            print(
-                f"An error occurred while retrieving users who need partners: {e}")
-            return []
+        query = self.session.query(User).filter(
+            User.requested_partners > 0)
+        return query
 
     @filter_necessary_data
     def get_users_who_need_partners_by_cohort(self, n):
         """Get users who need partners by cohort"""
-        try:
-            query = self.session.query(User).filter(
-                User.requested_partners > 0, User.cohort_number == n)
-            return query
-        except Exception as e:
-            print(
-                f"An error occurred while retrieving"
-                f"users who need partners by cohort: {e}")
-            return []
+        query = self.session.query(User).filter(
+            User.requested_partners > 0, User.cohort_number == n)
+        return query
 
     @filter_necessary_data
     def get_cohort_leaderboard(self, n):
         """Get leaderboard for cohort n"""
-        try:
-            query = self.session.query(User).filter(
-                User.cohort_number == n).order_by(
-                    User.waka_week_total_seconds.desc())
-            return query
-        except Exception as e:
-            print(
-                f"An error occurred while retrieving"
-                f"cohort leaderboard: {e}")
-            return []
+        query = self.session.query(User).filter(
+            User.cohort_number == n).order_by(
+                User.waka_week_total_seconds.desc())
+        return query
 
     @filter_necessary_data
     def get_overall_leaderboard(self):
         """Get overall leaderboard"""
-        try:
-            query = self.session.query(User).order_by(
-                User.waka_week_total_seconds.desc())
-            return query
-        except Exception as e:
-            print(
-                f"An error occurred while retrieving"
-                f"overall leaderboard data: {e}")
-            return []
+        query = self.session.query(User).order_by(
+            User.waka_week_total_seconds.desc())
+        return query
