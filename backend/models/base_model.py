@@ -52,7 +52,7 @@ class BaseModel(Base):
         """Deletes the object from the database"""
         from . import storage
         try:
-            storage.delete()
+            storage.delete(self)
         except DatabaseException as e:
             logging.error(f"An error occurred while deleting the object: {e}")
             raise DatabaseException('Failed to delete object')

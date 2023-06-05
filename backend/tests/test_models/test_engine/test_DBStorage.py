@@ -19,14 +19,13 @@ class TestDBStorage(TestCase):
         """setUp method that instantiates a new DBStorage object and reloads the database."""
         self.db = DBStorage()
         self.db.reload()
-        # Delete all objects from the tables
-        self.db.session.query(User).delete()
-        self.db.session.query(Cohort).delete()
-        self.db.session.commit()
 
     def tearDown(self):
         """tearDown method that deletes all objects from the tables and rolls back the session."""
-        self.db.session.rollback()
+        # Delete all objects from the tables
+        self.db.session.query(User).delete()
+        self.db.session.query(Cohort).delete()
+        self.db.save()
         self.db.session.close()
 
     def test_all_returns_all_objects(self):
@@ -170,7 +169,7 @@ class TestDBStorageNew(TestDBStorage):
         self.db.new(cohort1)
 
         # Verify that a DatabaseException is raised when adding the duplicate object
-        with self.assertRaises(Exception):
+        with self.assertRaises(DatabaseException):
             cohort2 = Cohort(name="Smiths", number=9)
             self.db.new(cohort2)
 
@@ -191,10 +190,10 @@ class TestDBStorageDeleteMethod(TestDBStorage):
 
     def test_delete_handles_none_object(self):
         """Test that the delete() method handles a None object"""
-        # Call the delete() method with a None object
-        self.db.delete(None)
-
-        # No exception should be raised
+        try:
+            self.db.delete(None)
+        except Exception:
+            self.fail("Unexpected exception raised")
 
 
 class TestDBStorageReloadMethod(TestDBStorage):
@@ -244,13 +243,13 @@ class TestDBStorageSaveClose(TestDBStorage):
     def test_save_exception(self):
         """Test that the save() method handles exceptions correctly."""
         # Create an object with invalid data
-        invalid_user = User(name=1, email="john@example.com")
+        invalid_user = User(name=[], email="john@example.com")
 
         # Add the invalid user to the session and attempt to save it
         # Assert that attempting to save the invalid user raises a SQLAlchemyError
         with self.assertRaises(DatabaseException):
             self.db.new(invalid_user)
-        # self.db.save()
+            self.db.save()
 
     def test_close_successful(self):
         """Test that the close() method closes the session successfully."""

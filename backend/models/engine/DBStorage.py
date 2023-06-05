@@ -24,6 +24,7 @@ class DBStorage:
     def __init__(self):
         """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI)
+        self.session = sessionmaker(bind=self.engine)()
         if DB_ENV == 'test':
             self.drop_all()
 
@@ -76,13 +77,18 @@ class DBStorage:
         except IntegrityError as e:
             self.session.rollback()
             error_message = f"Integrity error occurred while adding object: {obj.__class__.__name__}"
-            logging.exception(error_message)
-            return False
+            # logging.exception(error_message)
+            raise DatabaseException(error_message)
         except SQLAlchemyError as e:
             self.session.rollback()
             error_message = f"{e.__class__.__name__} occurred while adding object: {obj.__class__.__name__}"
             logging.exception(error_message)
-            return False
+            raise DatabaseException(error_message)
+        except Exception as e:
+            self.session.rollback()
+            error_message = f"{e.__class__.__name__} occurred while adding object: {obj.__class__.__name__}"
+            logging.exception(error_message)
+            raise DatabaseException(error_message)
 
     def delete(self, obj=None):
         """Delete an object from the database"""

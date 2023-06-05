@@ -9,15 +9,15 @@ class TestUser(unittest.TestCase):
     def setUp(self):
         """setUp method that instantiates a new DBStorage object and reloads the database."""
         self.db = storage
-        # Delete all objects from the tables
-        self.db.session.query(User).delete()
-        self.db.session.query(Cohort).delete()
-        self.db.session.commit()
+        self.db.reload()
 
     def tearDown(self):
         """tearDown method that deletes all objects from the tables and rolls back the session."""
-        self.db.session.rollback()
-        self.db.session.close()
+        # Delete all objects from the tables
+        self.db.session.query(User).delete()
+        # self.db.session.query(Cohort).delete()
+        self.db.save()
+        self.db.close()
 
     def test_create_user(self):
         user = User(name="John Doe",
@@ -100,7 +100,7 @@ class TestUser(unittest.TestCase):
 
     def test_delete_user_not_in_database(self):
         """Edge case: Attempt to delete a User object that does not exist in the database"""
-        user = User(name="John Doe", email="johndoe@example.com")
+        user = User(name="John", email="johndoe@example.com")
         print('Test delete user not in database')
         with self.assertRaises(DatabaseException):
             user.delete()
