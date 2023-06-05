@@ -19,13 +19,13 @@ class TestDBStorage(TestCase):
         """setUp method that instantiates a new DBStorage object and reloads the database."""
         self.db = DBStorage()
         self.db.reload()
+        self.db.session.query(User).delete()
+        self.db.session.query(Cohort).delete()
+        self.db.save()
 
     def tearDown(self):
         """tearDown method that deletes all objects from the tables and rolls back the session."""
         # Delete all objects from the tables
-        self.db.session.query(User).delete()
-        self.db.session.query(Cohort).delete()
-        self.db.save()
         self.db.session.close()
 
     def test_all_returns_all_objects(self):

@@ -82,18 +82,14 @@ class TestCohort(unittest.TestCase):
         user.cohort_id = cohort.id
         # Save the user to the database
         user.save()
-    # test just won't pass. I give up ahhh
-    # def test_delete_cohort(self):
-    #     """Tests deleting a cohort"""
-    #     cohort = Cohort(name='cohort_name', number=8)
 
-    #     # # Create a new session for deletion
-    #     db = DBStorage()
-    #     db.session =
-    #     db.session.add(cohort)
-    #     cohort_to_delete = db.get(Cohort, cohort.id)
-    #     cohort_to_delete.delete()
-    #     db.save()
-    #     # self.db.close()
+    def test_delete_cohort(self):
+        """Tests deleting a cohort"""
+        from models import storage
+        cohort = Cohort(name='cohort_name', number=8)
 
-    #     self.assertIsNone(db.get(Cohort, cohort.id))
+        storage.new(cohort)
+        cohort.delete()
+        storage.save()
+
+        self.assertIsNone(storage.get(Cohort, cohort.id))

@@ -23,10 +23,10 @@ DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
 class DBStorage:
     def __init__(self):
         """Initialize the database storage engine"""
-        self.engine = create_engine(DATABASE_URI)
-        self.session = sessionmaker(bind=self.engine)()
-        if DB_ENV == 'test':
-            self.drop_all()
+        self.engine = None
+        self.session = None
+        # if DB_ENV == 'test':
+        # self.drop_all()
 
     def create_all(self):
         """Create all database tables"""
@@ -91,21 +91,24 @@ class DBStorage:
             raise DatabaseException(error_message)
 
     def delete(self, obj=None):
-        """Delete an object from the database"""
-        try:
-            if obj:
+        """Deletes the cohort from the database"""
+        if obj:
+            try:
+                # Detach the object from the current session
+                self.session.expunge(obj)
                 self.session.delete(obj)
                 self.session.commit()
-        except SQLAlchemyError as e:
-            self.session.rollback()
-            error_message = "An error occurred while deleting the object: " + \
-                str(e.__class__.__name__)
-            logging.exception(error_message)
-            raise DatabaseException(error_message)
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                error_message = "An error occurred while deleting the object: " + \
+                    str(e)
+                logging.exception(error_message)
+                raise DatabaseException(error_message)
 
     def reload(self):
         """Reloads the database"""
         try:
+            self.engine = create_engine(DATABASE_URI)
             Base.metadata.create_all(self.engine)
             session_factory = sessionmaker(
                 bind=self.engine, expire_on_commit=False)
