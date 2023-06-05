@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const Table = ({ data }) => {
   return (
-    <table className='max-w-full divide-y text-white divide-red-950'>
+    <table className='max-w-full divide-y divide-red-950'>
       <thead>
         <tr className='text-xs text-left text-gray-500 font-medium uppercase tracking-wider'>
           <th className='py-3 px-3 w-1/6'>Name</th>
@@ -13,7 +13,7 @@ const Table = ({ data }) => {
       </thead>
       <tbody>
         {data.map((row, index) => (
-          <tr key={index} className='cursor-pointer whitespace-nowrap dark:bg-black dark:hover:bg-red-950 bg-red-950 hover:bg-black hover:text-white transition-colors duration-200'>
+          <tr key={index} className='cursor-pointer text-black whitespace-nowrap dark:text-white dark:bg-black dark:hover:bg-red-950 hover:bg-red-950 hover:text-white transition-colors duration-200'>
             <td className='py-4 px-3 w-1/6'>
               <div className='flex items-center'>
                 <img src={row.photo_url} alt={row.name} className='w-10 h-10 rounded-full' />
