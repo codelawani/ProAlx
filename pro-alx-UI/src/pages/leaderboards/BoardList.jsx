@@ -1,19 +1,45 @@
-import Board from './Board';
-import { useUserData } from '../../hooks/fetchData';
+import PropTypes from 'prop-types';
+
 import { useNavigate } from 'react-router-dom';
 //import { useState } from 'react';
 //import Button from '../../components/Button';
-import { leaderboardList } from '../../data';
-import withPagination from '../../components/Paginate';
-// import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 
+// import { toast } from 'react-toastify';
 const BoardList = ({ data }) => {
 	const navigate = useNavigate();
 
 	const handleClick = id => {
 		navigate(`/user/${id}`);
 	};
+
+	const getTime = seconds => {
+		const hour = Math.floor(seconds / 3600);
+		const minute = Math.floor((seconds % 3600) / 60);
+		return `${hour > 0 ? hour + 'hrs' : ''} ${minute}mins`;
+	};
+
+	const BoardItems = data.map((item, index) => {
+		return (
+			<tr
+				className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-3 md:gap-9 '
+				key={item.id}
+			>
+				<td className='text-center col-span-1'>{index + 1}</td>
+				<td
+					className='text-center text-blue-500 dark:text-blue-300 cursor-pointer col-span-2'
+					onClick={() => handleClick(item.id)}
+				>
+					{item.name}
+				</td>
+				<td className='text-center col-span-2'>
+					{getTime(item.waka_week_total_seconds)}
+				</td>
+				<td className='text-center col-span-2'>
+					{getTime(item.waka_week_daily_average)}
+				</td>
+			</tr>
+		);
+	});
 
 	return (
 		<div className=''>
@@ -28,27 +54,13 @@ const BoardList = ({ data }) => {
 					</tr>
 				</thead>
 
-				<tbody>
-					{data.map(item => (
-						<Board key={item.rank} handleClick={handleClick} {...item} />
-					))}
-				</tbody>
+				<tbody>{BoardItems}</tbody>
 			</table>
 		</div>
 	);
 };
-// const useData = () => {
-// 	const { value } = useUserData({
-// 		queryKey: `leaderboard`,
-// 		endpoint: `/users/leaderboard`,
-// 		keepPreviousData: true,
-// 	});
-// 	return value;
-// };
-const EnhancedBoardList = withPagination(BoardList, leaderboardList, 10);
-
 BoardList.propTypes = {
 	data: PropTypes.array,
 };
 
-export default EnhancedBoardList;
+export default BoardList;

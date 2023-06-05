@@ -14,7 +14,6 @@ const Bar = () => {
 	const style =
 		'border border-red-950 p-2 w-fit hover:bg-red-950 hover:text-white hover:border-white text-gray-400 dark:border-gray-400';
 	const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
-	console.log(user);
 	const handleClick = () => {
 		setShowSidebar(prev => !prev);
 	};

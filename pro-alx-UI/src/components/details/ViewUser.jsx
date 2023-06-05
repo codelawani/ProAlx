@@ -49,14 +49,15 @@ const ViewUser = () => {
 	const { user } = useUser();
 	const { value: userDetails } = useUserData({
 		queryKey: 'user-7be332d6-2a14-4c40-a753-e6736c8673d3',
-		endpoint: '/user/7be332d6-2a14-4c40-a753-e6736c8673d3/details',
+		endpoint: '/users/7be332d6-2a14-4c40-a753-e6736c8673d3/details',
 	});
 
 	const { value: userStats } = useUserData({
 		queryKey: 'userdata',
-		endpoint: '/user/7be332d6-2a14-4c40-a753-e6736c8673d3/waka_stats',
+		endpoint: '/users/7be332d6-2a14-4c40-a753-e6736c8673d3/waka_stats',
 		enabled: userDetails,
 	});
+	console.log(userDetails);
 	console.log(userStats);
 	const navigate = useNavigate();
 	return (

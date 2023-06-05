@@ -1,14 +1,32 @@
 import { useState } from 'react';
 //import PropTypes from 'prop-types';
 import Button from './Button';
+import { useUserData } from '../hooks/fetchData';
 
-const withPagination = (Component, data, itemsPerPage) => {
-	return function Paginate(props) {
+/**
+ * This is a higher-order function that adds pagination functionality to a component.
+ * Usage:
+ * To use this higher order component, wrap your component like this:
+ *  const PaginatedComponent = withPagination(Component,<queryKey>, <endpoint>, <itemsPerPge>)
+ * @params
+ * Component - component that needs pagination(React component)
+ * queryKey - unique key to identify data fetched(string)
+ * endpoint - route where data is fetched(string)
+ * itemsPerPage - number of items displayed per page (number)
+ */
+
+const withPagination = (Component, queryKey, endpoint, itemsPerPage) => {
+	const PaginatedComponent = props => {
+		const { value: data } = useUserData({
+			queryKey: queryKey,
+			endpoint: endpoint,
+			keepPreviousData: true,
+		});
 		const [currentPage, setCurrentPage] = useState(1);
 		const lastIndex = currentPage * itemsPerPage;
 		const firstIndex = lastIndex - itemsPerPage;
-		const items = data.slice(firstIndex, lastIndex);
-		const totalPages = Math.ceil(data.length / itemsPerPage);
+		const items = data ? data?.slice(firstIndex, lastIndex) : [];
+		const totalPages = data ? Math.ceil(data?.length / itemsPerPage) : 0;
 		const pagesList = [...Array(totalPages + 1).keys()].slice(1);
 
 		const style = `disabled:cursor-not-allowed disabled:text-gray-300 text-blue-400 border p-2 disabled:border-gray-300 border-blue-400 hover:bg-blue-500 hover:text-white disabled:hover:bg-inherit`;
@@ -64,11 +82,7 @@ const withPagination = (Component, data, itemsPerPage) => {
 			</div>
 		);
 	};
+	return PaginatedComponent;
 };
-
-// withPagination.propTypes = {
-// 	itemsPerPage: PropTypes.number,
-// 	data: PropTypes.array,
-// };
 
 export default withPagination;
