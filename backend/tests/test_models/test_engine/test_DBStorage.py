@@ -26,7 +26,7 @@ class TestDBStorage(TestCase):
     def tearDown(self):
         """tearDown method that deletes all objects from the tables and rolls back the session."""
         # Delete all objects from the tables
-        self.db.session.close()
+        self.db.close()
 
     def test_all_returns_all_objects(self):
         """Tests that the all() method returns all objects in the database."""

@@ -11,7 +11,20 @@ from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 classes = {"User": User, "Cohort": Cohort}
+
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+log_file = "errors.log"
+file_handler = logging.FileHandler(log_file)
+file_handler.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 # Construct the database URI
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
                                                            DB_PASSWORD,
@@ -25,8 +38,6 @@ class DBStorage:
         """Initialize the database storage engine"""
         self.engine = None
         self.session = None
-        # if DB_ENV == 'test':
-        # self.drop_all()
 
     def create_all(self):
         """Create all database tables"""
