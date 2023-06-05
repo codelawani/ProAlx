@@ -5,7 +5,7 @@ import BoardList from './BoardList';
 
 const PaginatedBoardList = withPagination(
 	BoardList,
-	'leaderboard',
+	['leaderboard'],
 	'/users/leaderboard',
 	10
 );

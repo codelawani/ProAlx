@@ -4,6 +4,7 @@ import Button from '../Button';
 import UserChart from './UserChart';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { useUser } from '../../hooks/customContexts';
+import { BsTwitter } from 'react-icons/bs';
 
 const dataset = {
 	'2023-05-14': {
@@ -45,44 +46,74 @@ const dataset = {
 
 const ViewUser = () => {
 	// id : the user id gotten from the route link
-	// const { id } = useParams();
+	const { id } = useParams();
 	const { user } = useUser();
 	const { value: userDetails } = useUserData({
-		queryKey: 'user-7be332d6-2a14-4c40-a753-e6736c8673d3',
-		endpoint: '/users/7be332d6-2a14-4c40-a753-e6736c8673d3/details',
+		queryKey: ['user', id],
+		endpoint: `/users/${id}/details`,
 	});
 
 	const { value: userStats } = useUserData({
-		queryKey: 'userdata',
-		endpoint: '/users/7be332d6-2a14-4c40-a753-e6736c8673d3/waka_stats',
+		queryKey: ['user-stats', id],
+		endpoint: `/user/${id}/waka_stats`,
 		enabled: userDetails,
 	});
-	console.log(userDetails);
-	console.log(userStats);
+	//console.log(userDetails, userStats);
 	const navigate = useNavigate();
 	return (
 		<div className='w-full'>
 			<div className='flex items-center justify-between mb-11'>
-				<h3 className='text-lg'>user name</h3>
+				<h3 className='text-xl font-semibold'>{`${userDetails?.name}'s Profile`}</h3>
 				<Button
-					value={<MdOutlineArrowBackIosNew />}
+					value={
+						<span className='flex items-center text-lg text-main hover:text-white'>
+							<MdOutlineArrowBackIosNew style={{ fontSize: '1.5rem' }} />
+							Go back
+						</span>
+					}
 					handleClick={() => navigate(-1)}
-					style='border border-red-950 p-2 hover:bg-red-950'
+					style='border border-main p-2 hover:bg-main'
 				/>
 			</div>
 			<div className='flex flex-col md:flex-row md:justify-between'>
-				<div id='user-details' className='flex flex-col justify-center'>
-					<p className='border rounded h-32 w-fit p-3'>user image</p>
-					<p>name</p>
-					<p>total hours</p>
-					<p>location</p>
-					<p>social links</p>
-				</div>
-				<div className='w-fit'>
-					<UserChart
-						value={userStats ? userStats : {}}
-						isGithubData={!user.waka}
+				<div
+					id='user-details'
+					className='flex flex-col justify-center md:w-2/4'
+				>
+					<img
+						src={userDetails?.photo_url}
+						alt='profile picture'
+						className=' rounded h-2/4 w-fit'
 					/>
+					<span>{userDetails?.name}</span>
+					<span>{userDetails?.cohort_number}</span>
+					<span>Country: {userDetails?.timezone}</span>
+					<span>Email : {userDetails?.email}</span>
+					<span>WhatsApp : {userDetails?.whatsapp}</span>
+					<span>{`Most active time : ${
+						userDetails?.most_active_time ? userDetails?.most_active_time : ''
+					}`}</span>
+
+					<ul className='' id='socials'>
+						<li className='flex items-center gap-1'>
+							<BsTwitter className='text-blue-600' /> :
+							<a
+								href={`https://twitter.com/${userDetails?.twitter_username}`}
+								className='text-blue-500'
+							>
+								{userDetails?.twitter_username}
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div className='md:w-2/4 flex items-center flex-col justify-center'>
+					{userStats === undefined ? (
+						<p className='text-center animate-bounce text-blue-400 self-start'>
+							Fetching stats...
+						</p>
+					) : (
+						<UserChart value={dataset} isGithubData={!user.waka} />
+					)}
 				</div>
 			</div>
 		</div>

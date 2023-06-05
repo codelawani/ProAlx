@@ -10,7 +10,7 @@ import { useUserData } from '../hooks/fetchData';
  *  const PaginatedComponent = withPagination(Component,<queryKey>, <endpoint>, <itemsPerPge>)
  * @params
  * Component - component that needs pagination(React component)
- * queryKey - unique key to identify data fetched(string)
+ * queryKey - unique key to identify data fetched(array) i.e ['user']
  * endpoint - route where data is fetched(string)
  * itemsPerPage - number of items displayed per page (number)
  */
