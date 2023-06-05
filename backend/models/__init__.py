@@ -1,8 +1,11 @@
 from os import getenv
 from dotenv import load_dotenv, find_dotenv
-
+import time
 load_dotenv(find_dotenv())
-DB_ENV = getenv('DB_ENV')
+DB_ENV = getenv('DB_ENV', 'dev')  # dev is default
+print('Current DB_ENV:', DB_ENV)
+print('Initialising Database...')
+time.sleep(3)
 if DB_ENV == 'test':
     DB_USERNAME = getenv('TEST_DB_USERNAME')
     DB_PASSWORD = getenv('TEST_DB_PASSWORD')

@@ -16,7 +16,7 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
 API = 'http://localhost:5000/api/v1'
 
 
-@app_views.route('/user/<id>/waka_stats')
+@app_views.route('/users/<id>/waka_stats')
 def get_daily_logs(id, n=7):
     """
     Get the daily wakatime log for each date.

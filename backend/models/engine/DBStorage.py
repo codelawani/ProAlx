@@ -6,7 +6,7 @@ from models.cohort import Cohort
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_ENV
+from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME
 from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
@@ -21,17 +21,20 @@ DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
 
 
 class DBStorage:
+    """Interface to the database"""
+    engine = None
+    session = None
+
     def __init__(self):
         """Initialize the database storage engine"""
-        self.engine = None
-        self.session = None
+        self.engine = create_engine(DATABASE_URI, pool_pre_ping=True)
 
     def create_all(self):
         """Create all database tables"""
         try:
             Base.metadata.create_all(self.engine)
         except SQLAlchemyError as e:
-            error_message = "An error occurred while creating the database tables: " + \
+            error_message = "An error occurred while creating the database tables, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(error_message)
             raise DatabaseException(error_message)
@@ -41,7 +44,7 @@ class DBStorage:
         try:
             Base.metadata.drop_all(self.engine)
         except SQLAlchemyError as e:
-            error_message = "An error occurred while dropping the database tables: " + \
+            error_message = "An error occurred while dropping the database tables, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(error_message)
             raise DatabaseException(error_message)
@@ -59,7 +62,7 @@ class DBStorage:
                     result[key] = obj
             return result
         except SQLAlchemyError as e:
-            error_message = "An error occurred while retrieving objects: " + \
+            error_message = "An error occurred while retrieving objects, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(error_message)
             raise DatabaseException(error_message)
@@ -98,7 +101,7 @@ class DBStorage:
                 self.session.commit()
             except SQLAlchemyError as e:
                 self.session.rollback()
-                error_message = "An error occurred while deleting the object: " + \
+                error_message = "An error occurred while deleting the object, Error: " + \
                     str(e)
                 logger.exception(error_message)
                 raise DatabaseException(error_message)
@@ -106,13 +109,12 @@ class DBStorage:
     def reload(self):
         """Reloads the database"""
         try:
-            self.engine = create_engine(DATABASE_URI)
             Base.metadata.create_all(self.engine)
             session_factory = sessionmaker(
                 bind=self.engine, expire_on_commit=False)
             self.session = scoped_session(session_factory)()
         except SQLAlchemyError as e:
-            error_message = "An error occurred while reloading the database: " + \
+            error_message = "An error occurred while reloading the database, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(error_message)
             raise DatabaseException(error_message)
@@ -135,7 +137,7 @@ class DBStorage:
         try:
             self.session.close()
         except Exception as e:
-            msg = "An error occurred while closing the session: " + \
+            msg = "An error occurred while closing the session, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -147,7 +149,7 @@ class DBStorage:
                 model = classes[model]
             return self.session.get(model, id)
         except Exception as e:
-            msg = "An error occurred while retrieving the object: " + \
+            msg = "An error occurred while retrieving the object, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -157,7 +159,7 @@ class DBStorage:
         try:
             return self.session.query(model).count()
         except Exception as e:
-            msg = "An error occurred while counting the objects" + \
+            msg = "An error occurred while counting the objects, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -165,20 +167,20 @@ class DBStorage:
     def get_user_public_data(self, id):
         try:
             secrets = (
-                'gh_access_token',
-                'wk_access_token',
-                'wk_refresh_token',
-                'github_session',
-                'waka_token_expires'
+                User.gh_access_token,
+                User.wk_access_token,
+                User.wk_refresh_token,
+                User.github_session,
+                User.waka_token_expires
             )
             query = self.session.query(User).filter(User.id == id)
             for secret in secrets:
                 query = query.options(defer(secret))
             return query.one()
-        except NoResultFound:
-            raise ValueError("No user found with the given ID")
+        except NoResultFound as e:
+            return None
         except Exception as e:
-            msg = "An error occurred while retrieving user data" + \
+            msg = "An error occurred while retrieving user data, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -193,7 +195,7 @@ class DBStorage:
         except NoResultFound:
             return None
         except Exception as e:
-            msg = "An error occurred while checking GitHub UID" + \
+            msg = "An error occurred while checking GitHub UID, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -206,7 +208,7 @@ class DBStorage:
                 user.github_session = False
                 self.save()
         except DatabaseException as e:
-            msg = "An error occurred while clearing GitHub session" + \
+            msg = "An error occurred while clearing GitHub session, Error: " + \
                 str(e.__class__.__name__)
             logger.exception(msg)
             raise DatabaseException(msg)
@@ -224,7 +226,7 @@ class DBStorage:
                               for user in users if user is not None]
                 return users_dict
             except Exception as e:
-                error_message = "An error occured while retrieving users" + \
+                error_message = "An error occured while retrieving users, Error: " + \
                     str(e.__class__.__name__)
                 logger.error(error_message)
                 # Custom exception class for database errors

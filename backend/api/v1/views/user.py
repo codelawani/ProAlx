@@ -5,6 +5,7 @@ from models.user import User
 from models import storage
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
+from models.engine.DBExceptions import DatabaseException
 import requests
 API = 'http://localhost:5000/api/v1'
 
@@ -38,11 +39,14 @@ def get_users_daily_commits():
 @app_views.route('/users/<id>/details', strict_slashes=False)
 def get_user(id):
     """ Retrieves a user's details"""
-    user = storage.get_user_public_data(id)
-    print(user)
-    if not user:
-        abort(404)
-    return jsonify(user.to_dict())
+    try:
+        user = storage.get_user_public_data(id)
+        print(user)
+        if not user:
+            abort(404)
+        return jsonify(user.to_dict())
+    except DatabaseException as e:
+        return jsonify({'error': e.message}), e.code
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)

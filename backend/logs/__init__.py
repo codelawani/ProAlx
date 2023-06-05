@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-log_file = "logs/errors.log"
+log_file = "errors.log"
 file_handler = logging.FileHandler(log_file)
 file_handler.setLevel(logging.DEBUG)
 
