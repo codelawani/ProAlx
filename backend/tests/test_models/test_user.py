@@ -101,6 +101,5 @@ class TestUser(unittest.TestCase):
     def test_delete_user_not_in_database(self):
         """Edge case: Attempt to delete a User object that does not exist in the database"""
         user = User(name="John", email="johndoe@example.com")
-        print('Test delete user not in database')
         with self.assertRaises(DatabaseException):
             user.delete()

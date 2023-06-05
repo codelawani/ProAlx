@@ -1,4 +1,4 @@
-import logging
+from logs import logger
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
 from models.user import User
@@ -12,20 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 classes = {"User": User, "Cohort": Cohort}
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
-log_file = "errors.log"
-file_handler = logging.FileHandler(log_file)
-file_handler.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-file_handler.setFormatter(formatter)
-
-logger.addHandler(file_handler)
-
-# Construct the database URI
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
                                                            DB_PASSWORD,
                                                            DB_HOST,
@@ -46,7 +33,7 @@ class DBStorage:
         except SQLAlchemyError as e:
             error_message = "An error occurred while creating the database tables: " + \
                 str(e.__class__.__name__)
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def drop_all(self):
@@ -56,7 +43,7 @@ class DBStorage:
         except SQLAlchemyError as e:
             error_message = "An error occurred while dropping the database tables: " + \
                 str(e.__class__.__name__)
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def all(self, cls=None):
@@ -74,7 +61,7 @@ class DBStorage:
         except SQLAlchemyError as e:
             error_message = "An error occurred while retrieving objects: " + \
                 str(e.__class__.__name__)
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def new(self, obj):
@@ -88,17 +75,17 @@ class DBStorage:
         except IntegrityError as e:
             self.session.rollback()
             error_message = f"Integrity error occurred while adding object: {obj.__class__.__name__}"
-            # logging.exception(error_message)
+            # logger.exception(error_message)
             raise DatabaseException(error_message)
         except SQLAlchemyError as e:
             self.session.rollback()
             error_message = f"{e.__class__.__name__} occurred while adding object: {obj.__class__.__name__}"
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
         except Exception as e:
             self.session.rollback()
             error_message = f"{e.__class__.__name__} occurred while adding object: {obj.__class__.__name__}"
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def delete(self, obj=None):
@@ -113,7 +100,7 @@ class DBStorage:
                 self.session.rollback()
                 error_message = "An error occurred while deleting the object: " + \
                     str(e)
-                logging.exception(error_message)
+                logger.exception(error_message)
                 raise DatabaseException(error_message)
 
     def reload(self):
@@ -127,7 +114,7 @@ class DBStorage:
         except SQLAlchemyError as e:
             error_message = "An error occurred while reloading the database: " + \
                 str(e.__class__.__name__)
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def save(self):
@@ -140,7 +127,7 @@ class DBStorage:
         except SQLAlchemyError as e:
             self.session.rollback()
             error_message = "Database error: " + str(e.__class__.__name__)
-            logging.exception(error_message)
+            logger.exception(error_message)
             raise DatabaseException(error_message)
 
     def close(self):
@@ -150,7 +137,7 @@ class DBStorage:
         except Exception as e:
             msg = "An error occurred while closing the session: " + \
                 str(e.__class__.__name__)
-            logging.exception(msg)
+            logger.exception(msg)
             raise DatabaseException(msg)
 
     def get(self, model, id):
@@ -162,7 +149,7 @@ class DBStorage:
         except Exception as e:
             msg = "An error occurred while retrieving the object: " + \
                 str(e.__class__.__name__)
-            logging.exception(msg)
+            logger.exception(msg)
             raise DatabaseException(msg)
 
     def count(self, model):
@@ -239,7 +226,7 @@ class DBStorage:
             except Exception as e:
                 error_message = "An error occured while retrieving users" + \
                     str(e.__class__.__name__)
-                logging.error(error_message)
+                logger.error(error_message)
                 # Custom exception class for database errors
                 raise DatabaseException(error_message)
         return wrapper

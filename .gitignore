@@ -10,7 +10,8 @@ venv.bak/
 #cache
 *.json
 pycache/
-
+*.log
+*.log.*
 # editor backup files
 *~
 *.swp

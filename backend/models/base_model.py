@@ -4,19 +4,12 @@ import uuid
 from datetime import datetime
 from . import storage_type
 from models.engine.DBExceptions import DatabaseException
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+from logs import logger
 
-log_file = "errors.log"
-file_handler = logging.FileHandler(log_file)
-file_handler.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-file_handler.setFormatter(formatter)
-
-logger.addHandler(file_handler)
+if storage_type == 'db':
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel(Base):
