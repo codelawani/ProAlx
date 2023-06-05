@@ -3,17 +3,17 @@ import LoginWithGithub from '../GithubLogin';
 import Theme from '../Theme';
 
 const DeskTopView = () => {
-  const style =
+	const style =
 		'border border-main w-15 p-1 hover:bg-main transition-all duration-200 ';
-  return (
-    <div className='hidden md:flex items-center justify-center'>
-      <NavLinks />
-      <LoginWithGithub style={style} />
-      <span className='pl-3'>
-        <Theme />
-      </span>
-    </div>
-  );
+	return (
+		<div className='hidden md:flex items-center justify-center'>
+			<NavLinks />
+			<LoginWithGithub style={style} />
+			<span className='pl-3'>
+				<Theme />
+			</span>
+		</div>
+	);
 };
 
 export default DeskTopView;

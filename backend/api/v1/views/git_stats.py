@@ -1,47 +1,41 @@
 from datetime import datetime, timedelta
-from flask import jsonify, abort, request
 import jwt
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask import jsonify
 from dotenv import load_dotenv
 from api.v1.views import app_views
 import requests
-import os
 from models import storage
 load_dotenv()
-
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'AirBnB_clone_v4',
              'alx-higher_level_programming', 'alx-low_level_programming',
              'alx-system_engineering-devops', 'simple_shell',
              'binary_trees', 'sorting_algorithms', 'alx-zero_day',
              'monty', 'RSA-Factoring-Challenge']
-secret_key = os.getenv('JWT_SECRET_KEY')
 api = 'http://localhost:5000/api/v1'
 
 
-@app_views.route('/user/daily_commits', strict_slashes=False)
-@jwt_required()
-def get_daily_commits(n=7):
+@app_views.route('/users/<id>/git_stats', strict_slashes=False)
+def get_daily_commits(id, n=7):
     """
     Calculate the daily commit count for each date based on the commit data.
 
     Returns:
         dict: A dictionary containing the commit counts per day and repository.
     """
-    print(request.headers.get('Authorization'))
-    user_id = get_jwt_identity()
-    user = storage.get('User', user_id)
-    token = user.gh_access_token
-    username = user.github_login
-    return get_commits(token, username, n)
+    user = storage.get('User', id)
+    if user:
+        token = user.gh_access_token
+        username = user.github_login
+        return get_commits(token, username, n)
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 def verify_token(token, secret_key):
     try:
         decoded_token = jwt.decode(token, secret_key, algorithms=['HS256'])
         return decoded_token
-    except jwt.ExpiredSignatureError:
-        return None
     except (jwt.InvalidTokenError):
         return None
 
@@ -98,5 +92,5 @@ def get_commits(token, username, n=7, page_size=100):
             else:
                 retries -= 1
                 print("Retrying...")
-
+    print(commit_counts)
     return commit_counts

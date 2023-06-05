@@ -16,6 +16,8 @@ fi
 # DB_USERNAME
 # DB_PASSWORD
 
+mysql -e "DROP DATABASE IF EXISTS $DB_NAME;"
+
 # Create project development database
 mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
 

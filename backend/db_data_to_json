@@ -1,0 +1,20 @@
+from models import storage
+from models.user import User
+import json
+
+
+# Retrieve data from the 'users' table
+data = storage.all(User)
+
+# Prepare the data as a list of dictionaries
+formatted_data = []
+for obj in data.values():
+    formatted_data.append(obj.to_dict())
+
+# Save the data as a JSON file
+output_file = "waka_user.json"  # Specify the desired output file path
+with open(output_file, "w") as file:
+    json.dump(formatted_data, file, indent=4)
+
+storage.close()
+print(f"Data saved as JSON file: {output_file}")
