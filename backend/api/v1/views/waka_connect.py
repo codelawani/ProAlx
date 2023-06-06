@@ -18,15 +18,15 @@ wakatime_url = "https://wakatime.com/api/v1/"
 
 CLIENT_ID = getenv("WAKATIME_ID")
 CLIENT_SECRET = getenv("WAKATIME_SECRET")
-print('c', CLIENT_ID)
-print('cs', CLIENT_SECRET)
 app = Flask(__name__)
 api = 'http://localhost:5000/api/v1'
 
 
-def update_user(id, data):
+def update_user(id, data, token):
     """Updates user in database"""
-    res = requests.put(f'{api}/users/{id}', json=data)
+    res = requests.put(f'{api}/users/{id}', json=data, headers={
+        'Authorization': f'Bearer {token}'}
+    )
     if res.ok:
         print('Updated successfully')
         return res.json()
@@ -58,9 +58,6 @@ def authorize():
         # Request was successful
         print('POST request succeeded')
         user = response.json()
-        # expiration_string = user.get('expires_at')
-        # expiration_datetime = datetime.strptime(
-        # expiration_string, '%Y-%m-%dT%H:%M:%SZ')
         waka_data = {
             'wk_access_token': user.get('access_token'),
             'wk_refresh_token': user.get('refresh_token'),
@@ -69,13 +66,16 @@ def authorize():
             'waka_token_expires': user.get('expires_at')
         }
         user_id = get_jwt_identity()
-        user = update_user(user_id, waka_data)
+        authorization_header = request.headers.get('Authorization')
+        token = authorization_header.split(' ')[1]
+        user = update_user(user_id, waka_data, token)
         print(user)
         public_user_data = {
-            'name': user.get('name'),
-            'photo_url': user.get('photo_url'),
-            'github_login': user.get('github_login'),
-            'waka': user.get('waka_connected')
+            'name': user.get('name', ''),
+            'cohort': user.get('cohort_number', 0),
+            'photo_url': user.get('photo_url', ''),
+            'github_login': user.get('github_login', ''),
+            'waka': user.get('waka_connected', False)
         }
         access_token = create_access_token(
             identity=user_id,

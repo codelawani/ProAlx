@@ -1,12 +1,25 @@
 import unittest
 from models.user import User
 from models.cohort import Cohort
-from models import storage
+from models import DBStorage
 
 cohort_name = "Cohort 9"
 
 
 class TestCohort(unittest.TestCase):
+    def setUp(self):
+        """setUp method that instantiates a new DBStorage object and reloads the database."""
+        self.db = DBStorage()
+        self.db.reload()
+        self.db.session.query(Cohort).delete()
+        self.db.save()
+
+    def tearDown(self):
+        """tearDown method that deletes all objects from the tables and rolls back the session."""
+        # Delete all objects from the tables
+        # self.db.session.query(User).delete()
+        self.db.close()
+
     def test_create_cohort_with_name(self):
         """Tests creating a new Cohort instance with a name and adding it to the database"""
 
@@ -16,9 +29,9 @@ class TestCohort(unittest.TestCase):
         self.assertIsNotNone(cohort.created_at)
         self.assertIsNotNone(cohort.updated_at)
         # Save cohort to database
-        cohort.save()
+        self.db.new(cohort)
         # Retrieve cohort from database and check if it matches the original cohort
-        retrieved_cohort = storage.get(Cohort, cohort.id)
+        retrieved_cohort = self.db.get(Cohort, cohort.id)
         self.assertEqual(retrieved_cohort.name, cohort_name)
 
     def test_update_cohort_name(self):
@@ -26,12 +39,12 @@ class TestCohort(unittest.TestCase):
         new_cohort_name = "Cohort 10"
         cohort = Cohort(name=cohort_name, number=9)
         # Save cohort to database
-        cohort.save()
+        self.db.new(cohort)
         # Update cohort name and save to database
         cohort.name = new_cohort_name
         cohort.save()
         # Retrieve cohort from database and check if the name has been updated
-        retrieved_cohort = storage.get(Cohort, cohort.id)
+        retrieved_cohort = self.db.get(Cohort, cohort.id)
         self.assertEqual(retrieved_cohort.name, new_cohort_name)
 
     def test_create_cohort_without_name(self):
@@ -60,11 +73,11 @@ class TestCohort(unittest.TestCase):
                     wk_access_token="def456",
                     wk_refresh_token="ghi789"
                     )
-        user.save()
+        self.db.new(user)
         self.assertIsNotNone(user.id)
         # Create a cohort with a valid ID
         cohort = Cohort(name="Test Cohort", number=9)
-        cohort.save()
+        self.db.new(cohort)
         # Assign the cohort ID to the user's cohort_id attribute
         user.cohort_id = cohort.id
         # Save the user to the database
@@ -72,7 +85,11 @@ class TestCohort(unittest.TestCase):
 
     def test_delete_cohort(self):
         """Tests deleting a cohort"""
-        cohort = Cohort(name=cohort_name, number=9)
-        cohort.save()
-        self.assertIsNotNone(cohort.id)
+        from models import storage
+        cohort = Cohort(name='cohort_name', number=8)
+
+        storage.new(cohort)
         cohort.delete()
+        storage.save()
+
+        self.assertIsNone(storage.get(Cohort, cohort.id))

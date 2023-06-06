@@ -4,6 +4,7 @@ This module contains a basic view for the github login route
 """
 from os import getenv
 from urllib.parse import parse_qs
+import json
 from models import storage
 import jwt
 import requests
@@ -28,11 +29,10 @@ def get_github_user_data(token):
     headers = {'Authorization': f"token {token}"}
     res = requests.get(USER_ENDPOINT, headers=headers)
     if res.ok:
-        print('successfull got user github data')
+        print('successfully got user github data')
         return res.json()
     else:
         res.raise_for_status()  # Raise an exception for non-2xx status codes
-        # abort(404)
         print('user github data not found')
 
 
@@ -68,11 +68,13 @@ def login():
         parsed_res = parse_qs(res.content.decode('utf-8'))
         token = parsed_res['access_token'][0]
         user = get_github_user_data(token)
-        # print(user)
+        with open('user.json', 'w') as f:
+            json.dump(user, f)
         user_data = {
             'github_login': user.get('login'),
             'github_uid': user.get('id'),
             'name': user.get('name'),
+            'email': user.get('email'),
             'photo_url': user.get('avatar_url'),
             'twitter_username': user.get('twitter_username'),
             'gh_access_token': token,
@@ -82,14 +84,15 @@ def login():
         print(user_data)
         created_user = create_user(user_data)
         public_user_data = {
-            'name': created_user.get('name'),
-            'photo_url': created_user.get('photo_url'),
-            'github_login': created_user.get('github_login'),
-            'waka': created_user.get('waka_connected')
+            'name': created_user.get('name', ''),
+            'photo_url': created_user.get('photo_url', ''),
+            'github_login': created_user.get('github_login', ''),
+            'waka': created_user.get('waka_connected', False),
+            'cohort': created_user.get('cohort_number', 0),
         }
         access_token = create_access_token(
             identity=created_user['id'],
-            additional_claims={'user_data': public_user_data}
+            additional_claims={'user_data': (public_user_data)}
         )
         res = make_response({'access_token': access_token}, 200)
         return res
@@ -102,23 +105,3 @@ def login():
     except Exception as e:
         print('Exception:', e)
         return jsonify({'msg': 'Unexpected server error'}), 500
-
-
-# @app_views.route('/github/logout', strict_slashes=False)
-# @jwt_required()
-# def logout():
-#     """Logout user"""
-#     user = get_jwt_identity()
-#     storage.clear_github_session(user)
-#     return make_response({'msg': 'Logout Successful'})
-
-
-def decode_jwt_token(token):
-    """" Decode JWT token"""
-    try:
-        decoded_token = jwt.decode(token, key=key, algorithms=['HS256'])
-        user_id = decoded_token.get('sub')
-        return user_id
-    except (InvalidTokenError, ExpiredSignatureError, DecodeError) as e:
-        print(e)
-        return None

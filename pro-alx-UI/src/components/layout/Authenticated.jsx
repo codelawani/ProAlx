@@ -13,6 +13,7 @@ const Authenticated = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+
     const handleConnect = code => {
       updateLoading(true);
       api
@@ -22,8 +23,6 @@ const Authenticated = () => {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
             setUser(getUser());
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, '', newUrl);
             if (user.waka) {
               updateLoading(false);
               toast.success('Wakatime connected successfully!');

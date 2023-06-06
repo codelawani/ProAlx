@@ -3,9 +3,13 @@ from sqlalchemy import Column, String, DateTime
 import uuid
 from datetime import datetime
 from . import storage_type
+from models.engine.DBExceptions import DatabaseException
+from logs import logger
 
 if storage_type == 'db':
     Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel(Base):
@@ -40,13 +44,20 @@ class BaseModel(Base):
         """Updates updated_at with current time when instance is changed"""
         from . import storage
         self.updated_at = datetime.now()
-        storage.new(self)
-        storage.save()
+        try:
+            storage.save()
+        except DatabaseException as e:
+            logger.error(f"An error occurred while saving the object: {e}")
+            raise DatabaseException('Failed to save object')
 
     def delete(self):
         """Deletes the object from the database"""
         from . import storage
-        storage.delete(self)
+        try:
+            storage.delete(self)
+        except DatabaseException as e:
+            logger.error(f"An error occurred while deleting the object: {e}")
+            raise DatabaseException('Failed to delete object')
 
     def __str__(self):
         """Returns a string representation of the instance"""

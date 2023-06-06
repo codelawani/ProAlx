@@ -4,6 +4,8 @@ from models import storage
 import random
 from datetime import datetime, timedelta
 from models.cohort import Cohort
+from models.request import RequestedPartners
+from models.engine.DBExceptions import DatabaseException
 from mysql.connector import Error
 fake = Faker()
 # If u want the fake data to be location specific
@@ -20,7 +22,7 @@ def generate_random_boolean():
 
 def create_fake_users():
     users = []
-    for _ in range(40):
+    for i in range(40):
         total_seconds = random.randint(0, 1000000)
         random_boolean = generate_random_boolean()
         daily_average = total_seconds // 7
@@ -49,19 +51,33 @@ def create_fake_users():
             waka_connected=random_boolean,
             github_login=fake.user_name(),
             wakatime_login=fake.user_name(),
-            requested_partners=fake.random_int(
-                min=0, max=3),
         )
         # user.new()
-        user.save()
-        users.append(user)
+        try:
+            storage.new(user)
+            users.append(user)
+            print(f'Created {i + 1} user(s)')
+        except DatabaseException:
+            print('Failed to create user')
+            print('moving on ...')
     return users
+
+
+def create_fake_requests(users):
+    for user in users:
+        number_of_partners = fake.random_int(min=0, max=2)
+        requested_partners = RequestedPartners(
+            number=number_of_partners, user=user)
+        storage.new(requested_partners)
+
+    storage.save()
+    print("Fake requests created successfully.")
 
 
 def create_fake_cohorts():
     create_fake_users()
     users = list(storage.all(User).values())
-
+    create_fake_requests(users)
     if not users:
         print("Users weren't created")
         return
@@ -73,11 +89,8 @@ def create_fake_cohorts():
         cohort = find_cohort(existing_cohorts, i)
 
         if cohort is None:
-            print(cohort, 'is none')
             create_new_cohort(users, assigned_users, i)
         else:
-            print('i', i)
-            print(cohort.number, 'Not none')
             add_users_to_cohort(users, assigned_users, cohort)
 
 
@@ -100,9 +113,11 @@ def create_new_cohort(users, assigned_users, number):
     assigned_users.extend(cohort_users)
 
     try:
-        cohort.save()
-    except Error as e:
-        print(e)
+        storage.new(cohort)
+        print('Creating cohort', number)
+    except DatabaseException:
+        print('Failed to create new cohort')
+        print('moving on ...')
 
 
 def add_users_to_cohort(users, assigned_users, cohort):
@@ -117,7 +132,8 @@ def add_users_to_cohort(users, assigned_users, cohort):
     assigned_users.extend(cohort_users)
 
     try:
-        storage.save()
+        cohort.save()
+        print(f'Updating cohort {cohort.number}')
     except Error as e:
         print(e)
 

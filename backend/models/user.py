@@ -1,7 +1,9 @@
 import requests
 from sqlalchemy import Integer, Column, ForeignKey, String, DateTime, BOOLEAN
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship
 from .base_model import BaseModel
+from sqlalchemy.ext.hybrid import hybrid_property
+from models.request import RequestedPartners
 api = 'http://localhost:5000/api/v1'
 
 
@@ -15,7 +17,7 @@ class User(BaseModel):
     username = Column(String(50), unique=True)
     twitter_username = Column(String(60))
     whatsapp = Column(String(25))
-    email = Column(String(50))
+    email = Column(String(50), unique=True)
     github_uid = Column(Integer, unique=True)
     wakatime_uid = Column(String(36))
     most_active_time = Column(String(10))
@@ -37,17 +39,40 @@ class User(BaseModel):
 
     github_login = Column(String(48))
     wakatime_login = Column(String(25))
-    requested_partners = Column(Integer, default=0, index=True)
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
 
     cohort = relationship("Cohort", back_populates="users")
+    requested_partners = relationship(
+        'RequestedPartners', back_populates='user', uselist=False)
 
-    def fetch_github_data(self):
-        """Retrieves daily commits of user from github api"""
-        from models import storage
-        if not self.gh_access_token:
-            return None
-        # res = requests.get(f'{api}/users/{self.id}/daily_commits')
-        # return res.json()
+    def to_dict(self):
+        user_dict = super().to_dict()
+        secrets = ['gh_access_token', 'wk_access_token',
+                   'wk_refresh_token', 'waka_token_expires']
+        for secret in secrets:
+            user_dict.pop(secret, None)
+        user_dict.update({
+            'requested_partners': self.requested_partners_number,
+            'last_request_date': self.last_request_date
+        })
+        return user_dict
 
-    # def get_user_public_details(self):
+    @hybrid_property
+    def requested_partners_number(self):
+        if self.requested_partners:
+            return self.requested_partners.number
+        return None
+
+    @requested_partners_number.expression
+    def requested_partners_number(cls):
+        return RequestedPartners.number
+
+    @hybrid_property
+    def last_request_date(self):
+        if self.requested_partners:
+            return self.requested_partners.updated_at
+        return None
+
+    @last_request_date.expression
+    def last_request_date(cls):
+        return RequestedPartners.updated_at

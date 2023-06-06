@@ -2,9 +2,23 @@ import unittest
 from models.user import User
 from models.cohort import Cohort
 from models import storage
+from models.engine.DBExceptions import DatabaseException
 
 
 class TestUser(unittest.TestCase):
+    def setUp(self):
+        """setUp method that instantiates a new DBStorage object and reloads the database."""
+        self.db = storage
+        self.db.reload()
+
+    def tearDown(self):
+        """tearDown method that deletes all objects from the tables and rolls back the session."""
+        # Delete all objects from the tables
+        self.db.session.query(User).delete()
+        # self.db.session.query(Cohort).delete()
+        self.db.save()
+        self.db.close()
+
     def test_create_user(self):
         user = User(name="John Doe",
                     email="johndoe@example.com",
@@ -32,7 +46,7 @@ class TestUser(unittest.TestCase):
                     wk_access_token="uvw456",
                     wk_refresh_token="rst123"
                     )
-        user.save()
+        self.db.new(user)
         self.assertIsNotNone(user.id)
 
     def test_create_user_with_missing_fields(self):
@@ -44,7 +58,7 @@ class TestUser(unittest.TestCase):
                         wakatime_uid="5678",
                         gh_access_token="abc123"
                         )
-            user.save()
+            self.db.new(user)
         except Exception as e:
             self.assertEqual(str(e), "All fields must be filled")
 
@@ -59,7 +73,7 @@ class TestUser(unittest.TestCase):
                 wk_access_token="def456",
                 wk_refresh_token="ghi789"
             )
-            user.save()
+            self.db.new(user)
         except TypeError as e:
             self.assertEqual(str(e), "unhashable type: '12344'")
 
@@ -79,13 +93,13 @@ class TestUser(unittest.TestCase):
     def test_delete_user_from_database(self):
         """Test deleting a user from the database"""
         user = User(name='John Doe')
-        user.save()  # Save the user to the database
+        self.db.new(user)
         user.delete()
         with self.assertRaises(KeyError):
             storage.all(User)[user.id]
 
     def test_delete_user_not_in_database(self):
-        # Edge case: Attempt to delete a User object that does not exist in the database
-        user = User(name="John Doe", email="johndoe@example.com")
-        with self.assertRaises(Exception):
+        """Edge case: Attempt to delete a User object that does not exist in the database"""
+        user = User(name="John", email="johndoe@example.com")
+        with self.assertRaises(DatabaseException):
             user.delete()
