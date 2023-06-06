@@ -1,16 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.active {
-  @apply text-body border-x rounded-md p-2 flex items-center gap-2 bg-gradient-to-bl from-dark to-red-950 w-fit;
-}
+@layer components {
+  .active {
+    @apply text-white border-x rounded-md p-2 flex items-center gap-2 bg-cool w-fit;
+  }
 
-.inactive {
-  @apply flex items-center p-2 gap-2;
-}
+  .inactive {
+    @apply flex items-center p-2 gap-2 text-gray-200;
+  }
 
-.inactive:hover,
-.active:hover {
-  @apply border-l-2 bg-blur bg-gradient-to-bl from-dark to-red-950 text-white rounded
+  .inactive:hover,
+  .active:hover {
+    @apply border-l-2 bg-blur bg-none text-white rounded
+  }
 }

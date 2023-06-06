@@ -11,7 +11,9 @@ function App () {
     <div className={`${theme} dark:bg-dark`}>
       <Header />
       <ToastContainer />
-      <Outlet />
+      <div className='mt-20'>
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );

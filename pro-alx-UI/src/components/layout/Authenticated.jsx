@@ -13,25 +13,24 @@ const Authenticated = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    console.log(user);
-    const handleConnect = (code) => {
+    const handleConnect = code => {
       updateLoading(true);
       api
         .get(`${API}/waka/authorize?code=${code}`)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             const data = res.data;
-            console.log(data);
             localDataMgr.set('access_token', data.access_token);
             setUser(getUser());
             const newUrl = window.location.pathname;
             window.history.replaceState(null, '', newUrl);
             if (user.waka) {
               updateLoading(false);
+              toast.success('Wakatime connected successfully!');
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           toast.error('Something went wrong');
           toast.error(err.message);
           updateLoading(false);
@@ -50,7 +49,7 @@ const Authenticated = () => {
           <>
             <SideBar />
             <ToastContainer />
-            <div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-black dark:text-gray-300'>
+            <div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-dark dark:text-gray-300'>
               <Outlet />
             </div>
           </>

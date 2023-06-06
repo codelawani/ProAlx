@@ -1,23 +1,23 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const NavLinks = ({ color = 'white', handleClick = () => {} }) => {
+const NavLinks = ({ color = 'dark', handleClick = () => {} }) => {
   return (
     <ul
-      className={`flex flex-col md:flex-row text-${color} justify-center content-center dark:text-gray-300 gap-2 md:gap-0`}
+      className={`flex flex-col md:flex-row text-${color} justify-center content-center dark:text-gray-300 gap-2 md:gap-1`}
     >
       <li
-        className='pr-2 hover:border-b hover:border-main rounded hover:px-2'
+        className='px-2 py-2 rounded-md active:outline-none transform active:scale-x-[0.8] mr-2 hover:scale-x-[1.05] transition ease-in-out hover:bg-yellow hover:text-dark'
         onClick={handleClick}
       >
         <Link to='contact'>Contact</Link>
       </li>
-      <li
+      {/* <li
         className='pr-2 hover:border-b hover:border-main rounded hover:px-2'
         onClick={handleClick}
       >
         <Link to='/'>Setup Wakatime</Link>
-      </li>
+      </li> */}
     </ul>
   );
 };

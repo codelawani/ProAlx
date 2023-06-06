@@ -13,11 +13,11 @@ const DashboardNav = ({ handleClick = () => {} }) => {
             onClick={handleClick}
           >
             <MdHome style={{ fontSize: '1.5rem' }} />
-            <span className='md:hidden'>Dashboard</span>
+            <span className=''>Dashboard</span>
           </NavLink>
-          <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
+          {/* <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
             Dashboard
-          </span>
+          </span> */}
         </li>
         <li className='relative group flex w-fit pb-2'>
           <NavLink
@@ -26,11 +26,11 @@ const DashboardNav = ({ handleClick = () => {} }) => {
             onClick={handleClick}
           >
             <MdLeaderboard style={{ fontSize: '1.5rem' }} />
-            <span className='md:hidden'>Leaderboard</span>
+            <span className=''>Leaderboard</span>
           </NavLink>
-          <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
+          {/* <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
             Leaderboard
-          </span>
+          </span> */}
         </li>
 
         <li className='relative group flex w-fit'>
@@ -40,11 +40,11 @@ const DashboardNav = ({ handleClick = () => {} }) => {
             onClick={handleClick}
           >
             <MdSettings style={{ fontSize: '2rem' }} />
-            <span className='md:hidden'>Settings</span>
+            <span className=''>Settings</span>
           </NavLink>
-          <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
-            Settings
-          </span>
+          {/* <span className='group-hover:opacity-100 transition-opacity bg-red-950 px-1 text-sm text-white rounded-md absolute left-full p-2 opacity-0 -m-4 mx-auto'>
+						Settings
+					</span> */}
         </li>
       </ul>
     </nav>

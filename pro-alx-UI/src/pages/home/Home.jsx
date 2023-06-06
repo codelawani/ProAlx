@@ -50,7 +50,7 @@ const Home = () => {
   if (isLoading) return <TempLoader />;
 
   return (
-    <div className='dark:bg-black dark:text-gray-300'>
+    <div className='dark:bg-dark dark:text-gray-300'>
       <Hero />
       <Main />
     </div>

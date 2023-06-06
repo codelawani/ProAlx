@@ -3,8 +3,8 @@ import TempLoader from '../../components/TempLoader';
 
 const Dashboard = () => {
   const { value, isInitialLoading } = useUserData({
-    queryKey: 'userdata',
-    endpoint: '/user/daily_commits'
+    queryKey: ['userdata'],
+    endpoint: '/users/leaderboard'
   });
   console.log(value);
   if (isInitialLoading) return <TempLoader />;

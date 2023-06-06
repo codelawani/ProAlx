@@ -16,7 +16,7 @@ const MobileView = ({ openMobileNav }) => {
         className='bg-black fixed top-0 bottom-0 left-0 right-0 z-10 opacity-50 dark:bg-body '
         onClick={openMobileNav}
       />
-      <div className='md:hidden fixed  right-5 bg-body p-6 z-40 flex flex-col gap-2 items-start rounded transition ease-in-out transform dark:bg-black dark:text-gray-300'>
+      <div className='md:hidden fixed  right-5 bg-body p-6 z-40 flex flex-col gap-2 items-start rounded transition duration-300 ease-linear transform animate-nav origin-top dark:bg-black dark:text-gray-300'>
         <Button
           value={<TfiClose />}
           handleClick={openMobileNav}

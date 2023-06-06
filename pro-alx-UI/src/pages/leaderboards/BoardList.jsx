@@ -1,63 +1,46 @@
-import Board from './Board';
-import { useUserData } from '../../hooks/fetchData';
+import PropTypes from 'prop-types';
+
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Button from '../../components/Button';
+// import { useState } from 'react';
+// import Button from '../../components/Button';
+
 // import { toast } from 'react-toastify';
-
-const data = [
-  {
-    rank: 1,
-    name: 'John doe',
-    hours: 4090.09,
-    average: 450.9
-  },
-  {
-    rank: 2,
-    name: 'Jane doe',
-    hours: 5090.09,
-    average: 350.9
-  },
-  {
-    rank: 3,
-    name: 'John smith',
-    hours: 2090.094,
-    average: 1450.9
-  },
-  {
-    rank: 4,
-    name: 'Jane smith',
-    hours: 44090.09,
-    average: 2450.9
-  }
-];
-
-const BoardList = () => {
-  const [pageNumber, setPageNumber] = useState(1);
-  const { value } = useUserData({
-    queryKey: `leaderboard${pageNumber}`,
-    endpoint: `/users/${pageNumber}`,
-    keepPreviousData: true
-  });
-
-  console.log(value);
+const BoardList = ({ data }) => {
   const navigate = useNavigate();
 
   const handleClick = id => {
     navigate(`/user/${id}`);
   };
 
-  const prevPage = () => {
-    // check if current pageNumber is less than 1
-    if (pageNumber <= 1) return;
-    setPageNumber(prev => prev - 1);
+  const getTime = seconds => {
+    const hour = Math.floor(seconds / 3600);
+    const minute = Math.floor((seconds % 3600) / 60);
+    return `${hour > 0 ? hour + 'hrs' : ''} ${minute}mins`;
   };
 
-  const nextPage = () => {
-    // check if current pageNumber is equal to total number of pages first
+  const BoardItems = data.map((item, index) => {
+    return (
+      <tr
+        className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-3 md:gap-9 '
+        key={item.id}
+      >
+        <td className='text-center col-span-1'>{index + 1}</td>
+        <td
+          className='text-center text-blue-500 dark:text-blue-300 cursor-pointer col-span-2'
+          onClick={() => handleClick(item.id)}
+        >
+          {item.name}
+        </td>
+        <td className='text-center col-span-2'>
+          {getTime(item.waka_week_total_seconds)}
+        </td>
+        <td className='text-center col-span-2'>
+          {getTime(item.waka_week_daily_average)}
+        </td>
+      </tr>
+    );
+  });
 
-    setPageNumber(prev => prev + 1);
-  };
   return (
     <div className=''>
       <h3 className='pb-4 font-semibold text-lg'>Leaderboards</h3>
@@ -71,18 +54,13 @@ const BoardList = () => {
           </tr>
         </thead>
 
-        <tbody>
-          {data.map(item => (
-            <Board key={item.rank} handleClick={handleClick} {...item} />
-          ))}
-        </tbody>
+        <tbody>{BoardItems}</tbody>
       </table>
-      <div className='flex justify-between text-blue-500 dark:text-blue-300 w-full'>
-        {pageNumber > 1 && <Button value='PrevPage' handleClick={prevPage} />}
-        <Button value='NextPage' handleClick={nextPage} style='' />
-      </div>
     </div>
   );
+};
+BoardList.propTypes = {
+  data: PropTypes.array
 };
 
 export default BoardList;
