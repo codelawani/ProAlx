@@ -12,7 +12,7 @@ const Hero = () => {
 		'border-2 p-2 text-black border-yellow w-60 dark:text-dark dark: lg:text-2xl bg-yellow hover:text-dark dark:hover:text-dark hover:border-body ';
 
 	return (
-		<section className='md:h-screen justify-center flex flex-col md:flex-row lg:px-10 pt-5 items-center z-[10] relative bg-cool dark:bg-none dark:bg-dark-hero pb-[5rem]'>
+		<section className='md:h-screen justify-center flex flex-col md:flex-row lg:px-10 pt-5 items-center z-[10] relative bg-cool dark:bg-none dark:bg-dark-hero pb-[5rem] px-3'>
 			<div className='md:basis-3/4 items-center flex flex-col md:items-start md:px-4 basis-0 rounded-full relative'>
 				<h2 className=' text-white text-3xl md:text-4xl text-center lg:text-5xl font-bold leading-10 tracking-widest pb-4 dark:text-yellow md:text-justify lg:text-left uppercase'>
 					Teamwork Made Easy: Find Active Partners for Smooth Project

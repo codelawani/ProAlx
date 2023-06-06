@@ -3,7 +3,7 @@ import TempLoader from '../../components/TempLoader';
 
 const Dashboard = () => {
 	const { value, isInitialLoading } = useUserData({
-		queryKey: 'userdata',
+		queryKey: ['userdata'],
 		endpoint: '/users/leaderboard',
 	});
 	console.log(value);

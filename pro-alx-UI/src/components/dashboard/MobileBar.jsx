@@ -20,10 +20,10 @@ const MobileBar = ({ handleClick }) => {
 	return (
 		<>
 			<div
-				className='bg-black fixed top-0 bottom-0 left-0 right-0 z-10 opacity-50'
+				className='bg-body fixed top-0 bottom-0 left-0 right-0 z-10 opacity-20'
 				onClick={handleClick}
 			/>
-			<div className='fixed bg-dark text-white right-4 p-4 z-50 flex flex-col justify-center items-start rounded gap-2 duration-300 ease-linear transition transform top-16 animate-nav origin-top'>
+			<div className='fixed bg-dark-hero text-white right-4 p-4 z-50 flex flex-col justify-center items-start rounded gap-2 duration-300 ease-linear transition transform top-10 animate-nav origin-top'>
 				<Button
 					value={<TfiClose />}
 					style='self-end pb-3'

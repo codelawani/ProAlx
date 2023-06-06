@@ -70,7 +70,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 	});
 
 	return (
-		<div className='w-fit bg-[#B5B5B5] rounded'>
+		<div className='w-fit bg-warm dark:bg-dark-hero dark:bg-none rounded'>
 			<BarChart
 				width={barWidth}
 				height={400}
@@ -85,7 +85,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 				<XAxis dataKey='name' />
 				<Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
 				<Legend />
-				<Bar dataKey='coding' barSize={30} fill='#ff8906' />
+				<Bar dataKey='coding' barSize={30} fill='#9CA2D2' />
 			</BarChart>
 		</div>
 	);

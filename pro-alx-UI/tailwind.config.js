@@ -23,6 +23,7 @@ export default {
 				'dark-hero': '#23162b',
 				waka: '#1d1e28',
 				yellow: '#E1FF6B',
+				'warm-tone': '#FFBA6B',
 			},
 			fontFamily: {
 				inter: ['Inter', 'sans-serif'],

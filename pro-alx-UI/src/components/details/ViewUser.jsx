@@ -5,6 +5,8 @@ import UserChart from './UserChart';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { useUser } from '../../hooks/customContexts';
 import { BsTwitter } from 'react-icons/bs';
+import EditProfile from './EditProfile';
+import { useState } from 'react';
 
 const dataset = {
 	'2023-05-14': {
@@ -48,20 +50,23 @@ const ViewUser = () => {
 	// id : the user id gotten from the route link
 	const { id } = useParams();
 	const { user } = useUser();
-	const { value: userDetails } = useUserData({
+	const [editProfile, setEditProfile] = useState(false);
+	const { value: userDetails, refetch } = useUserData({
 		queryKey: ['user', id],
 		endpoint: `/users/${id}/details`,
 	});
 
 	const { value: userStats } = useUserData({
 		queryKey: ['user-stats', id],
-		endpoint: `/user/${id}/waka_stats`,
+		endpoint: `/user/${id}/${
+			userDetails['waka_connected'] ? 'waka_stats' : 'github_stats'
+		}`,
 		enabled: userDetails,
 	});
 	//console.log(userDetails, userStats);
 	const navigate = useNavigate();
 	return (
-		<div className='w-full'>
+		<div className='w-full relative py-4'>
 			<div className='flex items-center justify-between mb-11'>
 				<h3 className='text-xl font-semibold'>{`${userDetails?.name}'s Profile`}</h3>
 				<Button
@@ -75,15 +80,21 @@ const ViewUser = () => {
 					style='border border-main p-2 hover:bg-main'
 				/>
 			</div>
-			<div className='flex flex-col md:flex-row md:justify-between'>
+
+			<div className='flex flex-col lg:grid lg:justify-between lg:grid-cols-5 justify-center items-center lg:content-between'>
 				<div
 					id='user-details'
-					className='flex flex-col justify-center md:w-2/4'
+					className='flex flex-col justify-center md:full lg:col-span-2'
 				>
 					<img
 						src={userDetails?.photo_url}
 						alt='profile picture'
-						className=' rounded h-2/4 w-fit'
+						className=' rounded h-2/4 w-3/4'
+					/>
+					<Button
+						value={'edit profile'}
+						handleClick={() => setEditProfile(true)}
+						style='self-start border border-yellow w-2/4 mt-2 hover:bg-yellow hover:text-dark capitalize py-2'
 					/>
 					<span>{userDetails?.name}</span>
 					<span>{userDetails?.cohort_number}</span>
@@ -106,7 +117,7 @@ const ViewUser = () => {
 						</li>
 					</ul>
 				</div>
-				<div className='md:w-2/4 flex items-center flex-col justify-center'>
+				<div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end'>
 					{userStats === undefined ? (
 						<p className='text-center animate-bounce text-blue-400 self-start'>
 							Fetching stats...
@@ -116,6 +127,9 @@ const ViewUser = () => {
 					)}
 				</div>
 			</div>
+			{editProfile && (
+				<EditProfile setEditProfile={setEditProfile} refetch={refetch} />
+			)}
 		</div>
 	);
 };

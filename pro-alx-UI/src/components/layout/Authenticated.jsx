@@ -48,7 +48,7 @@ const Authenticated = () => {
 				<>
 					<SideBar />
 					<ToastContainer />
-					<div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-black dark:text-gray-300'>
+					<div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-dark dark:text-gray-300'>
 						<Outlet />
 					</div>
 				</>

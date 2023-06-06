@@ -25,7 +25,7 @@ const Bar = () => {
 	};
 	return (
 		<header className=''>
-			<div className='fixed bg-gradient-to-bl from-dark to-red-950 text-gray-300 p-4 top-0 left-0 right-0 z-40 flex justify-between items-center md:hidden'>
+			<div className='fixed dark:bg-[#010414] bg-[#adb6f0] text-white p-4 top-0 left-0 right-0 z-40 flex justify-between items-center md:hidden'>
 				<h1 className=''>
 					<Link to='/'>ProAlx</Link>
 				</h1>
@@ -36,8 +36,8 @@ const Bar = () => {
 				/>
 			</div>
 
-			<div className='hidden w-fit top-0 bottom-0 left-0 px-2 z-20 border-r h-full md:flex flex-col items-left bg-gradient-to-tl from-red-950 to-dark text-gray-300'>
-				<h1 className='text-gray-500 text-2xl font-extrabold border-b py-4 text-center mb-3'>
+			<div className='hidden w-fit top-0 bottom-0 left-0 px-1 xl:px-2 z-20 border-r h-full md:flex flex-col items-left dark:bg-[#010414] bg-[#adb6f0] text-white'>
+				<h1 className='bg-warm bg-clip-text text-transparent text-3xl font-extrabold border-b py-4 text-center mb-3'>
 					<Link to={'/'}>ProAlx</Link>
 				</h1>
 				<div className='flex flex-col justify-between w-full h-full items-left'>
