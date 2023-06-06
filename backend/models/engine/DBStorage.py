@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
 from models.user import User
 from models.cohort import Cohort
+from models.request import RequestedPartners
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
@@ -11,7 +12,8 @@ from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 from uuid import uuid4
-classes = {"User": User, "Cohort": Cohort}
+classes = {"User": User, "Cohort": Cohort,
+           'RequestedPartners': RequestedPartners}
 log_msg = "\nPlease check the logs for more details."
 
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
@@ -38,18 +40,21 @@ class DBStorage:
             try:
                 return method(self, *args, **kwargs)
             except NoResultFound:
-                self.session.rollback()
+                if self.session:
+                    self.session.rollback()
                 error_message = "No result found :{" + log_msg
                 logger.exception(f'Error ID: {str(uuid4())}')
                 raise DatabaseException(error_message, 404)
             except IntegrityError:
-                self.session.rollback()
+                if self.session:
+                    self.session.rollback()
                 error_message = "The requested action could not be completed due to data conflicts :(" + \
                     log_msg
                 logger.exception(f'Error ID: {str(uuid4())}')
                 raise DatabaseException(error_message, 409)
             except SQLAlchemyError:
-                self.session.rollback()
+                if self.session:
+                    self.session.rollback()
                 error_message = "There must be an issue with our server, contact support pls ^-^" + log_msg
                 logger.exception(f'Error ID: {str(uuid4())}')
                 raise DatabaseException(error_message)
@@ -176,8 +181,9 @@ class DBStorage:
         def wrapper(self, *args, **kwargs):
             query = method(self, *args, **kwargs)
             entities = (User.id, User.name, User.cohort_number,
-                        User.photo_url, User.requested_partners.number,
-                        User.waka_week_total_seconds, User.waka_week_daily_average)
+                        User.photo_url,
+                        User.waka_week_total_seconds, User.waka_week_daily_average,
+                        )
             query = query.options(load_only(*entities))
             users = query.all()
             users_dict = [user.to_dict()
@@ -203,10 +209,10 @@ class DBStorage:
     @filter_necessary_data
     def get_users_who_need_partners_by_cohort(self, n):
         """Get the users who need partners by cohort ordered by most recent request"""
-        query = self.session.query(User).filter(
-            User.requested_partners.number > 0,
-            User.cohort_number == n).order_by(
-                User.requested_partners.updated_at.desc())
+        query = self.session.query(User).join(RequestedPartners).filter(
+            RequestedPartners.number > 0,
+            User.cohort_number == n
+        ).order_by(RequestedPartners.updated_at.desc())
         return query
 
     @error_handler

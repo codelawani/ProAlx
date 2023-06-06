@@ -68,6 +68,7 @@ def authorize():
         print(user)
         public_user_data = {
             'name': user.get('name'),
+            'cohort': user.get('cohort_number'),
             'photo_url': user.get('photo_url'),
             'github_login': user.get('github_login'),
             'waka': user.get('waka_connected')

@@ -4,6 +4,7 @@ from models import storage
 import random
 from datetime import datetime, timedelta
 from models.cohort import Cohort
+from models.request import RequestedPartners
 from models.engine.DBExceptions import DatabaseException
 from mysql.connector import Error
 fake = Faker()
@@ -50,8 +51,6 @@ def create_fake_users():
             waka_connected=random_boolean,
             github_login=fake.user_name(),
             wakatime_login=fake.user_name(),
-            requested_partners=fake.random_int(
-                min=0, max=3),
         )
         # user.new()
         try:
@@ -64,10 +63,21 @@ def create_fake_users():
     return users
 
 
+def create_fake_requests(users):
+    for user in users:
+        number_of_partners = fake.random_int(min=0, max=2)
+        requested_partners = RequestedPartners(
+            number=number_of_partners, user=user)
+        storage.new(requested_partners)
+
+    storage.save()
+    print("Fake requests created successfully.")
+
+
 def create_fake_cohorts():
     create_fake_users()
     users = list(storage.all(User).values())
-
+    create_fake_requests(users)
     if not users:
         print("Users weren't created")
         return

@@ -9,4 +9,4 @@ class RequestedPartners(BaseModel):
 
     number = Column(Integer, default=0)
     user = relationship('User', back_populates='requested_partners')
-    user_id = Column(String, ForeignKey('users.id'), unique=True)
+    user_id = Column(String(60), ForeignKey('users.id'), unique=True)

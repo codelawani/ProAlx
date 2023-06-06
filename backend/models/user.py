@@ -2,6 +2,8 @@ import requests
 from sqlalchemy import Integer, Column, ForeignKey, String, DateTime, BOOLEAN
 from sqlalchemy.orm import relationship
 from .base_model import BaseModel
+from sqlalchemy.ext.hybrid import hybrid_property
+from models.request import RequestedPartners
 api = 'http://localhost:5000/api/v1'
 
 
@@ -41,4 +43,36 @@ class User(BaseModel):
 
     cohort = relationship("Cohort", back_populates="users")
     requested_partners = relationship(
-        'RequestedPartners', back_populates='user')
+        'RequestedPartners', back_populates='user', uselist=False)
+
+    def to_dict(self):
+        user_dict = super().to_dict()
+        secrets = ['gh_access_token', 'wk_access_token',
+                   'wk_refresh_token', 'waka_token_expires']
+        for secret in secrets:
+            user_dict.pop(secret, None)
+        user_dict.update({
+            'requested_partners': self.requested_partners_number,
+            'last_request_date': self.last_request_date
+        })
+        return user_dict
+
+    @hybrid_property
+    def requested_partners_number(self):
+        if self.requested_partners:
+            return self.requested_partners.number
+        return None
+
+    @requested_partners_number.expression
+    def requested_partners_number(cls):
+        return RequestedPartners.number
+
+    @hybrid_property
+    def last_request_date(self):
+        if self.requested_partners:
+            return self.requested_partners.updated_at
+        return None
+
+    @last_request_date.expression
+    def last_request_date(cls):
+        return RequestedPartners.updated_at
