@@ -1,6 +1,6 @@
 import requests
 from sqlalchemy import Integer, Column, ForeignKey, String, DateTime, BOOLEAN
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship
 from .base_model import BaseModel
 api = 'http://localhost:5000/api/v1'
 
@@ -15,7 +15,7 @@ class User(BaseModel):
     username = Column(String(50), unique=True)
     twitter_username = Column(String(60))
     whatsapp = Column(String(25))
-    email = Column(String(50))
+    email = Column(String(50), unique=True)
     github_uid = Column(Integer, unique=True)
     wakatime_uid = Column(String(36))
     most_active_time = Column(String(10))
@@ -40,4 +40,5 @@ class User(BaseModel):
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
 
     cohort = relationship("Cohort", back_populates="users")
-    user_request = relationship('Request', back_populates='user')
+    requested_partners = relationship(
+        'RequestedPartners', back_populates='user')

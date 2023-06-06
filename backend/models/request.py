@@ -1,11 +1,12 @@
-from sqlalchemy import Integer, Column, ForeignKey
+from sqlalchemy import Integer, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 from .base_model import BaseModel
 
 
-class Request(BaseModel):
+class RequestedPartners(BaseModel):
     """Stores the number of partners a user requested"""
     __tablename__ = 'requests'
-    requested_number = Column(Integer, default=0)
-    user = relationship('User', back_populates='user_request')
-    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+
+    number = Column(Integer, default=0)
+    user = relationship('User', back_populates='requested_partners')
+    user_id = Column(String, ForeignKey('users.id'), unique=True)
