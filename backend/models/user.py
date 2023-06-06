@@ -37,17 +37,7 @@ class User(BaseModel):
 
     github_login = Column(String(48))
     wakatime_login = Column(String(25))
-    requested_partners = Column(Integer, default=0, index=True)
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
 
     cohort = relationship("Cohort", back_populates="users")
-
-    def fetch_github_data(self):
-        """Retrieves daily commits of user from github api"""
-        from models import storage
-        if not self.gh_access_token:
-            return None
-        # res = requests.get(f'{api}/users/{self.id}/daily_commits')
-        # return res.json()
-
-    # def get_user_public_details(self):
+    user_request = relationship('Request', back_populates='user')
