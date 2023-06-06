@@ -15,63 +15,63 @@ import ViewUser from './components/details/ViewUser.jsx';
 import { ThemeProvider } from './hooks/ThemeContext.jsx';
 
 const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnWindowFocus: false,
-			refetchOnmount: false,
-			refetchOnReconnect: false,
-			retry: false,
-			staleTime: 60 * 60 * 1000,
-			cacheTime: 60 * 60 * 1000,
-		},
-	},
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnmount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: 60 * 60 * 1000,
+      cacheTime: 60 * 60 * 1000
+    }
+  }
 });
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <App />,
-		errorElement: <ErrorPage />,
-		children: [
-			{
-				path: '',
-				element: <Home />,
-				index: true,
-			},
-			{
-				path: 'contact',
-				element: <Contact />,
-			},
-		],
-	},
-	{
-		path: '',
-		element: <Authenticated />,
-		errorElement: <ErrorPage />,
-		children: [
-			{
-				path: 'dashboard',
-				element: <Dashboard />,
-				index: true,
-			},
-			{
-				path: 'leaderboard',
-				element: <Leaderboard />,
-			},
-			{
-				path: 'user/:id',
-				element: <ViewUser />,
-			},
-		],
-	},
+  {
+    path: '/',
+    element: <App />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '',
+        element: <Home />,
+        index: true
+      },
+      {
+        path: 'contact',
+        element: <Contact />
+      }
+    ]
+  },
+  {
+    path: '',
+    element: <Authenticated />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'dashboard',
+        element: <Dashboard />,
+        index: true
+      },
+      {
+        path: 'leaderboard',
+        element: <Leaderboard />
+      },
+      {
+        path: 'user/:id',
+        element: <ViewUser />
+      }
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<QueryClientProvider client={queryClient}>
-		<UserProvider>
-			<ThemeProvider>
-				<RouterProvider router={router} />
-			</ThemeProvider>
-		</UserProvider>
-	</QueryClientProvider>
+  <QueryClientProvider client={queryClient}>
+    <UserProvider>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </UserProvider>
+  </QueryClientProvider>
 );
