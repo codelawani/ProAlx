@@ -35,11 +35,17 @@ const localDataMgr = {
     window.localStorage.clear();
   }
 };
+function base64UrlDecode (str) {
+  const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const padding = base64.length % 4 === 0 ? 0 : 4 - (base64.length % 4);
+  const decoded = atob(base64 + '==='.slice(0, padding));
+  return decoded;
+}
 
 function decodeJWTToken (token) {
   const tokenParts = token.split('.');
   const encodedPayload = tokenParts[1];
-  const decodedPayload = atob(encodedPayload);
+  const decodedPayload = base64UrlDecode(encodedPayload);
   const payload = JSON.parse(decodedPayload);
   return payload;
 }

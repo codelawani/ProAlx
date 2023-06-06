@@ -120,13 +120,14 @@ def create_user():
         return error_handler(e)
 
 
-@app_views.route('/user', methods=['PUT'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
-def update_user():
+def update_user(user_id):
     """
     Updates a user
     """
-    user_id = get_jwt_identity()
+    if user_id != get_jwt_identity():
+        return jsonify(error="Unauthorized"), 401
     user = storage.get(User, user_id)
     if not user:
         return jsonify(error="User not found"), 404
@@ -150,6 +151,7 @@ def update_user():
         setattr(user, key, value)
     try:
         user.save()
+        return jsonify(user.to_dict()), 200
     except DatabaseException as e:
         error_handler(e)
     return jsonify(message="User updated successfully"), 200

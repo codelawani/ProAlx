@@ -161,13 +161,19 @@ class DBStorage:
             query = query.options(defer(secret))
         return query.one()
 
-    @error_handler
     def github_uid_exists(self, g_uid):
         """Check if a GitHub UID exists in the database"""
-        query = self.session.query(User).filter(User.github_uid == g_uid)
-        # Use .one() instead of .first() to raise an exception if no result is found
-        user = query.one()
-        return user
+        try:
+            query = self.session.query(User).filter(User.github_uid == g_uid)
+            # Use .one() instead of .first() to raise an exception if no result is found
+            user = query.one()
+            return user
+        except NoResultFound:
+            return None
+        except Exception as e:
+            logger.exception(e)
+            raise DatabaseException(
+                "An error occurred while checking if a GitHub UID exists in the database")
 
     @error_handler
     def clear_github_session(self, id):

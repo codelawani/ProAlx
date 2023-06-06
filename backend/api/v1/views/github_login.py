@@ -84,15 +84,15 @@ def login():
         print(user_data)
         created_user = create_user(user_data)
         public_user_data = {
-            'name': created_user.get('name'),
-            'photo_url': created_user.get('photo_url'),
-            'github_login': created_user.get('github_login'),
-            'waka': created_user.get('waka_connected'),
-            'cohort': created_user.get('cohort_number'),
+            'name': created_user.get('name', ''),
+            'photo_url': created_user.get('photo_url', ''),
+            'github_login': created_user.get('github_login', ''),
+            'waka': created_user.get('waka_connected', False),
+            'cohort': created_user.get('cohort_number', 0),
         }
         access_token = create_access_token(
             identity=created_user['id'],
-            additional_claims={'user_data': public_user_data}
+            additional_claims={'user_data': (public_user_data)}
         )
         res = make_response({'access_token': access_token}, 200)
         return res
