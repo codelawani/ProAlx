@@ -4,15 +4,13 @@ const Footer = () => {
   const date = new Date();
   const currentYear = date.getFullYear();
   return (
-    <footer className='pt-3 bg-gradient-to-bl from-dark to-red-950 py-4 text-body px-3'>
-      {/* <div className="px-3">
-				<h3>ProAlx</h3>
-				<p>Find project partner(s) easily</p>
-				<NavLinks color='black' />
-			</div> */}
-      <p className='text-center'>
-        &copy;{currentYear}ProAlx. All rights reserved.
-      </p>
+    <footer className=' text-black px-3 flex justify-between gap-1 md:flex-row flex-col dark:bg-dark bg-body dark:text-gray-300 z-[1] py-[5rem]'>
+      <h3>ProAlx</h3>
+      <ul>
+        <li>Contact Us</li>
+        <li>Documentation</li>
+      </ul>
+      <p className=''>&copy;{currentYear}ProAlx. All rights reserved.</p>
     </footer>
   );
 };

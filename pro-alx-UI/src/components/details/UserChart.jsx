@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, Tooltip, Legend } from 'recharts';
 const getTime = value => {
   const hours = Math.floor(value / 3600);
   const minutes = Math.floor((value % 3600) / 60);
-  return `${hours}hrs ${minutes}mins`;
+  return `${hours > 0 ? hours + 'hrs' : ''} ${minutes}mins`;
 };
 
 const updatedDataset = {};
@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 
 const UserChart = ({ value, isGithubData = false }) => {
   const screenWidth = window.innerWidth;
-  const barWidth = screenWidth >= 768 ? 600 : 320;
+  const barWidth = screenWidth >= 768 ? 500 : 320;
   const days = [
     'sunday',
     'monday',
@@ -69,16 +69,8 @@ const UserChart = ({ value, isGithubData = false }) => {
     updatedDataset[getDate(key)] = value[key];
   });
 
-  if (Object.keys(value).length === 0) {
-    return (
-      <p className=' text-center self-center animate-bounce text-red-950'>
-        fetching stats...
-      </p>
-    );
-  }
-
   return (
-    <div className='w-fit'>
+    <div className='w-fit bg-warm dark:bg-dark-hero dark:bg-none rounded'>
       <BarChart
         width={barWidth}
         height={400}
@@ -93,7 +85,7 @@ const UserChart = ({ value, isGithubData = false }) => {
         <XAxis dataKey='name' />
         <Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
         <Legend />
-        <Bar dataKey='coding' barSize={50} fill='rgba(69, 10 ,10,0.8)' />
+        <Bar dataKey='coding' barSize={30} fill='#9CA2D2' />
       </BarChart>
     </div>
   );
