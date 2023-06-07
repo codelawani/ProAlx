@@ -1,10 +1,11 @@
 import traceback
 from api.v1.views import app_views
 from flask import jsonify, request, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models.user import User
 from models import storage
 from datetime import datetime
+from models.cohort import Cohort
 from models.engine.DBExceptions import DatabaseException
 import requests
 from logs import logger
@@ -13,7 +14,7 @@ API = 'http://localhost:5000/api/v1'
 
 def error_handler(e, msg=None):
     """
-    A function to handle errors in the application. 
+    A function to handle errors in the application.
 
     Parameters:
     - e (Exception): The exception to be handled.
@@ -70,13 +71,13 @@ def get_users_daily_commits():
 def get_user(id):
     """
     Retrieves the public data of a user with the given id.
-    
+
     Args:
         id (int): the id of the user to retrieve data for.
-    
+
     Returns:
         JSON: the public data of the user as a JSON object.
-    
+
     Raises:
         404 Error: if no user with the given id exists.
         DatabaseException: if there is an error retrieving the data from the database.
@@ -175,30 +176,77 @@ def update_user(user_id):
     user = storage.get(User, user_id)
     if not user:
         return jsonify(error="User not found"), 404
-
     if not request.is_json:
         return jsonify(error="Invalid JSON"), 400
-    update_err_msg = "An error occurred during user update"
     data = request.get_json()
-    for key, value in data.items():
-        if key in ['id', 'created_at', 'updated_at']:
-            continue
-        if key == 'waka_token_expires':
-            value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
-        if key == 'requested_partners':
-            if not hasattr(user, 'requested_partners'):
-                logger.exception(
-                    "User does not have requested_partners attribute")
-                return jsonify(error=update_err_msg), 500
-            user.requested_partners.number = value
-            continue
-        setattr(user, key, value)
+    user_dict = storage.set_user_data(user, data)
+    if not user_dict:
+        return jsonify(error="Invalid data"), 400
+    try:
+        return jsonify(user_dict), 200
+    except DatabaseException as e:
+        return error_handler(e)
+
+
+@app_views.route('/user', methods=['PUT'], strict_slashes=False)
+@jwt_required()
+def put_user():
+    """
+    Updates a user
+    """
+    user = storage.get(User, get_jwt_identity())
+    if not user:
+        return jsonify(error="User not found"), 404
+    if not request.is_json:
+        return jsonify(error="Invalid JSON"), 400
+    data = request.get_json()
+    user_dict = storage.set_user_data(user, data)
+    if not user_dict:
+        return jsonify(error="Invalid data"), 400
+    try:
+        return jsonify(user_dict), 200
+    except DatabaseException as e:
+        return error_handler(e)
+
+
+@app_views.route('/user/cohort', methods=['PUT'], strict_slashes=False)
+@jwt_required()
+def update_user_cohort():
+    """
+    Updates the cohort of a user.
+    Args:
+        user_id (int): The ID of the user to update.
+        cohort_id (int): The ID of the cohort to update the user to.
+    Returns:
+        A tuple containing a JSON object with the updated user information and a status code of 200 on success.
+        Otherwise, it returns the result of the error_handler function.
+    """
+    user = storage.get(User, get_jwt_identity())
+    if not user:
+        return jsonify(error="User not found"), 404
+    if not request.is_json:
+        return jsonify(error="Invalid JSON"), 400
+    data = request.get_json()
+    c_number = data.get('cohort_number')
+    if not c_number or c_number < 8:
+        return jsonify(error="Invalid data"), 400
+    storage.new(Cohort(number=c_number))
+    setattr(user, 'cohort_number', int(c_number))
     try:
         user.save()
-        return jsonify(user.to_dict()), 200
+        public_data = {
+            'name': user.name,
+            'photo_url': user.photo_url,
+            'github_login': user.github_login,
+            'waka': user.waka_connected,
+            'cohort': user.cohort_number,
+        }
+        print(public_data)
+        token = create_access_token(
+            identity=user.id, additional_claims={'user_data': (public_data)})
+        return jsonify({'access_token': token}), 201
     except DatabaseException as e:
-        error_handler(e)
-    return jsonify(message="User updated successfully"), 200
+        return error_handler(e)
 
 
 @app_views.route('/users/needs_partners', strict_slashes=False)

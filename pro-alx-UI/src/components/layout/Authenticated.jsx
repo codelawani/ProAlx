@@ -21,8 +21,11 @@ const Authenticated = () => {
         .then(res => {
           if (res.status === 200) {
             const data = res.data;
+            console.log(data);
             localDataMgr.set('access_token', data.access_token);
+            console.log('b4', user);
             setUser(getUser());
+            console.log('after', user);
             if (user.waka) {
               updateLoading(false);
               toast.success('Wakatime connected successfully!');
@@ -59,7 +62,7 @@ const Authenticated = () => {
           </>
           )
         : (
-          <Navigate to='/' replace />
+          <Navigate to='/dashboard' replace />
           )}
     </div>
   );

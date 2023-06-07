@@ -12,7 +12,8 @@ const URL = 'http://127.0.0.1:5000/api/v1';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { updateLoading, isLoading, setIsLoggedIn, setUser } = useUser();
+  const { updateLoading, isLoading, setIsLoggedIn, setUser, user } = useUser();
+  console.log(user);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');

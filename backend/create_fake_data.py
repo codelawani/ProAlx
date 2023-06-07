@@ -52,7 +52,6 @@ def create_fake_users():
             github_login=fake.user_name(),
             wakatime_login=fake.user_name(),
         )
-        # user.new()
         try:
             storage.new(user)
             users.append(user)
@@ -69,14 +68,14 @@ def create_fake_requests(users):
         requested_partners = RequestedPartners(
             number=number_of_partners, user=user)
         storage.new(requested_partners)
+        print(f'Created {number_of_partners} request(s) for {user.name}')
 
     storage.save()
     print("Fake requests created successfully.")
 
 
 def create_fake_cohorts():
-    create_fake_users()
-    users = list(storage.all(User).values())
+    users = create_fake_users()
     create_fake_requests(users)
     if not users:
         print("Users weren't created")
