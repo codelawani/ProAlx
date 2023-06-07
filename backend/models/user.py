@@ -4,6 +4,9 @@ from sqlalchemy.orm import relationship
 from .base_model import BaseModel
 from sqlalchemy.ext.hybrid import hybrid_property
 from models.request import RequestedPartners
+from logs import logger
+from datetime import datetime
+from flask import jsonify
 api = 'http://localhost:5000/api/v1'
 
 
@@ -109,6 +112,13 @@ class User(BaseModel):
         The function returns the number attribute of the RequestedPartners class.
         """
         return RequestedPartners.number
+
+    @requested_partners_number.setter
+    def requested_partners_number(self, value):
+        if self.requested_partners:
+            self.requested_partners.number = value
+        else:
+            self.requested_partners = RequestedPartners(number=value)
 
     @hybrid_property
     def last_request_date(self):

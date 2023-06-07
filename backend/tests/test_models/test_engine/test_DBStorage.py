@@ -7,6 +7,7 @@ from models.user import User
 from models.engine.DBStorage import DBStorage
 from sqlalchemy import inspect
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 from models.engine.DBExceptions import DatabaseException
 DATABASE_URI = "mysql+mysqlconnector://{}:***@{}/{}".format(DB_USERNAME,
                                                             DB_HOST,
@@ -267,3 +268,36 @@ class TestDBStorageSaveClose(TestDBStorage):
             self.db.close()
         except Exception as e:
             self.fail(f"Unexpected exception raised: {str(e)}")
+
+
+class TestSetUserMethod(TestDBStorage):
+    def test_set_user_data(self):
+        # Create a user object for testing
+        user = User(name="Jake")
+
+        data = {
+            'name': 'John Doe',
+            'email': 'john.doe@example.com',
+            'requested_partners': 5
+        }
+
+        result = self.db.set_user_data(user, data)
+
+        self.assertEqual(result['name'], 'John Doe')
+        self.assertEqual(result['email'], 'john.doe@example.com')
+        self.assertEqual(result['requested_partners'], 5)
+        self.assertIsNotNone(result['created_at'])
+        self.assertIsNotNone(result['updated_at'])
+
+    def test_set_user_data_invalid_attribute(self):
+        # Create a user object for testing
+        user = User(name="Kams")
+
+        data = {
+            'invalid_attribute': 'test'
+        }
+
+        result = self.db.set_user_data(user, data)
+
+        # Assert that the user object was not modified
+        self.assertNotEqual(result.get('invalid_attribute'), 'test')
