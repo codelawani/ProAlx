@@ -8,3 +8,4 @@ from api.v1.views.github_login import *
 from api.v1.views.user import *
 from api.v1.views.cohort import *
 from api.v1.views.waka_connect import *
+from api.v1.views.request import *

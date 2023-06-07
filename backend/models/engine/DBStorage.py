@@ -12,6 +12,7 @@ from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 from uuid import uuid4
+from datetime import datetime
 classes = {"User": User, "Cohort": Cohort,
            'RequestedPartners': RequestedPartners}
 log_msg = "\nPlease check the logs for more details."
@@ -237,3 +238,31 @@ class DBStorage:
         query = self.session.query(User).order_by(
             User.waka_week_total_seconds.desc())
         return query
+
+    @error_handler
+    def create_user_request(self, data, user_id):
+        """ Create a new user request """
+        number_requested = data.get('requested_partners')
+        user = self.get(User, user_id)
+        user.requested_partners_number = number_requested
+        self.save()
+        return user
+
+    def set_user_data(self, user, data):
+        """Sets user data"""
+        for key, value in data.items():
+            if key in ['id', 'created_at', 'updated_at']:
+                continue
+            if key == 'waka_token_expires':
+                value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
+            if key == 'requested_partners':
+                if not hasattr(user, 'requested_partners'):
+                    logger.exception(
+                        "User does not have requested_partners attribute")
+                    return None
+                user.requested_partners_number = value
+                continue
+            if hasattr(user, key):
+                setattr(user, key, value)
+        self.save()
+        return user.to_dict()
