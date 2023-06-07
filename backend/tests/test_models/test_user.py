@@ -20,6 +20,13 @@ class TestUser(unittest.TestCase):
         self.db.close()
 
     def test_create_user(self):
+        """
+        Test the creation of a User object with specific attributes and check if the object is an instance of User class.
+        Parameters:
+            self: the instance of the class.
+        Returns:
+            None
+        """
         user = User(name="John Doe",
                     email="johndoe@example.com",
                     github_uid=1234,
@@ -38,6 +45,12 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.wk_refresh_token, "ghi789")
 
     def test_save_user_to_database(self):
+        """
+        Saves a new user to the database and checks if the user's ID is not None.
+
+        :param self: This object.
+        :return: None.
+        """
         user = User(name="Jane Doe",
                     email="janedoe@example.com",
                     github_uid=4321,
@@ -50,7 +63,13 @@ class TestUser(unittest.TestCase):
         self.assertIsNotNone(user.id)
 
     def test_create_user_with_missing_fields(self):
-        """Test create user with missing fields"""
+        """
+        Creates a new user object with missing fields and attempts to add it to the database. This test ensures 
+        that the proper error message is returned when attempting to create a user with missing fields. 
+
+        :param self: The test class instance.
+        :return: None.
+        """
         try:
             user = User(name="John Doe",
                         email="johndoe@example.com",
@@ -63,6 +82,21 @@ class TestUser(unittest.TestCase):
             self.assertEqual(str(e), "All fields must be filled")
 
     def test_create_user_with_invalid_data_types(self):
+        """
+        Test creating a new user with invalid data types for some of the attributes.
+
+        This function tests the behavior of the User class when trying to create a new user
+        with invalid data types for some of the attributes. It tries to create a new User
+        instance with a non-hashable github_uid of type int and a wrongly formatted wakatime_uid
+        of type str. If the User instance is successfully created, it is added to the database.
+        Otherwise, a TypeError is raised and checked against a specific error message.
+
+        Parameters:
+        self (TestCase): the current test case.
+        
+        Returns:
+        None.
+        """
         try:
             user = User(
                 name="John Doe",
@@ -78,6 +112,14 @@ class TestUser(unittest.TestCase):
             self.assertEqual(str(e), "unhashable type: '12344'")
 
     def test_relationship_with_cohort(self):
+        """
+        Test the relationship between a User and a Cohort by creating a test cohort and a test user,
+        setting the user's cohort to the test cohort, and then asserting that the user's cohort is
+        equal to the test cohort.
+
+        :param self: The object instance.
+        :return: None
+        """
         cohort = Cohort(name="Test Cohort")
         user = User(name="John Doe",
                     email="johndoe@example.com",
@@ -91,7 +133,12 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.cohort, cohort)
 
     def test_delete_user_from_database(self):
-        """Test deleting a user from the database"""
+        """
+        Deletes a user from the database and verifies if it was successfully deleted.
+
+        :param self: An instance of the test class.
+        :return: None
+        """
         user = User(name='John Doe')
         self.db.new(user)
         user.delete()
@@ -99,7 +146,11 @@ class TestUser(unittest.TestCase):
             storage.all(User)[user.id]
 
     def test_delete_user_not_in_database(self):
-        """Edge case: Attempt to delete a User object that does not exist in the database"""
+        """
+        Test that a DatabaseException is raised when trying to delete a user that is not in the database.
+        Takes no parameters.
+        Returns nothing.
+        """
         user = User(name="John", email="johndoe@example.com")
         with self.assertRaises(DatabaseException):
             user.delete()

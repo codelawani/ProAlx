@@ -4,7 +4,13 @@ from .base_model import BaseModel
 
 
 class RequestedPartners(BaseModel):
-    """Stores the number of partners a user requested"""
+    """
+    Represents the number of partners a user has requested.
+
+    Attributes:
+        number (int): The number of requested partners.
+        user (User): The user associated with the requested partners.
+    """
     __tablename__ = 'requests'
 
     number = Column(Integer, default=0)
