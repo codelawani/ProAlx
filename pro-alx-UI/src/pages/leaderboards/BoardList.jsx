@@ -1,10 +1,6 @@
 import PropTypes from 'prop-types';
-
 import { useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
-// import Button from '../../components/Button';
 
-// import { toast } from 'react-toastify';
 const BoardList = ({ data }) => {
   const navigate = useNavigate();
 
@@ -18,7 +14,7 @@ const BoardList = ({ data }) => {
     return `${hour > 0 ? hour + 'hrs' : ''} ${minute}mins`;
   };
 
-  const BoardItems = data.map((item, index) => {
+  const BoardItems = data?.map((item, index) => {
     return (
       <tr
         className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-3 md:gap-9 '
@@ -32,31 +28,32 @@ const BoardList = ({ data }) => {
           {item.name}
         </td>
         <td className='text-center col-span-2'>
-          {getTime(item.waka_week_total_seconds)}
+          {item.waka_week_total_seconds
+					  ? getTime(item.waka_week_total_seconds)
+					  : '-'}
         </td>
         <td className='text-center col-span-2'>
-          {getTime(item.waka_week_daily_average)}
+          {item.waka_week_daily_average
+					  ? getTime(item.waka_week_daily_average)
+					  : '-'}
         </td>
       </tr>
     );
   });
 
   return (
-    <div className=''>
-      <h3 className='pb-4 font-semibold text-lg'>Leaderboards</h3>
-      <table className='table-auto flex flex-col'>
-        <thead className=''>
-          <tr className='grid grid-cols-7 content-center'>
-            <th className='col-span-1'>Rank</th>
-            <th className='col-span-2'>Fullname</th>
-            <th className='col-span-2'>Hours</th>
-            <th className='col-span-2'>Average</th>
-          </tr>
-        </thead>
+    <table className='table-auto flex flex-col'>
+      <thead className=''>
+        <tr className='grid grid-cols-7 content-center font-mono font-normal uppercase text-sm'>
+          <th className='col-span-1 font-normal'>Rank</th>
+          <th className='col-span-2 '>Fullname</th>
+          <th className='col-span-2'>Hours</th>
+          <th className='col-span-2'>Average</th>
+        </tr>
+      </thead>
 
-        <tbody>{BoardItems}</tbody>
-      </table>
-    </div>
+      <tbody>{BoardItems}</tbody>
+    </table>
   );
 };
 BoardList.propTypes = {

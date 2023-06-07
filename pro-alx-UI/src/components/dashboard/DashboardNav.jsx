@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 
 const DashboardNav = ({ handleClick = () => {} }) => {
   return (
-    <nav className='md:pt-3'>
-      <ul className='list-none text-gray-400'>
-        <li className='relative group flex w-fit pb-2'>
+    <nav className='md:pt-3 uppercase font-mono text-sm font-bold'>
+      <ul className='list-none text-dark dark:text-body '>
+        <li className='relative group flex w-fit pb-2 '>
           <NavLink
             to='dashboard'
-            className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            className={({ isActive }) =>
+						  isActive ? 'active dark:text-dark' : 'inactive'}
             onClick={handleClick}
           >
             <MdHome style={{ fontSize: '1.5rem' }} />
@@ -22,7 +23,8 @@ const DashboardNav = ({ handleClick = () => {} }) => {
         <li className='relative group flex w-fit pb-2'>
           <NavLink
             to='leaderboard'
-            className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            className={({ isActive }) =>
+						  isActive ? 'active dark:text-dark' : 'inactive'}
             onClick={handleClick}
           >
             <MdLeaderboard style={{ fontSize: '1.5rem' }} />
@@ -36,7 +38,8 @@ const DashboardNav = ({ handleClick = () => {} }) => {
         <li className='relative group flex w-fit'>
           <NavLink
             to=''
-            className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            className={({ isActive }) =>
+						  isActive ? 'active dark:text-dark' : 'inactive'}
             onClick={handleClick}
           >
             <MdSettings style={{ fontSize: '2rem' }} />
