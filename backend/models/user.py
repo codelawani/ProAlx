@@ -117,6 +117,7 @@ class User(BaseModel):
     def requested_partners_number(self, value):
         if self.requested_partners:
             self.requested_partners.number = value
+            self.requested_partners.updated_at = datetime.now()
         else:
             self.requested_partners = RequestedPartners(number=value)
 
@@ -135,7 +136,7 @@ class User(BaseModel):
     def last_request_date(cls):
         """
         This is a SQLAlchemy expression function that retrieves the "updated_at" column from the RequestedPartners table.
-        
+
         :param cls: The class being used to call this function (i.e., RequestedPartners)
         :return: The updated_at column from the RequestedPartners table
         """

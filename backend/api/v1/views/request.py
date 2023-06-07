@@ -25,9 +25,11 @@ def create_user_request():
     Updates the number of partners a user requests
     """
     try:
+        print('hi')
         data = request.get_json()
         user = storage.get(User, get_jwt_identity())
-        user_dict = user.create_user_request(data)
+        user_dict = storage.set_user_data(user, data)
+        print(user_dict)
         return jsonify(user_dict), 201
     except DatabaseException as e:
         return error_handler(e)

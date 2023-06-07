@@ -21,7 +21,9 @@ const localDataMgr = {
    * @param {boolean} jsonflag - The flag to set JSON string or not.
    */
   set (item, value) {
-    window.localStorage.setItem(item, value);
+    if (typeof value === 'string') {
+      window.localStorage.setItem(item, value);
+    }
   },
 
   /**
@@ -44,6 +46,7 @@ function base64UrlDecode (str) {
 
 function decodeJWTToken (token) {
   const tokenParts = token.split('.');
+  console.log(tokenParts);
   const encodedPayload = tokenParts[1];
   const decodedPayload = base64UrlDecode(encodedPayload);
   const payload = JSON.parse(decodedPayload);
