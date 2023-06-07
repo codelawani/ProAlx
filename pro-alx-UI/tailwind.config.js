@@ -16,14 +16,17 @@ export default {
       },
       colors: {
         dark: '#0f0f10',
-        main: '#ff8906',
-        body: '#fffffe',
+        main: '#FBFBFB',
+        body: '#eaecf0',
         blur: '#333333',
         mood: 'rgba(0,0,0,0.9)',
         'dark-hero': '#23162b',
         waka: '#1d1e28',
         yellow: '#E1FF6B',
-        'warm-tone': '#FFBA6B'
+        'warm-tone': '#FFBA6B',
+        'gray-ul': '#f7f7f8',
+        primary: '#434343',
+        'dark-blue': '#2e3192'
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
@@ -51,6 +54,9 @@ export default {
         loader: 'loader 1s linear infinite',
         nav: 'navMenu 0.5s linear forwards',
         bouncy: 'bouncy 9s ease-in-out infinte'
+      },
+      boxShadow: {
+        ul: '0px 4px 6px -2px rgba(46, 49, 146, 0.06), 0px 2px 4px -2px rgba(231, 215, 215, 0.06);'
       }
     }
   },

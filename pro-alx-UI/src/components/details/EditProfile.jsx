@@ -6,22 +6,14 @@ import PropTypes from 'prop-types';
 
 const EditProfile = ({ setEditProfile, refetch }) => {
   const totalCohorts = 17;
-  const cohorts = Array.from(
-    { length: totalCohorts },
-    (_, idx) => `cohort ${idx + 1}`
-  );
+  const cohorts = Array.from({ length: totalCohorts }, (_, idx) => idx);
   const style = 'border p-2';
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = async userData => {
-    const data = {
-      name: userData?.fullname,
-      cohort_number: userData?.cohort
-    };
-
     try {
       const res = await api.put(
         '/users/7be332d6-2a14-4c40-a753-e6736c8673d3',
-        data,
+        userData,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -59,22 +51,12 @@ const EditProfile = ({ setEditProfile, refetch }) => {
       <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-body rounded-xl p-[2rem]'>
         <h3 className='w-fit py-2 border-b border-blur'>Update Profile</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className='mb-4'>
-            <label htmlFor='fullname' className='text-lg'>
-              Fullname
-            </label>
-            <input
-              type='text'
-              {...register('fullname', { maxLength: 50 })}
-              className='border block w-full border-blur outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2 px-2'
-            />
-          </div>
-          <div className='mb-4'>
-            <label htmlFor='cohort'>Cohort</label>
+          <div>
+            <label htmlFor='cohort_number'>Cohort</label>
             <select
-              {...register('cohort')}
+              {...register('cohort_number')}
               className='border block w-full border-blur outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded py-2'
-              name='cohort'
+              name='cohort_number'
             >
               <option value='' />
               {options}

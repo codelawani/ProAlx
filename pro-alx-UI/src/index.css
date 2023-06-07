@@ -3,17 +3,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 @layer components {
   .active {
-    @apply text-white border-x rounded-md p-2 flex items-center gap-2 bg-cool w-fit;
+    @apply border-l p-2 flex items-center gap-2 w-fit bg-gray-100 border-dark-blue rounded;
   }
 
   .inactive {
-    @apply flex items-center p-2 gap-2 text-gray-200;
+    @apply flex items-center p-2 gap-2;
   }
 
   .inactive:hover,
   .active:hover {
-    @apply border-l-2 bg-blur bg-none text-white rounded
+    @apply border-l-2 scale-x-[0.9] rounded
   }
 }

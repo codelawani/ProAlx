@@ -13,10 +13,11 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, updateLoading, setUser } = useUser();
   const handleAuth = () => {
-    const authUrl = GITHUB_AUTH_URL +
-      `?client_id=${CLIENT_ID}` +
-      '&response_type=code' +
-      `&scope=${SCOPE}`;
+    const authUrl =
+			GITHUB_AUTH_URL +
+			`?client_id=${CLIENT_ID}` +
+			'&response_type=code' +
+			`&scope=${SCOPE}`;
     window.location.assign(authUrl);
   };
   const clearUser = () => {
@@ -33,7 +34,7 @@ const LoginWithGithub = ({ style = 'text-white' }) => {
   return (
     <Button
       handleClick={isLoggedIn ? handleLogout : handleAuth}
-      value={isLoggedIn ? 'Logout' : 'Sign in with Github'}
+      value={isLoggedIn ? 'Signout' : 'Sign in with Github'}
       style={style}
     />
   );

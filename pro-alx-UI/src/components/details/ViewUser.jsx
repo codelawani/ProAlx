@@ -5,8 +5,6 @@ import UserChart from './UserChart';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { useUser } from '../../hooks/customContexts';
 import { BsTwitter } from 'react-icons/bs';
-import EditProfile from './EditProfile';
-import { useState } from 'react';
 
 const dataset = {
   '2023-05-14': {
@@ -47,37 +45,36 @@ const dataset = {
 };
 
 const ViewUser = () => {
-  // id : the user id gotten from the route link
   const { id } = useParams();
   const { user } = useUser();
-  const [editProfile, setEditProfile] = useState(false);
-  const { value: userDetails, refetch } = useUserData({
+  const { value: userDetails } = useUserData({
     queryKey: ['user', id],
     endpoint: `/users/${id}/details`
   });
+  console.log(userDetails);
 
   const { value: userStats } = useUserData({
     queryKey: ['user-stats', id],
-    endpoint: `/user/${id}/${
-			userDetails.waka_connected ? 'waka_stats' : 'github_stats'
+    endpoint: `/users/${id}/${
+			userDetails?.waka_connected === true ? 'waka_stats' : 'git_stats'
 		}`,
     enabled: userDetails
   });
   // console.log(userDetails, userStats);
   const navigate = useNavigate();
   return (
-    <div className='w-full relative py-4'>
+    <div className='w-full relative py-4 mt-[2rem]'>
       <div className='flex items-center justify-between mb-11'>
         <h3 className='text-xl font-semibold'>{`${userDetails?.name}'s Profile`}</h3>
         <Button
           value={
-            <span className='flex items-center text-lg text-main hover:text-white'>
+            <span className='flex items-center text-lg text-dark-blue  dark:text-body hover:text-white'>
               <MdOutlineArrowBackIosNew style={{ fontSize: '1.5rem' }} />
               Go back
             </span>
 					}
           handleClick={() => navigate(-1)}
-          style='border border-main p-2 hover:bg-main'
+          style=' p-2 hover:bg-yellow shadow-ul'
         />
       </div>
 
@@ -89,21 +86,18 @@ const ViewUser = () => {
           <img
             src={userDetails?.photo_url}
             alt='profile picture'
-            className=' rounded h-2/4 w-3/4'
+            className='mb-3 rounded h-2/4 w-3/4'
           />
-          <Button
-            value='edit profile'
-            handleClick={() => setEditProfile(true)}
-            style='self-start border border-yellow w-2/4 mt-2 hover:bg-yellow hover:text-dark capitalize py-2'
-          />
+
           <span>{userDetails?.name}</span>
           <span>{userDetails?.cohort_number}</span>
           <span>Country: {userDetails?.timezone}</span>
           <span>Email : {userDetails?.email}</span>
           <span>WhatsApp : {userDetails?.whatsapp}</span>
-          <span>{`Most active time : ${
-						userDetails?.most_active_time ? userDetails?.most_active_time : ''
-					}`}
+          <span>
+            {`Most active time : ${
+							userDetails?.most_active_time ? userDetails?.most_active_time : ''
+						}`}
           </span>
 
           <ul className='' id='socials'>
@@ -118,7 +112,7 @@ const ViewUser = () => {
             </li>
           </ul>
         </div>
-        <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end'>
+        <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end pt-9 lg:pt-0 '>
           {userStats === undefined
             ? (
               <p className='text-center animate-bounce text-blue-400 self-start'>
@@ -130,9 +124,6 @@ const ViewUser = () => {
               )}
         </div>
       </div>
-      {editProfile && (
-        <EditProfile setEditProfile={setEditProfile} refetch={refetch} />
-      )}
     </div>
   );
 };
