@@ -17,7 +17,7 @@ const BoardList = ({ data }) => {
   const BoardItems = data?.map((item, index) => {
     return (
       <tr
-        className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-3 md:gap-9 '
+        className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-[1.5rem] md:gap-9 border-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:rounded-lg'
         key={item.id}
       >
         <td className='text-center col-span-1'>{index + 1}</td>

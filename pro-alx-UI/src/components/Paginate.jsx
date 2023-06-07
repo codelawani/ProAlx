@@ -17,7 +17,7 @@ import Button from './Button';
 
 const withPagination = (Component, itemsPerPage) => {
   const PaginatedComponent = props => {
-    const { data } = props;
+    const { data, ...others } = props;
     const [currentPage, setCurrentPage] = useState(1);
     const lastIndex = currentPage * itemsPerPage;
     const firstIndex = lastIndex - itemsPerPage;
@@ -44,7 +44,7 @@ const withPagination = (Component, itemsPerPage) => {
     };
     return (
       <div>
-        <Component data={items} {...props} />
+        <Component data={items} {...others} />
         {totalPages > 1 && (
           <div className='flex justify-between text-blue-500 dark:text-blue-300 w-full items-center my-6'>
             <Button

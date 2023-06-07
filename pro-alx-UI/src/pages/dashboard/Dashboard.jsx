@@ -17,7 +17,7 @@ const Dashboard = () => {
   const cohortNumber = useRef();
   const { value, isInitialLoading, refetch } = useUserData({
     queryKey: ['partners'],
-    endpoint: `/cohorts/${user.cohort}/needs_partners`
+    endpoint: '/cohorts/9/needs_partners'
   });
   console.log(value);
 
