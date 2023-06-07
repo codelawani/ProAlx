@@ -23,7 +23,18 @@ api = 'http://localhost:5000/api/v1'
 
 
 def update_user(id, data, token):
-    """Updates user in database"""
+    """
+    Sends a PUT request to update a user's data in the API using the provided user ID, data, and authentication token.
+
+    :param id: The ID of the user to be updated.
+    :type id: int
+    :param data: The updated data for the user.
+    :type data: dict
+    :param token: The authentication token for the API.
+    :type token: str
+    :return: The JSON response from the API if the update was successful, otherwise raises an HTTPError or returns the error response.
+    :rtype: dict or str
+    """
     res = requests.put(f'{api}/users/{id}', json=data, headers={
         'Authorization': f'Bearer {token}'}
     )
@@ -38,6 +49,15 @@ def update_user(id, data, token):
 @app_views.route('/waka/authorize', strict_slashes=False)
 @jwt_required()
 def authorize():
+    """
+    This function authorizes a user using OAuth with Wakatime. The user's code is received as a request parameter and is used to get an access token from Wakatime using the OAuth 2.0 authorization code flow. The access token is then used to update the user's data with Wakatime information and create a new JWT access token with the user's data for future use. The function returns a JSON response containing the new access token or an error message if the request fails.
+
+    Args:
+        None
+
+    Returns:
+        A Flask JSON response object containing an access token or an error message.
+    """
     url = "https://wakatime.com/oauth/token"
     code = request.args.get('code')
     data = {

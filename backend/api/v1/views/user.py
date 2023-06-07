@@ -12,7 +12,16 @@ API = 'http://localhost:5000/api/v1'
 
 
 def error_handler(e, msg=None):
-    """Returns an error message and status code"""
+    """
+    A function to handle errors in the application. 
+
+    Parameters:
+    - e (Exception): The exception to be handled.
+    - msg (str): The error message to be returned. If None, it defaults to e.client_msg.
+
+    Returns:
+    - A JSON object with the error message (str) and the status code (int).
+    """
     if not msg:
         msg = e.client_msg
     return jsonify({'error': msg}), e.code
@@ -21,8 +30,9 @@ def error_handler(e, msg=None):
 @app_views.route('/users', strict_slashes=False)
 def get_users():
     """
-    Retrieves the list of all user objects
-    or a specific user
+    Retrieves all users from storage and returns them in JSON format.
+    Returns:
+        A JSON representation of a list of dictionaries, each representing a user.
     """
     try:
         all_users = storage.all(User).values()
@@ -37,8 +47,17 @@ def get_users():
 @app_views.route('/user/daily_commits', strict_slashes=False)
 @jwt_required()
 def get_users_daily_commits():
-    """This route <was created for convenience🥲
-    It fetches github stats for a user based on their token"""
+    """
+    This function retrieves the daily commit statistics of a user from the GitHub API.
+    It requires a valid JWT token to be passed in the request headers for authentication.
+
+    Args:
+        None
+
+    Returns:
+        If successful, a JSON object containing the daily commit statistics of the user.
+        Otherwise, a JSON object with an error message and a 404 status code.
+    """
     user_id = get_jwt_identity()
     res = requests.get(f'{API}/users/{user_id}/git_stats')
     if res.ok:
@@ -49,7 +68,19 @@ def get_users_daily_commits():
 
 @app_views.route('/users/<id>/details', strict_slashes=False)
 def get_user(id):
-    """ Retrieves a user's details"""
+    """
+    Retrieves the public data of a user with the given id.
+    
+    Args:
+        id (int): the id of the user to retrieve data for.
+    
+    Returns:
+        JSON: the public data of the user as a JSON object.
+    
+    Raises:
+        404 Error: if no user with the given id exists.
+        DatabaseException: if there is an error retrieving the data from the database.
+    """
     try:
         user = storage.get_user_public_data(id)
         print(user)
@@ -63,7 +94,14 @@ def get_user(id):
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
 def delete_user(user_id):
     """
-    Deletes a user Object
+    Deletes a user from the system.
+
+    Args:
+        user_id (int): The ID of the user to be deleted.
+
+    Returns:
+        A tuple containing an empty JSON object and a status code of 200 on success.
+        Otherwise, it returns the result of the error_handler function.
     """
     try:
         user = storage.get(User, user_id)
@@ -124,7 +162,13 @@ def create_user():
 @jwt_required()
 def update_user(user_id):
     """
-    Updates a user
+    Updates an existing user in the database.
+
+    :param user_id: The ID of the user to update.
+    :type user_id: str
+    :return: A JSON object containing the updated user information if the
+        update was successful, or an error message otherwise.
+    :rtype: json
     """
     if user_id != get_jwt_identity():
         return jsonify(error="Unauthorized"), 401
@@ -174,7 +218,10 @@ def get_users_who_needs_partners():
 @app_views.route('users/leaderboard', strict_slashes=False)
 def get_overall_leaderboard():
     """
-    Retrieves overall leaderboard
+    Retrieves the overall leaderboard of users. 
+
+    :return: A JSON object containing the user leaderboard information.
+    :raises DatabaseException: If there is an issue with retrieving the leaderboard from the database.
     """
     try:
         users = storage.get_overall_leaderboard()
