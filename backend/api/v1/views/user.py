@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from models.user import User
 from models import storage
 from datetime import datetime
+from models.cohort import Cohort
 from models.engine.DBExceptions import DatabaseException
 import requests
 from logs import logger
@@ -226,9 +227,11 @@ def update_user_cohort():
     if not request.is_json:
         return jsonify(error="Invalid JSON"), 400
     data = request.get_json()
-    if not data.get('cohort_number'):
+    c_number = data.get('cohort_number')
+    if not c_number or c_number < 8:
         return jsonify(error="Invalid data"), 400
-    setattr(user, 'cohort_number', int(data.get('cohort_number')))
+    storage.new(Cohort(number=c_number))
+    setattr(user, 'cohort_number', int(c_number))
     try:
         user.save()
         public_data = {
@@ -240,7 +243,7 @@ def update_user_cohort():
         }
         print(public_data)
         token = create_access_token(
-            identity=user.id, additional_claims=public_data)
+            identity=user.id, additional_claims={'user_data': (public_data)})
         return jsonify({'access_token': token}), 201
     except DatabaseException as e:
         return error_handler(e)

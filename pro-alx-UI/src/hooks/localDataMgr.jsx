@@ -50,10 +50,12 @@ function decodeJWTToken (token) {
   const encodedPayload = tokenParts[1];
   const decodedPayload = base64UrlDecode(encodedPayload);
   const payload = JSON.parse(decodedPayload);
+  console.log(payload);
   return payload;
 }
 export function getUser () {
   const token = localDataMgr.get('access_token');
+  console.log(token);
   if (token) {
     const payload = decodeJWTToken(token);
     return payload.user_data;

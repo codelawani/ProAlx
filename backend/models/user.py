@@ -57,7 +57,7 @@ class User(BaseModel):
     likes_interests = Column(String(255))
     waka_week_daily_average = Column(Integer)
     waka_week_total_seconds = Column(Integer)
-    waka_connected = Column(BOOLEAN)
+    waka_connected = Column(BOOLEAN, default=False)
     # gh_access_token = deferred(Column(String(60)), group='secret')
     # wk_access_token = deferred(Column(String(100)), group='secret')
     # wk_refresh_token = deferred(Column(String(100)), group='secret')
