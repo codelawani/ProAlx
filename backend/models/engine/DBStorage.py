@@ -149,6 +149,28 @@ class DBStorage:
         return self.session.query(model).count()
 
     @error_handler
+    def get_cohort_by_number(self, number):
+        """ Get a cohort by its number """
+        return self.session.query(Cohort).filter(Cohort.number == number).first()
+
+    @error_handler
+    def create_new_cohort_if_not_exists(self, c_number):
+        """
+        Creates a new cohort with the given cohort number if it doesn't exist.
+        Args:
+            c_number (int): The cohort number of the new cohort.
+        Returns:
+            The newly created Cohort object.
+        """
+        if not c_number:
+            return None
+        cohort = self.get_cohort_by_number(c_number)
+        if not cohort:
+            cohort = Cohort(number=c_number)
+            self.new(cohort)
+        return cohort.number
+
+    @error_handler
     def get_user_public_data(self, id):
         secrets = (
             User.gh_access_token,

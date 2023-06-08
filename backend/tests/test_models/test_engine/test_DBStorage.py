@@ -1,3 +1,4 @@
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 from models import DBStorage
 from unittest import TestCase
@@ -301,3 +302,55 @@ class TestSetUserMethod(TestDBStorage):
 
         # Assert that the user object was not modified
         self.assertNotEqual(result.get('invalid_attribute'), 'test')
+
+
+class TestGetCohortByNumber(TestDBStorage):
+
+    def test_get_cohort_by_number_existing_cohort(self):
+        """Tests that get_cohort_by_number returns the correct cohort for an existing cohort number."""
+        cohort_number = 9
+        cohort = Cohort(number=cohort_number)
+        self.db.new(cohort)
+        self.db.save()
+
+        result = self.db.get_cohort_by_number(cohort_number)
+
+        self.assertEqual(result, cohort)
+
+    def test_get_cohort_by_number_nonexistent_cohort(self):
+        """Tests that get_cohort_by_number returns None for a nonexistent cohort number."""
+        cohort_number = 10
+
+        result = self.db.get_cohort_by_number(cohort_number)
+
+        self.assertIsNone(result)
+
+
+class TestCreateNewCohortIfNotExists(TestDBStorage):
+
+    def test_create_new_cohort_if_not_exists_new_cohort(self):
+        """Tests that create_new_cohort_if_not_exists creates a new cohort when the cohort doesn't exist."""
+        cohort_number = 9
+
+        result = self.db.create_new_cohort_if_not_exists(cohort_number)
+
+        self.assertEqual(result, cohort_number)
+
+    def test_create_new_cohort_if_not_exists_existing_cohort(self):
+        """Tests that create_new_cohort_if_not_exists returns the existing cohort number when the cohort already exists."""
+        cohort_number = 9
+        cohort = Cohort(number=cohort_number)
+        self.db.new(cohort)
+        self.db.save()
+
+        result = self.db.create_new_cohort_if_not_exists(cohort_number)
+
+        self.assertEqual(result, cohort_number)
+
+    def test_create_new_cohort_if_not_exists_invalid_number(self):
+        """Tests that create_new_cohort_if_not_exists returns None for an invalid cohort number."""
+        cohort_number = None
+
+        result = self.db.create_new_cohort_if_not_exists(cohort_number)
+
+        self.assertIsNone(result)
