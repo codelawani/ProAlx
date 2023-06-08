@@ -162,6 +162,8 @@ class DBStorage:
         Returns:
             The newly created Cohort object.
         """
+        if not c_number:
+            return None
         cohort = self.get_cohort_by_number(c_number)
         if not cohort:
             cohort = Cohort(number=c_number)
