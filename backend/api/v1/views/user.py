@@ -149,8 +149,6 @@ def create_user():
 
     instance = User(**data)
     instance_dict = instance.to_dict()
-    instance_dict.pop('gh_access_token', None)
-    instance_dict.pop('wk_access_token', None)
 
     try:
         storage.new(instance)
@@ -159,40 +157,44 @@ def create_user():
         return error_handler(e)
 
 
-@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-@jwt_required()
-def update_user(user_id):
-    """
-    Updates an existing user in the database.
+# @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
+# @jwt_required()
+# def update_user(user_id):
+#     """
+#     Updates an existing user in the database.
 
-    :param user_id: The ID of the user to update.
-    :type user_id: str
-    :return: A JSON object containing the updated user information if the
-        update was successful, or an error message otherwise.
-    :rtype: json
-    """
-    if user_id != get_jwt_identity():
-        return jsonify(error="Unauthorized"), 401
-    user = storage.get(User, user_id)
-    if not user:
-        return jsonify(error="User not found"), 404
-    if not request.is_json:
-        return jsonify(error="Invalid JSON"), 400
-    data = request.get_json()
-    user_dict = storage.set_user_data(user, data)
-    if not user_dict:
-        return jsonify(error="Invalid data"), 400
-    try:
-        return jsonify(user_dict), 200
-    except DatabaseException as e:
-        return error_handler(e)
+#     :param user_id: The ID of the user to update.
+#     :type user_id: str
+#     :return: A JSON object containing the updated user information if the
+#         update was successful, or an error message otherwise.
+#     :rtype: json
+#     """
+#     if user_id != get_jwt_identity():
+#         return jsonify(error="Unauthorized"), 401
+#     user = storage.get(User, user_id)
+#     if not user:
+#         return jsonify(error="User not found"), 404
+#     if not request.is_json:
+#         return jsonify(error="Invalid JSON"), 400
+#     data = request.get_json()
+#     user_dict = storage.set_user_data(user, data)
+#     if not user_dict:
+#         return jsonify(error="Invalid data"), 400
+#     try:
+#         return jsonify(user_dict), 200
+#     except DatabaseException as e:
+#         return error_handler(e)
 
 
 @app_views.route('/user', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 def put_user():
     """
-    Updates a user
+    Updates an existing user in the database.
+
+    :return: A JSON object containing the updated user information if the
+        update was successful, or an error message otherwise.
+    :rtype: json
     """
     user = storage.get(User, get_jwt_identity())
     if not user:
@@ -207,6 +209,21 @@ def put_user():
         return jsonify(user_dict), 200
     except DatabaseException as e:
         return error_handler(e)
+
+
+def create_new_cohort_if_not_exists(c_number):
+    """
+    Creates a new cohort with the given cohort number if it doesn't exist.
+    Args:
+        c_number (int): The cohort number of the new cohort.
+    Returns:
+        The newly created Cohort object.
+    """
+    cohort = storage.get_cohort_by_number(c_number)
+    if not cohort:
+        cohort = Cohort(number=c_number)
+        storage.new(cohort)
+    return cohort.number
 
 
 @app_views.route('/user/cohort', methods=['PUT'], strict_slashes=False)
@@ -228,9 +245,10 @@ def update_user_cohort():
         return jsonify(error="Invalid JSON"), 400
     data = request.get_json()
     c_number = data.get('cohort_number')
+    print(c_number)
     if not c_number or c_number < 8:
         return jsonify(error="Invalid data"), 400
-    storage.new(Cohort(number=c_number))
+    c_number = create_new_cohort_if_not_exists(c_number)
     setattr(user, 'cohort_number', int(c_number))
     try:
         user.save()
@@ -266,7 +284,7 @@ def get_users_who_needs_partners():
 @app_views.route('users/leaderboard', strict_slashes=False)
 def get_overall_leaderboard():
     """
-    Retrieves the overall leaderboard of users. 
+    Retrieves the overall leaderboard of users.
 
     :return: A JSON object containing the user leaderboard information.
     :raises DatabaseException: If there is an issue with retrieving the leaderboard from the database.

@@ -90,31 +90,31 @@ const Dashboard = () => {
   // endpoint not available
   if (!user.cohort) {
     return (
-  <>
-      <div className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen' />
-      <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-body rounded-xl p-[2rem]'>
+      <>
+        <div className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen' />
+        <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-body rounded-xl p-[2rem]'>
       <h3 className='w-fit py-2 text-dark-blue'>
-      Please enter your cohort
+          Please enter your cohort
   				</h3>
       <form onSubmit={handleCohortSubmit} className='flex flex-col gap-5'>
-      <div>
-      <input
-      name='cohort_number'
-      id='cohort_number'
-      className='border block w-full border-blur outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-md py-2 px-3'
-      ref={cohortNumber}
-      type='number'
-      placeholder='cohort number'
-    />
+          <div>
+          <input
+          name='cohort_number'
+          id='cohort_number'
+          className='border block w-full border-blur outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-md py-2 px-3'
+          ref={cohortNumber}
+          type='number'
+          placeholder='cohort number'
+        />
+        </div>
+          <Button
+          value='Submit'
+          type='submit'
+          style='hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center'
+        />
+        </form>
     </div>
-      <Button
-      value='Submit'
-      type='submit'
-      style='hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center'
-    />
-    </form>
-    </div>
-    </>
+      </>
   	);
   }
   return (

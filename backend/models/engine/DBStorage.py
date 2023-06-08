@@ -149,6 +149,11 @@ class DBStorage:
         return self.session.query(model).count()
 
     @error_handler
+    def get_cohort_by_number(self, number):
+        """ Get a cohort by its number """
+        return self.session.query(Cohort).filter(Cohort.number == number).first()
+
+    @error_handler
     def get_user_public_data(self, id):
         secrets = (
             User.gh_access_token,
