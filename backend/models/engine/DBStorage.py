@@ -79,6 +79,8 @@ class DBStorage:
     def all(self, cls=None):
         """Returns all objects in the database"""
         result = {}
+        if isinstance(cls, str):
+            cls = classes.get(cls)
         for model in classes.values():
             if cls and model != cls:
                 continue
