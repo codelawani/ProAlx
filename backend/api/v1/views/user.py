@@ -211,21 +211,6 @@ def put_user():
         return error_handler(e)
 
 
-def create_new_cohort_if_not_exists(c_number):
-    """
-    Creates a new cohort with the given cohort number if it doesn't exist.
-    Args:
-        c_number (int): The cohort number of the new cohort.
-    Returns:
-        The newly created Cohort object.
-    """
-    cohort = storage.get_cohort_by_number(c_number)
-    if not cohort:
-        cohort = Cohort(number=c_number)
-        storage.new(cohort)
-    return cohort.number
-
-
 @app_views.route('/user/cohort', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 def update_user_cohort():
@@ -248,7 +233,7 @@ def update_user_cohort():
     print(c_number)
     if not c_number or c_number < 8:
         return jsonify(error="Invalid data"), 400
-    c_number = create_new_cohort_if_not_exists(c_number)
+    c_number = storage.create_new_cohort_if_not_exists(c_number)
     setattr(user, 'cohort_number', int(c_number))
     try:
         user.save()
