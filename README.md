@@ -32,11 +32,7 @@ By connecting with fellow developers on ProAlx, you gain access to a vibrant com
 
 ## Installation
 
-Provide step-by-step instructions on how to install and set up the ProAlx project management tool locally. Include any dependencies or prerequisites required for the installation process.
-
 ## Usage
-
-Explain how to use ProAlx effectively. Provide clear instructions on creating projects, assigning tasks, updating task status, and utilizing the collaboration features. Include examples and screenshots if possible.
 
 ## APIs Used
 
@@ -65,7 +61,6 @@ Here's a description of some endpoint used:
 
 - GET /users/<id>/git_stats: Calculates the daily commit count for each date based on the commit data.
 
-Please provide a detailed description for each API used in the project and its purpose.
 
 ## Contributors
 
