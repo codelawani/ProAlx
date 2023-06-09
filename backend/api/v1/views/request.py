@@ -1,13 +1,9 @@
-import traceback
 from api.v1.views import app_views
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user import User
 from models import storage
-from datetime import datetime
 from models.engine.DBExceptions import DatabaseException
-import requests
-from logs import logger
 API = 'http://localhost:5000/api/v1'
 
 
