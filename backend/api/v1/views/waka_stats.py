@@ -1,13 +1,6 @@
-import sys
-import os
-# Get the absolute path of the "backend" directory
-backend_path = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "../../../../backend"))
-sys.path.append(backend_path)
 import requests
-from api.v1.views import app_views
 from flask import jsonify
-from models import storage, API
+
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'AirBnB_clone_v4',
              'alx-higher_level_programming', 'alx-low_level_programming',
@@ -16,7 +9,7 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'monty', 'RSA-Factoring-Challenge']
 
 
-@app_views.route('/users/<id>/waka_stats')
+# @app_views.route('/users/<id>/waka_stats')
 def get_daily_logs(id, n=7):
     """
     Get the daily wakatime log for each date.
@@ -25,6 +18,8 @@ def get_daily_logs(id, n=7):
         dict: A dictionary where the keys are dates and the values are the
         corresponding logs.
     """
+    from models import storage
+
     user = storage.get('User', id)
     if user:
         token = user.wk_access_token
@@ -81,6 +76,7 @@ def get_waka_data(n, token, user, process=True):
 
 def save_waka_weekly_stats(data, user):
     """ Saves the weekly wakatime stats to the database."""
+    from models import storage
     user_data = {
         'waka_week_total_seconds': int(data['cumulative_total']['seconds']),
         'waka_week_daily_average': int(data['daily_average']['seconds'])
@@ -101,7 +97,7 @@ def process_data(data):
             date = day['range']['date']
             projects = day['projects']
             project_info = {project['name']: project['total_seconds']
-                            for project in projects if project['name'] in alx_repos}
+                            for project in projects if project['name']}
             daily_logs[date] = project_info
         return daily_logs
     except KeyError:
@@ -110,6 +106,7 @@ def process_data(data):
 
 def update_waka_weekly_stats_for_all_users():
     """ Updates the weekly wakatime stats for all users."""
+    from models import storage
     users = storage.all('User').values()
     for user in users:
         token = user.wk_access_token
@@ -117,4 +114,10 @@ def update_waka_weekly_stats_for_all_users():
 
 
 if __name__ == '__main__':
+    import sys
+    import os
+    # Get the absolute path of the "backend" directory
+    backend_path = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "../../../../backend"))
+    sys.path.append(backend_path)
     update_waka_weekly_stats_for_all_users()

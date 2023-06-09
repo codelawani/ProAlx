@@ -13,6 +13,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 from uuid import uuid4
 from datetime import datetime
+
 classes = {"User": User, "Cohort": Cohort,
            'RequestedPartners': RequestedPartners}
 log_msg = "\nPlease check the logs for more details."
@@ -174,6 +175,9 @@ class DBStorage:
 
     @error_handler
     def get_user_public_data(self, id):
+        from api.v1.views.waka_stats import get_daily_logs
+        from api.v1.views.git_stats import get_daily_commits
+
         secrets = (
             User.gh_access_token,
             User.wk_access_token,
@@ -184,7 +188,13 @@ class DBStorage:
         query = self.session.query(User).filter(User.id == id)
         for secret in secrets:
             query = query.options(defer(secret))
-        return query.one()
+        user = query.one()
+        if user:
+            daily_commits = get_daily_commits(user.id)
+            daily_logs = get_daily_logs(user.id)
+            return {'user': user.to_dict(),
+                    'waka_stats': daily_logs,
+                    'git_stats': daily_commits}
 
     def github_uid_exists(self, g_uid):
         """Check if a GitHub UID exists in the database"""

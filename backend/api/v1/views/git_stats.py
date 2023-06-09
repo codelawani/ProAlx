@@ -3,8 +3,8 @@ import jwt
 from flask import jsonify
 from dotenv import load_dotenv
 from api.v1.views import app_views
-import requests
 from models import storage
+import requests
 load_dotenv()
 alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
              'AirBnB_clone_v4',
@@ -60,6 +60,7 @@ def fetch_commits(url, headers):
     """
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
+        print(response.json())
         return response.json().get("items", [])
     else:
         print(f"Error fetching commits: {response.status_code}")
@@ -71,13 +72,13 @@ def process_commits(commits, username):
     Processes a list of commits and returns a dictionary containing the count of
     commits made to different repositories on different dates. The function takes
     in two parameters:
-    
+
     - commits: A list of dictionaries representing commits to repositories. Each
       dictionary contains information such as the name of the repository, the date
       of the commit, etc.
     - username: A string representing the username of the user whose commits are
       being processed.
-    
+
     The function returns a dictionary where the keys are dates in the format "YYYY-MM-DD"
     representing the dates of the commits and the values are dictionaries containing
     the count of commits made to different repositories on that date. The keys of the
@@ -89,7 +90,7 @@ def process_commits(commits, username):
         repo_name = commit["repository"]["full_name"]
         if username in repo_name:
             repo_name = repo_name.replace(f'{username}/', '')
-        if repo_name in alx_repos:  # Check if the repository is in the allowed repos
+        if repo_name:  # Check if the repository is in the allowed repos
             commit_date = commit["commit"]["author"]["date"][:10]
             if commit_date in commit_counts:
                 if repo_name in commit_counts[commit_date]:
@@ -104,7 +105,7 @@ def process_commits(commits, username):
 def get_commits(token, username, n=7, page_size=100):
     """
     Retrieves the number of commits authored by a given username in a specified time range.
-    
+
     :param token: The GitHub personal access token.
     :type token: str
     :param username: The username of the author whose commits are to be fetched.

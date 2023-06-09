@@ -1,11 +1,8 @@
-import traceback
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models.user import User
 from models import storage
-from datetime import datetime
-from models.cohort import Cohort
 from models.engine.DBExceptions import DatabaseException
 import requests
 from logs import logger
@@ -87,7 +84,7 @@ def get_user(id):
         print(user)
         if not user:
             abort(404)
-        return jsonify(user.to_dict())
+        return jsonify(user)
     except DatabaseException as e:
         return error_handler(e)
 
@@ -115,6 +112,12 @@ def delete_user(user_id):
         return jsonify({}), 200
     except DatabaseException as e:
         return error_handler(e)
+
+
+@app_views.route('/user/profile', strict_slashes=False)
+@jwt_required()
+def get_user_profile():
+    return jsonify(storage.get_user_public_data(get_jwt_identity()))
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
