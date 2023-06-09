@@ -23,7 +23,9 @@ def create_user_request():
     try:
         data = request.get_json()
         user = storage.get(User, get_jwt_identity())
-        user_dict = storage.set_user_data(user, data)
+        if not user:
+            return error_handler(DatabaseException(404, 'User not found'))
+        user_dict = storage.set_user_data(user.id, data)
         print(user_dict)
         return jsonify(user_dict), 201
     except DatabaseException as e:

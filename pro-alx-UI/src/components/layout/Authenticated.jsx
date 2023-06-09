@@ -62,7 +62,7 @@ const Authenticated = () => {
           </>
           )
         : (
-          <Navigate to='/dashboard' replace />
+          <Navigate to='/' replace />
           )}
     </div>
   );

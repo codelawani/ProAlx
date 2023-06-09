@@ -22,28 +22,23 @@ app = Flask(__name__)
 api = 'http://localhost:5000/api/v1'
 
 
-def update_user(id, data, token):
-    """
-    Sends a PUT request to update a user's data in the API using the provided user ID, data, and authentication token.
+def update_user(id, data):
+    """ This function updates a user's data in the database.
 
-    :param id: The ID of the user to be updated.
-    :type id: int
-    :param data: The updated data for the user.
-    :type data: dict
-    :param token: The authentication token for the API.
-    :type token: str
-    :return: The JSON response from the API if the update was successful, otherwise raises an HTTPError or returns the error response.
-    :rtype: dict or str
+    Args:
+        id (str): The user's id.
+        data (dicr): A dictionary containing the data to be updated.
+
+    Returns:
+        dict: A dictionary containing the updated user's data is successful.
     """
-    res = requests.put(f'{api}/users/{id}', json=data, headers={
-        'Authorization': f'Bearer {token}'}
-    )
-    if res.ok:
+    user_dict = storage.set_user_data(id, data)
+    if user_dict:
         print('Updated successfully')
-        return res.json()
+        return user_dict
     else:
-        res.raise_for_status()
-        return res.text
+        print('Update failed')
+        return {}
 
 
 @app_views.route('/waka/authorize', strict_slashes=False)
@@ -74,6 +69,7 @@ def authorize():
     }
     encoded_data = urlencode(data)
     response = requests.post(url,  data=encoded_data, headers=headers)
+    err_res = make_response(jsonify({'msg': 'failed'}), 404)
     if response.status_code == 200:
         # Request was successful
         print('POST request succeeded')
@@ -86,10 +82,10 @@ def authorize():
             'waka_token_expires': user.get('expires_at')
         }
         user_id = get_jwt_identity()
-        authorization_header = request.headers.get('Authorization')
-        token = authorization_header.split(' ')[1]
-        user = update_user(user_id, waka_data, token)
+        user = update_user(user_id, waka_data)
         print(user)
+        if not user:
+            return err_res
         public_user_data = {
             'name': user.get('name', ''),
             'cohort': user.get('cohort_number', 0),
@@ -106,6 +102,5 @@ def authorize():
         # Request failed
         print('POST request failed')
         print(f'response is {response.text}')
-        # abort(404)
-        res = make_response(jsonify({'msg': "failed"}), 404)
+        res = err_res
     return res

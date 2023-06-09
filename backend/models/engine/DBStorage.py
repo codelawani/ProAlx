@@ -282,8 +282,9 @@ class DBStorage:
         self.save()
         return user
 
-    def set_user_data(self, user, data):
+    def set_user_data(self, id, data):
         """Sets user data"""
+        user = self.get(User, id)
         for key, value in data.items():
             if key in ['id', 'created_at', 'updated_at']:
                 continue

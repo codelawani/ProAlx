@@ -205,7 +205,7 @@ def put_user():
     if not request.is_json:
         return jsonify(error="Invalid JSON"), 400
     data = request.get_json()
-    user_dict = storage.set_user_data(user, data)
+    user_dict = storage.set_user_data(user.id, data)
     if not user_dict:
         return jsonify(error="Invalid data"), 400
     try:
