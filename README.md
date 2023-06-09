@@ -1,6 +1,6 @@
 # ProAlx
 
-## Description
+## Introduction
 
 ProAlx is the ultimate app designed to supercharge your productivity and foster connections with like-minded developers. Our purpose is simple: to connect you with fellow productive developers and provide you with valuable insights into your coding journey.
 
@@ -33,6 +33,40 @@ By connecting with fellow developers on ProAlx, you gain access to a vibrant com
 ## Installation
 
 ## Usage
+
+To use this app you vist our website and get started on your journey.
+
+But if you want to run this locally, kindly follow these steps:
+
+### Instructions
+
+- clone the repository:
+```
+git clone https://github.com/angelofdeity/ProAlx.git
+```
+
+- navigate to the backend directory:
+```
+cd backend/
+```
+
+- run the app:
+```
+python3 -m api.v1.app
+```
+
+- open another terminal and navigate to `pro-alx-Ui`:
+```
+cd pro-alx-Ui
+```
+
+- then run the following commands:
+```
+npm install
+npm run dev
+```
+
+
 
 ## APIs Used
 
