@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 const Table = ({ data }) => {
+  const navigate = useNavigate();
   return (
-    <table className='max-w-full divide-y divide-red-950'>
+    <table className='max-w-full divide-y divide-bar'>
       <thead>
         <tr className='text-xs text-left text-gray-500 font-medium uppercase tracking-wider'>
           <th className='py-3 px-3 w-1/6'>Name</th>
           <th className='py-3 px-3 w-1/12'>Daily Average</th>
-          <th className='py-3 px-1 w-1/12'>request</th>
+          <th className='py-3 px-1 w-1/12'>partners needed</th>
           <th className='py-3 px-3 w-1/12 hidden sm:table-cell'>Total Hours</th>
         </tr>
       </thead>
@@ -15,7 +17,7 @@ const Table = ({ data }) => {
         {data?.map((row, index) => (
           <tr
             key={index}
-            className='cursor-pointer text-black whitespace-nowrap dark:text-white dark:bg-black dark:hover:bg-red-950 hover:bg-red-950 hover:text-white transition-colors duration-200'
+            className='cursor-pointer text-black whitespace-nowrap dark:text-white dark:bg-black dark:hover:bg-bar hover:bg-bar hover:text-white transition-colors duration-200 bg-white'
           >
             <td className='py-4 px-3 w-1/6'>
               <div className='flex items-center'>
@@ -24,7 +26,10 @@ const Table = ({ data }) => {
                   alt={row.name}
                   className='w-10 h-10 rounded-full'
                 />
-                <span className='ml-2 truncate text-blue-400 group-hover:text-white hover:underline cursor-pointer'>
+                <span
+                  className='ml-2 truncate text-blue-600 group-hover:text-white hover:underline cursor-pointer '
+                  onClick={() => navigate(`/user/${row.id}`)}
+                >
                   {row.name}
                 </span>
               </div>

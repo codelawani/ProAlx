@@ -1,62 +1,6 @@
+import wakatimeDashboard from './assets/stats.png';
 import test from './assets/sample.png';
-
-export const users = [
-	{
-		id: 0,
-		name: 'John',
-		dataset: [
-			[50, 24, 45, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-			[50, 24, 4, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-		],
-		projects: ['alx-system', 'alx-low level'],
-	},
-	{
-		id: 1,
-		name: 'Jane',
-		projects: ['alx-system', 'alx-low level'],
-		dataset: [
-			[50, 24, 45, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-			[50, 24, 4, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-		],
-	},
-	{
-		id: 2,
-		name: 'Phil',
-		dataset: [
-			[50, 24, 45, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-			[50, 24, 4, 67, 98, 9, 76, 54, 34, 34, 23, 12],
-			[50, 24, 45, 67, 98, 9, 76, 54, 34, 36, 23, 12],
-		],
-		projects: ['alx-system', 'alx-low level', 'AirBnB_clone'],
-	},
-];
-
-export const data = [
-	{
-		time: 1684767221.780784,
-		project: 'ProAlx',
-		duration: 3705.521775,
-		color: null,
-	},
-	{
-		time: 1684770927.302559,
-		project: 'test_dnd',
-		duration: 76.797201,
-		color: null,
-	},
-	{
-		time: 1684771004.09976,
-		project: 'ProAlx',
-		duration: 5058.45739,
-		color: null,
-	},
-	{
-		time: 1684784468.654037,
-		project: 'ProAlx',
-		duration: 578.074124,
-		color: null,
-	},
-];
+import dashboard from './assets/dashboard.png';
 
 export const reviews = [
 	{
@@ -79,125 +23,30 @@ export const reviews = [
 	},
 ];
 
-export const leaderboardList = [
+export const proalx = [
 	{
-		rank: 1,
-		name: 'John doe',
-		hours: 4090.09,
-		average: 450.9,
+		id: 0,
+		text: 'By seamlessly integrating their Wakatime statistics, we offer you an unparalleled opportunity to delve into the depths of their commitment to coding and learning.',
+		img: '',
+		alt: 'A snapshot of our dashboard',
 	},
 	{
-		rank: 2,
-		name: 'Jane doe',
-		hours: 5090.09,
-		average: 350.9,
+		id: 1,
+		text: 'Choose a partner from your cohort easily using our partner finding list',
+		img: dashboard,
+		alt: 'A snapshot showing the partner list of our dashboard',
 	},
+
 	{
-		rank: 3,
-		name: 'John smith',
-		hours: 2090.094,
-		average: 1450.9,
+		id: 2,
+		text: "Integrating Wakatime into your preferred code editor is easy. Just follow our clear guide on how to setup wakatime in your preferred editor to unlock the full potential of Wakatime's features.",
+		alt: 'snapshot of wakatime dashboard statistics',
+		img: wakatimeDashboard,
 	},
-	{
-		rank: 4,
-		name: 'Jane smith',
-		hours: 44090.09,
-		average: 2450.9,
-	},
-	{
-		rank: 5,
-		name: 'John doe',
-		hours: 4090.09,
-		average: 450.9,
-	},
-	{
-		rank: 6,
-		name: 'Jane doe',
-		hours: 5090.09,
-		average: 350.9,
-	},
-	{
-		rank: 7,
-		name: 'John smith',
-		hours: 2090.094,
-		average: 1450.9,
-	},
-	{
-		rank: 8,
-		name: 'Jane smith',
-		hours: 44090.09,
-		average: 2450.9,
-	},
-	{
-		rank: 9,
-		name: 'John doe',
-		hours: 4090.09,
-		average: 450.9,
-	},
-	{
-		rank: 10,
-		name: 'Jane doe',
-		hours: 5090.09,
-		average: 350.9,
-	},
-	{
-		rank: 11,
-		name: 'John smith',
-		hours: 2090.094,
-		average: 1450.9,
-	},
-	{
-		rank: 12,
-		name: 'Jane smith',
-		hours: 44090.09,
-		average: 2450.9,
-	},
-	{
-		rank: 13,
-		name: 'John doe',
-		hours: 4090.09,
-		average: 450.9,
-	},
-	{
-		rank: 14,
-		name: 'Jane doe',
-		hours: 5090.09,
-		average: 350.9,
-	},
-	{
-		rank: 15,
-		name: 'John smith',
-		hours: 2090.094,
-		average: 1450.9,
-	},
-	{
-		rank: 16,
-		name: 'Jane smith',
-		hours: 44090.09,
-		average: 2450.9,
-	},
-	{
-		rank: 17,
-		name: 'John doe',
-		hours: 4090.09,
-		average: 450.9,
-	},
-	{
-		rank: 18,
-		name: 'Jane doe',
-		hours: 5090.09,
-		average: 350.9,
-	},
-	{
-		rank: 19,
-		name: 'John smith',
-		hours: 2090.094,
-		average: 1450.9,
-	},
-	{
-		rank: 20,
-		name: 'Jane smith',
-		hours: 44090.09,
-		average: 2450.9,
-	},
+	// {
+	// 	id: 3,
+	// 	text: 'Experience enhanced productivity, transparency, and embark on a journey of mutual growth and shared coding aspirations.',
+	// 	alt: '',
+	// 	img: '',
+	// },
 ];

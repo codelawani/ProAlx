@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import Cohort from '../../components/details/Cohort';
+// import Cohort from '../../components/details/Cohort';
 import Button from '../../components/Button';
-import EditProfile from '../../components/details/EditProfile';
+// import EditProfile from '../../components/details/EditProfile';
 
 const Settings = () => {
   const [updateCohort, setUpdateCohort] = useState(false);
-  const [editProfile, setEditProfile] = useState(false);
+  // const [editProfile, setEditProfile] = useState(false);
 
   const handleCohortChange = () => {
     setUpdateCohort(prev => !prev);
   };
 
-  const handleProfileChange = () => {
-    setEditProfile(prev => !prev);
-  };
+  // const handleProfileChange = () => {
+  // 	setEditProfile(prev => !prev);
+  // };
   const style =
 		'hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center dark:text-main dark:border-warm';
 
@@ -33,8 +33,6 @@ const Settings = () => {
             style={style}
           />
         </div>
-        {updateCohort && <Cohort handleClick={handleCohortChange} />}
-        <EditProfile handleClick={handleProfileChange} />
       </div>
     </div>
   );

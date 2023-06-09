@@ -44,7 +44,7 @@ const Authenticated = () => {
   }, []);
   return (
     <div
-      className={`${theme} flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
     >
       {isLoggedIn
         ? (

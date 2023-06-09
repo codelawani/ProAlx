@@ -13,7 +13,7 @@ import Home from './pages/home/Home.jsx';
 import Leaderboard from './pages/leaderboards/PaginatedLeaderboard.jsx';
 import ViewUser from './components/details/ViewUser.jsx';
 import { ThemeProvider } from './hooks/ThemeContext.jsx';
-import Settings from './pages/settings/Settings.jsx';
+// import Settings from './pages/settings/Settings.jsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,11 +62,11 @@ const router = createBrowserRouter([
       {
         path: 'user/:id',
         element: <ViewUser />
-      },
-      {
-        path: '',
-        element: <Settings />
       }
+      // {
+      // 	path: 'settings',
+      // 	element: <Settings />,
+      // },
     ]
   }
 ]);
