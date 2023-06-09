@@ -1,9 +1,10 @@
+import re
 import requests
 from sqlalchemy import Integer, Column, ForeignKey, String, DateTime, BOOLEAN
 from sqlalchemy.orm import relationship
 from .base_model import BaseModel
 from sqlalchemy.ext.hybrid import hybrid_property
-from models.request import RequestedPartners
+from models.partner_request import PartnerRequest
 from logs import logger
 from datetime import datetime
 from flask import jsonify
@@ -38,7 +39,7 @@ class User(BaseModel):
         wakatime_login (str): The user's WakaTime login name.
         cohort_number (int): The number of the cohort the user belongs to.
         cohort (Cohort): The cohort the user belongs to.
-        requested_partners (RequestedPartners): The requested partners of the user.
+        partner_request (PartnerRequest): User request data (project, number).
     """
     __tablename__ = 'users'
 
@@ -74,8 +75,8 @@ class User(BaseModel):
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
 
     cohort = relationship("Cohort", back_populates="users")
-    requested_partners = relationship(
-        'RequestedPartners', back_populates='user', uselist=False)
+    partner_request = relationship(
+        'PartnerRequest', back_populates='user', uselist=False)
 
     def to_dict(self):
         """
@@ -87,57 +88,78 @@ class User(BaseModel):
                    'wk_refresh_token', 'waka_token_expires']
         for secret in secrets:
             user_dict.pop(secret, None)
-        user_dict.update({
-            'requested_partners': self.requested_partners_number,
-            'last_request_date': self.last_request_date
-        })
+        if self.partner_request:
+            user_dict.update({
+                'requested_partners': self.partner_request.number,
+                'last_request_date': self.partner_request.updated_at,
+                'requested_project': self.partner_request.project
+            })
+            user_dict.pop('partner_request', None)
         return user_dict
 
-    @hybrid_property
-    def requested_partners_number(self):
-        """
-        Returns the number of requested partners for the current instance.
+    # @hybrid_property
+    # def requested_partners_number(self):
+    #     """
+    #     Returns the number of requested partners for the current instance.
 
-        :return: An integer representing the number of requested partners or None if no partners are requested.
-        """
-        if self.requested_partners:
-            return self.requested_partners.number
-        return None
+    #     :return: An integer representing the number of requested partners or None if no partners are requested.
+    #     """
+    #     if self.requested_partners:
+    #         return self.requested_partners.number
+    #     return None
 
-    @requested_partners_number.expression
-    def requested_partners_number(cls):
-        """
-        This function is a class level decorator that is used to define an expression for the requested_partners_number column.
-        It takes a single parameter, cls, which represents the class calling the function.
-        The function returns the number attribute of the RequestedPartners class.
-        """
-        return RequestedPartners.number
+    # @requested_partners_number.expression
+    # def requested_partners_number(cls):
+    #     """
+    #     This function is a class level decorator that is used to define an expression for the requested_partners_number column.
+    #     It takes a single parameter, cls, which represents the class calling the function.
+    #     The function returns the number attribute of the RequestedPartners class.
+    #     """
+    #     return RequestedPartners.number
 
-    @requested_partners_number.setter
-    def requested_partners_number(self, value):
-        if self.requested_partners:
-            self.requested_partners.number = value
-            self.requested_partners.updated_at = datetime.now()
-        else:
-            self.requested_partners = RequestedPartners(number=value)
+    # @requested_partners_number.setter
+    # def requested_partners_number(self, value):
+    #     if self.requested_partners:
+    #         self.requested_partners.number = value
+    #         self.requested_partners.updated_at = datetime.now()
+    #     else:
+    #         self.requested_partners = RequestedPartners(number=value)
 
-    @hybrid_property
-    def last_request_date(self):
-        """
-        Returns the updated_at value of the last requested partner, if any, otherwise None.
+    # @hybrid_property
+    # def last_request_date(self):
+    #     """
+    #     Returns the updated_at value of the last requested partner, if any, otherwise None.
 
-        :return: datetime or None
-        """
-        if self.requested_partners:
-            return self.requested_partners.updated_at
-        return None
+    #     :return: datetime or None
+    #     """
+    #     if self.requested_partners:
+    #         return self.requested_partners.updated_at
+    #     return None
 
-    @last_request_date.expression
-    def last_request_date(cls):
-        """
-        This is a SQLAlchemy expression function that retrieves the "updated_at" column from the RequestedPartners table.
+    # @last_request_date.expression
+    # def last_request_date(cls):
+    #     """
+    #     This is a SQLAlchemy expression function that retrieves the "updated_at" column from the RequestedPartners table.
 
-        :param cls: The class being used to call this function (i.e., RequestedPartners)
-        :return: The updated_at column from the RequestedPartners table
-        """
-        return RequestedPartners.updated_at
+    #     :param cls: The class being used to call this function (i.e., RequestedPartners)
+    #     :return: The updated_at column from the RequestedPartners table
+    #     """
+    #     return RequestedPartners.updated_at
+
+    # @hybrid_property
+    # def requested_project(self):
+    #     if self.requested_partners:
+    #         return self.requested_partners.project
+    #     return None
+
+    # @requested_project.expression
+    # def requested_project(cls):
+    #     return RequestedPartners.project
+
+    # @requested_project.setter
+    # def requested_project(self, value):
+    #     if self.requested_partners:
+    #         self.requested_partners.project = value
+    #         self.requested_partners.updated_at = datetime.now()
+    #     else:
+    #         self.requested_partners = RequestedPartners(project=value)

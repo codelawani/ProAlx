@@ -1,6 +1,6 @@
 from api.v1.views import app_views
 from flask import jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity as jwt_id
 from models.user import User
 from models import storage
 from models.engine.DBExceptions import DatabaseException
@@ -22,7 +22,7 @@ def create_user_request():
     """
     try:
         data = request.get_json()
-        user = storage.get(User, get_jwt_identity())
+        user = storage.get(User, jwt_id())
         if not user:
             return error_handler(DatabaseException(404, 'User not found'))
         user_dict = storage.set_user_data(user.id, data)

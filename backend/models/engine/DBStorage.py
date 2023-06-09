@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
 from models.user import User
 from models.cohort import Cohort
-from models.request import RequestedPartners
+from models.partner_request import PartnerRequest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
@@ -13,9 +13,10 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .DBExceptions import DatabaseException
 from uuid import uuid4
 from datetime import datetime
+from functools import wraps
 
 classes = {"User": User, "Cohort": Cohort,
-           'RequestedPartners': RequestedPartners}
+           'PartnerRequest': PartnerRequest}
 log_msg = "\nPlease check the logs for more details."
 
 DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
@@ -36,7 +37,7 @@ class DBStorage:
 
     def error_handler(method):
         """Returns a wrapper that handles errors"""
-
+        @wraps(method)
         def wrapper(self, *args, **kwargs):
             """ Wrapper that handles errors"""
             try:
@@ -219,6 +220,7 @@ class DBStorage:
             self.save()
 
     def filter_necessary_data(method):
+        @wraps(method)
         def wrapper(self, *args, **kwargs):
             query = method(self, *args, **kwargs)
             entities = (User.id, User.name, User.cohort_number,
@@ -250,10 +252,10 @@ class DBStorage:
     @filter_necessary_data
     def get_users_who_need_partners_by_cohort(self, n):
         """Get the users who need partners by cohort ordered by most recent request"""
-        query = self.session.query(User).join(RequestedPartners).filter(
-            RequestedPartners.number > 0,
+        query = self.session.query(User).join(PartnerRequest).filter(
+            PartnerRequest.number > 0,
             User.cohort_number == n
-        ).order_by(RequestedPartners.updated_at.desc())
+        ).order_by(PartnerRequest.updated_at.desc())
         return query
 
     @error_handler
@@ -273,29 +275,29 @@ class DBStorage:
             User.waka_week_total_seconds.desc())
         return query
 
-    @error_handler
-    def create_user_request(self, data, user_id):
-        """ Create a new user request """
-        number_requested = data.get('requested_partners')
-        user = self.get(User, user_id)
-        user.requested_partners_number = number_requested
-        self.save()
-        return user
+    # @error_handler
+    # def create_user_request(self, data, user_id):
+    #     """ Create a new user request """
+    #     number_requested = data.get('requested_partners')
+    #     user = self.get(User, user_id)
+    #     user.requested_partners_number = number_requested
+    #     self.save()
+    #     return user
 
     def set_user_data(self, id, data):
         """Sets user data"""
         user = self.get(User, id)
+        request = PartnerRequest(user=user)
         for key, value in data.items():
             if key in ['id', 'created_at', 'updated_at']:
                 continue
-            if key == 'waka_token_expires':
+            elif key == 'waka_token_expires':
                 value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
-            if key == 'requested_partners':
-                if not hasattr(user, 'requested_partners'):
-                    logger.exception(
-                        "User does not have requested_partners attribute")
-                    return None
-                user.requested_partners_number = value
+            elif key == 'requested_partners':
+                request.number = value
+                continue
+            elif key == 'requested_project':
+                request.project = value
                 continue
             if hasattr(user, key):
                 setattr(user, key, value)
