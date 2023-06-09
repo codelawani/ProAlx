@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { BarChart, Bar, XAxis, Tooltip, Legend } from 'recharts';
+import { useState, useLayoutEffect } from 'react';
 
 const getTime = value => {
   const hours = Math.floor(value / 3600);
@@ -40,8 +41,29 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 };
 
 const UserChart = ({ value, isGithubData = false }) => {
-  const screenWidth = window.innerWidth;
-  const barWidth = screenWidth >= 768 ? 500 : 320;
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  let barWidth = null;
+  if (screenWidth < 600) {
+    barWidth = 320;
+  } else if (screenWidth < 1200) {
+    barWidth = 500;
+  } else {
+    barWidth = 600;
+  }
+
   const days = [
     'sunday',
     'monday',
@@ -70,10 +92,10 @@ const UserChart = ({ value, isGithubData = false }) => {
   });
 
   return (
-    <div className='w-fit bg-warm dark:bg-dark-hero dark:bg-none rounded'>
+    <div className='w-fit bg-chart dark:bg-chart rounded'>
       <BarChart
         width={barWidth}
-        height={400}
+        height={500}
         data={data}
         margin={{
 				  top: 5,
@@ -82,7 +104,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 				  bottom: 5
         }}
       >
-        <XAxis dataKey='name' />
+        <XAxis dataKey='name' tick={{ fill: 'white' }} />
         <Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
         <Legend />
         <Bar dataKey='coding' barSize={30} fill='#9CA2D2' />

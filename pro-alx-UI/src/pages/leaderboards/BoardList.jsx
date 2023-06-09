@@ -2,67 +2,67 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 const BoardList = ({ data }) => {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const handleClick = id => {
-		navigate(`/user/${id}`);
-	};
+  const handleClick = id => {
+    navigate(`/user/${id}`);
+  };
 
-	const getTime = seconds => {
-		const hour = Math.floor(seconds / 3600);
-		const minute = Math.floor((seconds % 3600) / 60);
-		return `${hour > 0 ? hour + 'hrs' : ''} ${minute}mins`;
-	};
+  const getTime = seconds => {
+    const hour = Math.floor(seconds / 3600);
+    const minute = Math.floor((seconds % 3600) / 60);
+    return `${hour > 0 ? hour + 'hrs' : ''} ${minute}mins`;
+  };
 
-	const BoardItems = data?.map(item => {
-		return (
-			<tr
-				className='grid grid-cols-7 content-center border-b dark:border-blur last:border-none py-[1.5rem] md:gap-9 border-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:rounded-lg'
-				key={item.id}
-			>
-				<td className='text-center col-span-1'>{item.rank}</td>
-				<td
-					className='text-center text-blue-500 dark:text-blue-300 cursor-pointer col-span-2 flex items-center gap-1 md:gap-2 text-xs md:text-lg'
-					onClick={() => handleClick(item.id)}
-				>
-					<img
-						src={item.photo_url}
-						alt='profile picture'
-						className='w-6 h-6 rounded-full'
-					/>
-					{item.name}
-				</td>
-				<td className='text-center col-span-2 text-xs md:text-lg'>
-					{item.waka_week_total_seconds
-						? getTime(item.waka_week_total_seconds)
-						: '-'}
-				</td>
-				<td className='text-center col-span-2 text-xs md:text-lg'>
-					{item.waka_week_daily_average
-						? getTime(item.waka_week_daily_average)
-						: '-'}
-				</td>
-			</tr>
-		);
-	});
+  const BoardItems = data?.map(item => {
+    return (
+      <tr
+        className='flex items-center md:grid grid-cols-7 content-center dark:even:bg-bar-light rounded dark:border-blur last:border-none py-[1.5rem] md:gap-9 border-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:rounded-lg text-xs md:text-sm even:bg-bar-dark even:text-white hover:even:bg-gray-400'
+        key={item.id}
+      >
+        <td className='basis-1/6 text-center col-span-1'>{item.rank}</td>
+        <td
+          className='basis-3/4 text-center text-blue-500 dark:text-blue-300 cursor-pointer col-span-2 flex items-center gap-1 md:gap-2'
+          onClick={() => handleClick(item.id)}
+        >
+          <img
+            src={item.photo_url}
+            alt='profile picture'
+            className='w-6 h-6 rounded-full'
+          />
+          <span className='truncate hover:underline'>{item.name}</span>
+        </td>
+        <td className='text-center col-span-2 hidden md:inline'>
+          {item.waka_week_total_seconds
+					  ? getTime(item.waka_week_total_seconds)
+					  : '-'}
+        </td>
+        <td className='text-center col-span-2 basis-2/6'>
+          {item.waka_week_daily_average
+					  ? getTime(item.waka_week_daily_average)
+					  : '-'}
+        </td>
+      </tr>
+    );
+  });
 
-	return (
-		<table className='table-auto flex flex-col'>
-			<thead className=''>
-				<tr className='grid grid-cols-7 content-center font-mono font-normal uppercase text-sm'>
-					<th className='col-span-1 font-normal'>Rank</th>
-					<th className='col-span-2'>Name</th>
-					<th className='col-span-2'>total hours</th>
-					<th className='col-span-2'>Average</th>
-				</tr>
-			</thead>
+  return (
+    <table className='table-auto flex flex-col'>
+      <thead className=''>
+        <tr className='flex md:grid md:grid-cols-7 content-center font-mono uppercase text-xs md:text-sm'>
+          <th className='basis-1/6 md:col-span-1'>Rank</th>
+          <th className='basis-3/4 text-left pl-5 md:col-span-2'>Name</th>
+          <th className=' md:col-span-2 hidden md:inline'>total hours</th>
+          <th className='col-span-2 basis-3/6'>daily average</th>
+        </tr>
+      </thead>
 
-			<tbody>{BoardItems}</tbody>
-		</table>
-	);
+      <tbody>{BoardItems}</tbody>
+    </table>
+  );
 };
 BoardList.propTypes = {
-	data: PropTypes.array,
+  data: PropTypes.array
 };
 
 export default BoardList;
