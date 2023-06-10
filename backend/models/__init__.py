@@ -2,6 +2,7 @@ from os import getenv
 from dotenv import load_dotenv, find_dotenv
 import time
 load_dotenv(find_dotenv())
+API = getenv('API', 'http://localhost:5000/api/v1')
 DB_ENV = getenv('DB_ENV', 'dev')  # dev is default
 print('Current DB_ENV:', DB_ENV)
 print('Initialising Database...')
