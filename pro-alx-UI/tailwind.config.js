@@ -6,13 +6,11 @@ export default {
     extend: {
       backgroundImage: {
         cool: 'linear-gradient(30deg, #6BFFBA,#BA6BFF,#FFBA6B)',
+        chart: 'linear-gradient(30deg, #5052a5,#010414)',
         warm: 'linear-gradient(to right,#FFBA6B, #6BFFBA)'
       },
       borderRadius: {
         double: '100% 50%'
-      },
-      content: {
-        hero: 'url("../src/assets/person2.png")'
       },
       colors: {
         dark: '#0f0f10',
@@ -26,7 +24,11 @@ export default {
         'warm-tone': '#FFBA6B',
         'gray-ul': '#f7f7f8',
         primary: '#434343',
-        'dark-blue': '#2e3192'
+        'dark-blue': '#2e3192',
+        bar: '#010414',
+        'bar-light': 'rgba(1,4,20,0.5)',
+        'bar-dark': '#5052a5',
+        'light-blue': '#6B7FFF'
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
@@ -57,6 +59,9 @@ export default {
       },
       boxShadow: {
         ul: '0px 4px 6px -2px rgba(46, 49, 146, 0.06), 0px 2px 4px -2px rgba(231, 215, 215, 0.06);'
+      },
+      screens: {
+        ml: '970px'
       }
     }
   },

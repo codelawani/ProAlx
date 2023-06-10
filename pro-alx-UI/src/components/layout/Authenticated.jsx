@@ -6,6 +6,7 @@ import SideBar from '../dashboard/Bar';
 import { useEffect } from 'react';
 import api from '../../hooks/api';
 import localDataMgr, { getUser } from '../../hooks/localDataMgr';
+
 const Authenticated = () => {
   const API = 'http://127.0.0.1:5000/api/v1';
   const { theme } = useTheme();
@@ -21,7 +22,6 @@ const Authenticated = () => {
         .then(res => {
           if (res.status === 200) {
             const data = res.data;
-            console.log(data);
             localDataMgr.set('access_token', data.access_token);
             console.log('b4', user);
             setUser(getUser());
@@ -44,7 +44,7 @@ const Authenticated = () => {
   }, []);
   return (
     <div
-      className={`${theme} flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
     >
       {isLoggedIn
         ? (
