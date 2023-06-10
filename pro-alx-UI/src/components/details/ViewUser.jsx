@@ -2,9 +2,10 @@ import { useUserData } from '../../hooks/fetchData';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import UserChart from './UserChart';
-import { MdOutlineArrowBackIosNew } from 'react-icons/md';
+import { MdOutlineArrowBackIosNew, MdOutlineAlternateEmail } from 'react-icons/md';
 import { useUser } from '../../hooks/customContexts';
 import { BsTwitter } from 'react-icons/bs';
+import { IoLocationSharp, IoLogoWhatsapp } from 'react-icons/io5';
 
 const dataset = {
   '2023-05-14': {
@@ -62,23 +63,24 @@ const ViewUser = () => {
   });
   // console.log(userDetails, userStats);
   const navigate = useNavigate();
+  const span = 'flex gap-1 items-center';
   return (
     <div className='w-full relative py-4 mt-[2rem]'>
       <div className='flex items-center justify-between mb-11'>
         <h3 className='text-xl font-semibold'>{`${userDetails?.name}'s Profile`}</h3>
         <Button
           value={
-            <span className='flex items-center text-lg text-dark-blue  dark:text-body hover:text-white'>
+            <span className='flex items-center text-lg '>
               <MdOutlineArrowBackIosNew style={{ fontSize: '1.5rem' }} />
               Go back
             </span>
 					}
           handleClick={() => navigate(-1)}
-          style=' p-2 hover:bg-yellow shadow-ul'
+          style=' border p-2 rounded-lg hover:bg-yellow shadow-ul text-dark-blue  dark:text-body hover:text-white dark:hover:text-dark'
         />
       </div>
 
-      <div className='flex flex-col lg:grid lg:justify-between lg:grid-cols-5 justify-center items-center lg:content-between'>
+      <div className='flex flex-col ml:flex-row lg:grid lg:justify-between lg:grid-cols-5 justify-center items-center lg:content-between xl:px-[7rem] lg:px-7'>
         <div
           id='user-details'
           className='flex flex-col justify-center md:full lg:col-span-2'
@@ -86,31 +88,46 @@ const ViewUser = () => {
           <img
             src={userDetails?.photo_url}
             alt='profile picture'
-            className='mb-3 rounded h-2/4 w-3/4'
+            className='mb-3 rounded-lg h-2/4 w-full md:w-3/5'
           />
 
-          <span>{userDetails?.name}</span>
-          <span>{userDetails?.cohort_number}</span>
-          <span>Country: {userDetails?.timezone}</span>
-          <span>Email : {userDetails?.email}</span>
-          <span>WhatsApp : {userDetails?.whatsapp}</span>
-          <span>
-            {`Most active time : ${
-							userDetails?.most_active_time ? userDetails?.most_active_time : ''
-						}`}
-          </span>
+          <div>
+            <div className='flex gap-8 items-center text-2xl pb-4'>
+              <span className=''>{userDetails?.name}</span>
+              {userDetails?.cohort_number && (
+                <span>{`Cohort ${userDetails?.cohort_number}`}</span>
+              )}
+            </div>
+            <span className={span}>
+              <IoLocationSharp />
+              {userDetails?.timezone}
+            </span>
+            <span className={span}>
+              <MdOutlineAlternateEmail /> {userDetails?.email}
+            </span>
+            <span className={span}>
+              <IoLogoWhatsapp /> {userDetails?.whatsapp}
+            </span>
 
-          <ul className='' id='socials'>
-            <li className='flex items-center gap-1'>
-              <BsTwitter className='text-blue-600' /> :
+            <span className={span}>
+              <BsTwitter className='text-blue-600' />
               <a
                 href={`https://twitter.com/${userDetails?.twitter_username}`}
-                className='text-blue-500'
+                className='text-blue-500 hover:underline'
+                target='_blank'
+                rel='noreferrer'
               >
                 {userDetails?.twitter_username}
               </a>
-            </li>
-          </ul>
+            </span>
+            <span>
+              {`most active time - ${
+								userDetails?.most_active_time
+									? userDetails?.most_active_time
+									: ''
+							}`}
+            </span>
+          </div>
         </div>
         <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end pt-9 lg:pt-0 '>
           {userStats === undefined

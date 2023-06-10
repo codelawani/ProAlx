@@ -14,7 +14,11 @@
 
 @layer components {
   .active {
-    @apply border-l p-2 flex items-center gap-2 w-fit bg-gray-100 border-dark-blue rounded;
+    @apply p-2 flex items-center gap-2 w-fit bg-bar rounded text-main;
+  }
+
+  .dark .active {
+    @apply border-l p-2 flex items-center gap-2 w-fit bg-gray-100 border-dark-blue rounded text-dark;
   }
 
   .inactive {
@@ -23,6 +27,11 @@
 
   .inactive:hover,
   .active:hover {
-    @apply border-l-2 scale-x-[0.9] rounded
+    @apply border-l-2 rounded bg-bar-light
+  }
+
+  .dark .inactive:hover,
+  .dark .active:hover {
+    @apply border-l-2 rounded bg-blur
   }
 }

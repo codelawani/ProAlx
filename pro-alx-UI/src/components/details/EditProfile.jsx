@@ -3,12 +3,16 @@ import Button from '../../components/Button';
 import { toast } from 'react-toastify';
 import api from '../../hooks/api';
 import PropTypes from 'prop-types';
+import { useUser } from '../../hooks/customContexts';
 
-const EditProfile = ({ setEditProfile, refetch }) => {
-  const totalCohorts = 17;
-  const cohorts = Array.from({ length: totalCohorts }, (_, idx) => idx);
+const EditProfile = ({ handleClick }) => {
+  const { user } = useUser();
   const style = 'border p-2';
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: user.name
+    }
+  });
   const onSubmit = async userData => {
     try {
       const res = await api.put(
@@ -22,9 +26,8 @@ const EditProfile = ({ setEditProfile, refetch }) => {
       );
       if (res.status === 200) {
         toast('Profile updated successfully!');
-        setEditProfile(false);
+        handleClick();
         reset();
-        refetch();
       } else {
         toast.error('An error occurred');
       }
@@ -33,48 +36,25 @@ const EditProfile = ({ setEditProfile, refetch }) => {
     }
   };
 
-  const handleClose = () => {
-    setEditProfile(false);
-  };
-
-  const options = cohorts.map(cohort => (
-    <option key={cohort} value={cohort}>
-      {cohort}
-    </option>
-  ));
   return (
-    <>
-      <div
-        className='bg-blur opacity-25 fixed z-[10] inset-0 h-screen'
-        onClick={handleClose}
-      />
-      <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-body rounded-xl p-[2rem]'>
-        <h3 className='w-fit py-2 border-b border-blur'>Update Profile</h3>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label htmlFor='cohort_number'>Cohort</label>
-            <select
-              {...register('cohort_number')}
-              className='border block w-full border-blur outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded py-2'
-              name='cohort_number'
-            >
-              <option value='' />
-              {options}
-            </select>
-          </div>
-          <div className='flex items-center justify-between'>
-            <Button value='Close' handleClick={handleClose} style={style} />
-            <Button value='Submit' type='submit' style={style} />
-          </div>
-        </form>
-      </div>
-    </>
+    <div className=' transform  bg-body rounded-xl p-[2rem] w-full'>
+      <h3 className='w-fit py-2 border-b border-blur'>Update Profile</h3>
+      <form onSubmit={handleSubmit(onSubmit)} className=''>
+        <div>
+          <label htmlFor='name'>Name</label>
+          <input {...register('name')} type='text' />
+        </div>
+        <div className='flex items-center justify-between'>
+          <Button value='Close' handleClick={handleClick} style={style} />
+          <Button value='Submit' type='submit' style={style} />
+        </div>
+      </form>
+    </div>
   );
 };
 
 EditProfile.propTypes = {
-  setEditProfile: PropTypes.func,
-  refetch: PropTypes.func
+  handleClick: PropTypes.func
 };
 
 export default EditProfile;

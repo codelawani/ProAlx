@@ -25,9 +25,8 @@ const Dashboard = () => {
   const handleFormSubmit = async e => {
     e.preventDefault();
     const partners = parseInt(numberOfPartners.current.value);
-    console.log('here');
     if (![1, 2].includes(partners)) {
-      toast.error('field cannot be empty');
+      toast.error('please select number of partners');
       return;
     }
     try {
@@ -87,13 +86,12 @@ const Dashboard = () => {
 
   if (isInitialLoading) return <TempLoader />;
 
-  // endpoint not available
   if (!user.cohort) {
     return (
       <>
         <div className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen' />
-        <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-body rounded-xl p-[2rem]'>
-          <h3 className='w-fit py-2 text-dark-blue'>
+        <div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-fit z-[20] bg-yellow rounded-xl p-[2rem] dark:bg-bar'>
+          <h3 className='w-fit py-2 dark:text-body text-bar'>
             Please enter your cohort
           </h3>
           <form onSubmit={handleCohortSubmit} className='flex flex-col gap-5'>
@@ -101,16 +99,18 @@ const Dashboard = () => {
               <input
                 name='cohort_number'
                 id='cohort_number'
-                className='border block w-full border-blur outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-md py-2 px-3'
+                className='border block w-full border-warm-tone outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-md py-2 px-3'
                 ref={cohortNumber}
                 type='number'
                 placeholder='cohort number'
+                min={8}
+                max={24}
               />
             </div>
             <Button
               value='Submit'
               type='submit'
-              style='hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center'
+              style='hover:bg-dark-blue hover:text-body border py-1 px-4 dark:text-yellow mt-2 dark:border-cool self-center border-dark'
             />
           </form>
         </div>
@@ -118,22 +118,25 @@ const Dashboard = () => {
     );
   }
   return (
-    <div className='w-full font-light flex flex-col'>
+    <div className='w-full font-light flex flex-col mt-4 md:mt-0'>
       <h2 className='font-bold text-xl'>Find a Partner</h2>
 
-      <div className='self-end mb-[3rem] px-[2rem]'>
-        <span className='text-sm block py-2'>Request for a partner</span>
-        <form onSubmit={handleFormSubmit}>
+      <div className='self-end mb-[3rem] md:px-[2rem] w-3/4 md:w-fit flex flex-col'>
+        <span className='text-sm block py-2 text-right '>
+          Request for a partner
+        </span>
+        <form onSubmit={handleFormSubmit} className='self-end text-right'>
           <select
             name='requested_partners'
             id='requested_partners'
             ref={numberOfPartners}
-            className='px-5 rounded-md py-1 focus:outline-none shadow-ul outline-none'
+            className='md:px-5 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur'
           >
             <option value=''>number of partners</option>
             <option value={1}>1</option>
             <option value={2}>2</option>
           </select>
+
           <Button
             type='submit'
             value='Request'
@@ -142,7 +145,7 @@ const Dashboard = () => {
         </form>
       </div>
       <PaginatedDashboard data={value} />
-      <p className='font-thin text-sm text-gray-600'>
+      <p className='font-thin text-sm text-gray-600 mt-4'>
         Statistics displayed for{' '}
         <span className='text-sky-500'>last 7 days</span>
       </p>
