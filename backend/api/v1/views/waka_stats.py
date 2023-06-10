@@ -10,7 +10,7 @@ alx_repos = ['AirBnB_clone', 'AirBnB_clone_v2', 'AirBnB_clone_v3',
 
 
 # @app_views.route('/users/<id>/waka_stats')
-def get_daily_logs(id, n=7):
+def get_daily_logs(id):
     """
     Get the daily wakatime log for each date.
     Filtered by Alx repositories only
@@ -22,13 +22,12 @@ def get_daily_logs(id, n=7):
 
     user = storage.get('User', id)
     if user:
-        token = user.wk_access_token
-        return get_waka_data(n, token, user)
+        return get_waka_data(user)
     else:
         return jsonify({'error': 'User not found'}), 404
 
 
-def get_waka_data(n, token, user, process=True):
+def get_waka_data(user, process=True):
     """
     Fetches the WakaTime data for the specified number of days.
 
@@ -56,6 +55,8 @@ def get_waka_data(n, token, user, process=True):
             "error": "WakaTime token not found"
         }
     """
+    n = 7
+    token = user.wk_access_token
     if not token:
         return {'error': 'wakaTime token Not found'}
     waka_summaries_api = (
@@ -66,6 +67,8 @@ def get_waka_data(n, token, user, process=True):
         'Authorization': f'Bearer {token}'
     }
     response = requests.get(waka_summaries_api, headers=headers)
+    if response.status_code != 200:
+        return {'error': 'WakaTime API error'}
     data = response.json()
     if not data:
         return []
@@ -81,7 +84,7 @@ def save_waka_weekly_stats(data, user):
         'waka_week_total_seconds': int(data['cumulative_total']['seconds']),
         'waka_week_daily_average': int(data['daily_average']['seconds'])
     }
-    user_dict = storage.set_user_data(user, user_data)
+    user_dict = storage.set_user_data(user.id, user_data)
     if user_dict:
         print('User waka stats updated successfully')
         print(user_dict)
@@ -109,8 +112,7 @@ def update_waka_weekly_stats_for_all_users():
     from models import storage
     users = storage.all('User').values()
     for user in users:
-        token = user.wk_access_token
-        get_waka_data(7, token, user, process=False)
+        get_waka_data(user, process=False)
 
 
 if __name__ == '__main__':

@@ -4,9 +4,8 @@ from models import storage
 import random
 from datetime import datetime, timedelta
 from models.cohort import Cohort
-from backend.models.partner_request import PartnerRequest
+from models.partner_request import PartnerRequest
 from models.engine.DBExceptions import DatabaseException
-from mysql.connector import Error
 fake = Faker()
 # If u want the fake data to be location specific
 # use this:

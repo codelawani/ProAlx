@@ -7,13 +7,6 @@ from api.v1 import error_handler
 API = 'http://localhost:5000/api/v1'
 
 
-# def error_handler(e, msg=None):
-#     """Returns an error message and status code"""
-#     if not msg:
-#         msg = e.client_msg
-#     return jsonify({'error': msg}), e.code
-
-
 @app_views.route('/user/request_partners', strict_slashes=False, methods=['PUT'])
 @jwt_required()
 @error_handler

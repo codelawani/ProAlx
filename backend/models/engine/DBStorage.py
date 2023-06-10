@@ -9,9 +9,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME
 from sqlalchemy.orm import defer, load_only
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from .DBExceptions import DatabaseException
-from uuid import uuid4
+from sqlalchemy.exc import SQLAlchemyError
+from .DBExceptions import DatabaseException, error_handler
 from datetime import datetime
 from functools import wraps
 
@@ -34,38 +33,6 @@ class DBStorage:
     def __init__(self):
         """Initialize the database storage engine"""
         self.engine = create_engine(DATABASE_URI, pool_pre_ping=True)
-
-    def error_handler(method):
-        """Returns a wrapper that handles errors"""
-        @wraps(method)
-        def wrapper(self, *args, **kwargs):
-            """ Wrapper that handles errors"""
-            try:
-                return method(self, *args, **kwargs)
-            except NoResultFound:
-                if self.session:
-                    self.session.rollback()
-                error_message = "No result found :{" + log_msg
-                logger.exception(f'Error ID: {str(uuid4())}')
-                raise DatabaseException(error_message, 404)
-            except IntegrityError:
-                if self.session:
-                    self.session.rollback()
-                error_message = "The requested action could not be completed due to data conflicts :(" + \
-                    log_msg
-                logger.exception(f'Error ID: {str(uuid4())}')
-                raise DatabaseException(error_message, 409)
-            except SQLAlchemyError:
-                if self.session:
-                    self.session.rollback()
-                error_message = "There must be an issue with our server, contact support pls ^-^" + log_msg
-                logger.exception(f'Error ID: {str(uuid4())}')
-                raise DatabaseException(error_message)
-            except Exception:
-                error_message = "An unexpected error occured :(" + log_msg
-                logger.exception(f'Error ID: {str(uuid4())}')
-                raise DatabaseException(error_message)
-        return wrapper
 
     @error_handler
     def create_all(self):
@@ -140,7 +107,7 @@ class DBStorage:
             logger.exception(msg)
             raise DatabaseException(msg)
 
-    @error_handler
+    # @error_handler
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
         if model in classes:
@@ -219,6 +186,14 @@ class DBStorage:
             user.github_session = False
             self.save()
 
+    @error_handler
+    def save_waka_weekly_stats(self, user_id):
+        """ Save weekly stats for a user """
+        from api.v1.views.waka_stats import get_waka_data
+        user = self.get(User, user_id)
+        if user:
+            get_waka_data(user)  # Save weekly stats
+
     def filter_necessary_data(method):
         @wraps(method)
         def wrapper(self, *args, **kwargs):
@@ -279,7 +254,8 @@ class DBStorage:
     def set_user_data(self, id, data):
         """Sets user data"""
         user = self.get(User, id)
-        request = PartnerRequest(user=user)
+        if 'requested_partners' in data:
+            request = PartnerRequest(user=user)
         for key, value in data.items():
             if key in ['id', 'created_at', 'updated_at']:
                 continue

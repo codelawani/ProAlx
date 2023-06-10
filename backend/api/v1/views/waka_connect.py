@@ -97,6 +97,7 @@ def authorize():
             identity=user_id,
             additional_claims={'user_data': public_user_data}
         )
+        storage.save_waka_weekly_stats(user_id)
         res = jsonify({'access_token': access_token})
     else:
         # Request failed
