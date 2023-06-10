@@ -59,21 +59,14 @@ class User(BaseModel):
     waka_week_daily_average = Column(Integer)
     waka_week_total_seconds = Column(Integer)
     waka_connected = Column(BOOLEAN, default=False)
-    # gh_access_token = deferred(Column(String(60)), group='secret')
-    # wk_access_token = deferred(Column(String(100)), group='secret')
-    # wk_refresh_token = deferred(Column(String(100)), group='secret')
-    # github_session = deferred(Column(BOOLEAN), group='secret')
-    # waka_token_expires = deferred(Column(DateTime), group='secret')
     gh_access_token = Column(String(60))
     wk_access_token = Column(String(100))
     wk_refresh_token = Column(String(100))
     github_session = Column(BOOLEAN)
     waka_token_expires = Column(DateTime)
-
     github_login = Column(String(48))
     wakatime_login = Column(String(25))
     cohort_number = Column(Integer, ForeignKey('cohorts.number'))
-
     cohort = relationship("Cohort", back_populates="users")
     partner_request = relationship(
         'PartnerRequest', back_populates='user', uselist=False)
@@ -96,70 +89,3 @@ class User(BaseModel):
             })
             user_dict.pop('partner_request', None)
         return user_dict
-
-    # @hybrid_property
-    # def requested_partners_number(self):
-    #     """
-    #     Returns the number of requested partners for the current instance.
-
-    #     :return: An integer representing the number of requested partners or None if no partners are requested.
-    #     """
-    #     if self.requested_partners:
-    #         return self.requested_partners.number
-    #     return None
-
-    # @requested_partners_number.expression
-    # def requested_partners_number(cls):
-    #     """
-    #     This function is a class level decorator that is used to define an expression for the requested_partners_number column.
-    #     It takes a single parameter, cls, which represents the class calling the function.
-    #     The function returns the number attribute of the RequestedPartners class.
-    #     """
-    #     return RequestedPartners.number
-
-    # @requested_partners_number.setter
-    # def requested_partners_number(self, value):
-    #     if self.requested_partners:
-    #         self.requested_partners.number = value
-    #         self.requested_partners.updated_at = datetime.now()
-    #     else:
-    #         self.requested_partners = RequestedPartners(number=value)
-
-    # @hybrid_property
-    # def last_request_date(self):
-    #     """
-    #     Returns the updated_at value of the last requested partner, if any, otherwise None.
-
-    #     :return: datetime or None
-    #     """
-    #     if self.requested_partners:
-    #         return self.requested_partners.updated_at
-    #     return None
-
-    # @last_request_date.expression
-    # def last_request_date(cls):
-    #     """
-    #     This is a SQLAlchemy expression function that retrieves the "updated_at" column from the RequestedPartners table.
-
-    #     :param cls: The class being used to call this function (i.e., RequestedPartners)
-    #     :return: The updated_at column from the RequestedPartners table
-    #     """
-    #     return RequestedPartners.updated_at
-
-    # @hybrid_property
-    # def requested_project(self):
-    #     if self.requested_partners:
-    #         return self.requested_partners.project
-    #     return None
-
-    # @requested_project.expression
-    # def requested_project(cls):
-    #     return RequestedPartners.project
-
-    # @requested_project.setter
-    # def requested_project(self, value):
-    #     if self.requested_partners:
-    #         self.requested_partners.project = value
-    #         self.requested_partners.updated_at = datetime.now()
-    #     else:
-    #         self.requested_partners = RequestedPartners(project=value)

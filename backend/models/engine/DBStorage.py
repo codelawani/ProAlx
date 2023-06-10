@@ -275,15 +275,7 @@ class DBStorage:
             User.waka_week_total_seconds.desc())
         return query
 
-    # @error_handler
-    # def create_user_request(self, data, user_id):
-    #     """ Create a new user request """
-    #     number_requested = data.get('requested_partners')
-    #     user = self.get(User, user_id)
-    #     user.requested_partners_number = number_requested
-    #     self.save()
-    #     return user
-
+    @error_handler
     def set_user_data(self, id, data):
         """Sets user data"""
         user = self.get(User, id)
@@ -302,4 +294,4 @@ class DBStorage:
             if hasattr(user, key):
                 setattr(user, key, value)
         self.save()
-        return user.to_dict()
+        return user.to_dict() if user else {}

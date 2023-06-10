@@ -275,14 +275,14 @@ class TestSetUserMethod(TestDBStorage):
     def test_set_user_data(self):
         # Create a user object for testing
         user = User(name="Jake")
-
+        self.db.new(user)
         data = {
             'name': 'John Doe',
             'email': 'john.doe@example.com',
             'requested_partners': 5
         }
 
-        result = self.db.set_user_data(user, data)
+        result = self.db.set_user_data(user.id, data)
 
         self.assertEqual(result['name'], 'John Doe')
         self.assertEqual(result['email'], 'john.doe@example.com')
@@ -293,12 +293,12 @@ class TestSetUserMethod(TestDBStorage):
     def test_set_user_data_invalid_attribute(self):
         # Create a user object for testing
         user = User(name="Kams")
-
+        self.db.new(user)
         data = {
             'invalid_attribute': 'test'
         }
 
-        result = self.db.set_user_data(user, data)
+        result = self.db.set_user_data(user.id, data)
 
         # Assert that the user object was not modified
         self.assertNotEqual(result.get('invalid_attribute'), 'test')
