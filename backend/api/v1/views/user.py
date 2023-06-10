@@ -1,56 +1,12 @@
-from functools import wraps
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models.user import User
 from models import storage
-import sys
+from api.v1 import error_handler
 from models.engine.DBExceptions import DatabaseException
 import requests
-from logs import logger
-# ANSI escape sequence for red color
-RED = '\033[91m'
-# ANSI escape sequence to reset color
-RESET = '\033[0m'
 API = 'http://localhost:5000/api/v1'
-
-
-# def error_handler(e, msg=None):
-#     """
-#     A function to handle errors in the application.
-
-#     Parameters:
-#     - e (Exception): The exception to be handled.
-#     - msg (str): The error message to be returned. If None, it defaults to e.client_msg.
-
-#     Returns:
-#     - A JSON object with the error message (str) and the status code (int).
-#     """
-#     if not msg:
-#         msg = e.client_msg
-#     return jsonify({'error': msg}), e.code
-
-
-def error_handler(method):
-    """
-    A function to handle errors in the application.
-
-    Parameters:
-    - msg (str): The error message to be returned. If None, it defaults to e.client_msg.
-
-    Returns:
-    - A decorator function.
-    """
-    @wraps(method)
-    def wrapper(*args, **kwargs):
-        try:
-            return method(*args, **kwargs)
-        except DatabaseException as e:
-            print(
-                f'{RED}pls Check ProAlx/backend/errors.log for '
-                f'more details as regards this error{RESET}')
-            return jsonify({'error': e.client_msg}), e.code
-    return wrapper
 
 
 @app_views.route('/users', strict_slashes=False)
@@ -178,35 +134,6 @@ def create_user():
 
     storage.new(instance)
     return jsonify(instance_dict), 201
-
-
-# @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-# @jwt_required()
-# def update_user(user_id):
-#     """
-#     Updates an existing user in the database.
-
-#     :param user_id: The ID of the user to update.
-#     :type user_id: str
-#     :return: A JSON object containing the updated user information if the
-#         update was successful, or an error message otherwise.
-#     :rtype: json
-#     """
-#     if user_id != get_jwt_identity():
-#         return jsonify(error="Unauthorized"), 401
-#     user = storage.get(User, user_id)
-#     if not user:
-#         return jsonify(error="User not found"), 404
-#     if not request.is_json:
-#         return jsonify(error="Invalid JSON"), 400
-#     data = request.get_json()
-#     user_dict = storage.set_user_data(user, data)
-#     if not user_dict:
-#         return jsonify(error="Invalid data"), 400
-#     try:
-#         return jsonify(user_dict), 200
-#     except DatabaseException as e:
-#         return error_handler(e)
 
 
 @app_views.route('/user', methods=['PUT'], strict_slashes=False)

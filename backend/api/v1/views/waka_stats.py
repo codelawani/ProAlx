@@ -97,7 +97,7 @@ def process_data(data):
             date = day['range']['date']
             projects = day['projects']
             project_info = {project['name']: project['total_seconds']
-                            for project in projects if project['name']}
+                            for project in projects if project['name'] in alx_repos}
             daily_logs[date] = project_info
         return daily_logs
     except KeyError:
