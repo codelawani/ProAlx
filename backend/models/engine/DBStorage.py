@@ -107,7 +107,7 @@ class DBStorage:
             logger.exception(msg)
             raise DatabaseException(msg)
 
-    # @error_handler
+    @error_handler
     def get(self, model, id):
         """Retrieve an object of the specified model by its ID"""
         if model in classes:
@@ -267,17 +267,32 @@ class DBStorage:
         user.save()
         return user.to_dict() if user else {}
 
-    @error_handler
     def update_user_request(self, user, data):
-        if 'requested_partners' in data:
+        """
+        Update user's partner request data if it exists, otherwise create a new request.
+
+        Args:
+            user: The user object to update the partner request for.
+            data: A dictionary containing the updated partner request data.
+
+        Returns:
+            A dictionary representing the updated user data.
+        """
+        if 'requested_partners' in data and 'requested_project' in data:
+            if not isinstance(data['requested_partners'], int):
+                raise DatabaseException(
+                    "'requested_partners' must be a positive integer.", 400)
             request = user.partner_request
             if request:
                 request.number = data['requested_partners']
-                request.project = data.get('requested_project')
+                request.project = data['requested_project']
             else:
                 request = PartnerRequest(user=user)
                 request.number = data['requested_partners']
-                request.project = data.get('requested_project')
+                request.project = data['requested_project']
                 self.new(request)
             request.save()
             return user.to_dict()
+        else:
+            error_message = "Both 'requested_partners' and 'requested_project' must be provided."
+            raise DatabaseException(error_message, 400)

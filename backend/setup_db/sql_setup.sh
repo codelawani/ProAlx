@@ -3,13 +3,13 @@
 # To run this script
 # sudo bash sql_setup.sh
 
-env_file=$(locate ProAlx/.env)
+env_file=$(locate "ProAlx/.env" | head -n 1)
 
 if [ -f "$env_file" ]; then
     # shellcheck source=/dev/null
     source "$env_file"
 else
-    echo "Error: create ProAlx/.env file"
+    echo "Error: U need to create ProAlx/.env file"
     exit 1
 fi
 # set env variables

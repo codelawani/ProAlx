@@ -32,7 +32,7 @@ const Dashboard = () => {
     try {
       const res = await api.put(
         '/user/request_partners',
-        { requested_partners: partners },
+        { requested_partners: partners, requested_project: null },
         {
           headers: {
             'Content-Type': 'application/json'
