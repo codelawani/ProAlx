@@ -9,15 +9,9 @@ class DatabaseException(Exception):
 
     def __init__(self, message="Database error occurred.", code=500):
         self.message = message
-        # print('-' * 20)
-        # print('err', self.message)
-        # print('-' * 20)
         self.client_msg = self.message.split('\n')[0]
         self.code = code
         super().__init__(self.message)
-
-    def __str__(self) -> str:
-        return super().__str__()
 
 
 def error_handler(method):
