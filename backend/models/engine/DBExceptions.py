@@ -41,6 +41,8 @@ def error_handler(method):
             logger.exception(f'Error ID: {str(uuid4())}')
             raise DatabaseException(error_message, code)
         except Exception:
+            if self.session:
+                self.session.rollback()
             error_message = "An unexpected error occurred :(" + log_msg
             logger.exception(f'Error ID: {str(uuid4())}')
             raise DatabaseException(error_message)

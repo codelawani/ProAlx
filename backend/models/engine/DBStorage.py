@@ -254,20 +254,30 @@ class DBStorage:
     def set_user_data(self, id, data):
         """Sets user data"""
         user = self.get(User, id)
-        if 'requested_partners' in data:
-            request = PartnerRequest(user=user)
+        ignore = ['gh_access_token', 'requested_partners',
+                  'requested_project', 'id', 'created_at',
+                  'updated_at']
         for key, value in data.items():
-            if key in ['id', 'created_at', 'updated_at']:
+            if key in ignore:
                 continue
             elif key == 'waka_token_expires':
                 value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
-            elif key == 'requested_partners':
-                request.number = value
-                continue
-            elif key == 'requested_project':
-                request.project = value
-                continue
             if hasattr(user, key):
                 setattr(user, key, value)
-        self.save()
+        user.save()
         return user.to_dict() if user else {}
+
+    @error_handler
+    def update_user_request(self, user, data):
+        if 'requested_partners' in data:
+            request = user.partner_request
+            if request:
+                request.number = data['requested_partners']
+                request.project = data.get('requested_project')
+            else:
+                request = PartnerRequest(user=user)
+                request.number = data['requested_partners']
+                request.project = data.get('requested_project')
+                self.new(request)
+            request.save()
+            return user.to_dict()

@@ -2,17 +2,15 @@
 """
 This module contains a basic view for the login route
 """
-from flask import jsonify, abort, redirect, request, Flask, make_response
+from flask import jsonify, request, Flask, make_response
 from api.v1.views import app_views
 from os import getenv
 import requests
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
-import json
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from api.v1 import error_handler
 from models import storage
-from datetime import datetime
-from secrets import token_hex
 load_dotenv(find_dotenv())
 wakatime_url = "https://wakatime.com/api/v1/"
 
@@ -43,6 +41,7 @@ def update_user(id, data):
 
 @app_views.route('/waka/authorize', strict_slashes=False)
 @jwt_required()
+@error_handler
 def authorize():
     """
     This function authorizes a user using OAuth with Wakatime. The user's code is received as a request parameter and is used to get an access token from Wakatime using the OAuth 2.0 authorization code flow. The access token is then used to update the user's data with Wakatime information and create a new JWT access token with the user's data for future use. The function returns a JSON response containing the new access token or an error message if the request fails.
