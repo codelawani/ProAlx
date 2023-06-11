@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from './Button';
-// import { useUserData } from '../hooks/fetchData';
 
 /**
- * This is a higher-order function that adds pagination functionality to a component.
+ * This is a higher-order component that adds pagination functionality to a component.
  * Usage:
  * To use this higher order component, wrap your component like this:
  *  const PaginatedComponent = withPagination(Component,<queryKey>, <endpoint>, <itemsPerPge>)

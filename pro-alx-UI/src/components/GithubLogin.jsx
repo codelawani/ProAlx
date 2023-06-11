@@ -14,6 +14,7 @@ const LoginWithGithub = ({ style = 'text-white', handleClick = () => {} }) => {
 	const navigate = useNavigate();
 	const { isLoggedIn, setIsLoggedIn, updateLoading, setUser } = useUser();
 	const handleAuth = () => {
+		updateLoading(true);
 		const authUrl =
 			GITHUB_AUTH_URL +
 			`?client_id=${CLIENT_ID}` +
@@ -24,9 +25,9 @@ const LoginWithGithub = ({ style = 'text-white', handleClick = () => {} }) => {
 	const clearUser = () => {
 		localDataMgr.clear();
 		setIsLoggedIn(false);
-		updateLoading(false);
 		setUser('');
 		navigate('/');
+		updateLoading(false);
 	};
 	const handleLogout = () => {
 		updateLoading(true);

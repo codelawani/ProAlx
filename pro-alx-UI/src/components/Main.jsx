@@ -10,8 +10,8 @@ const Main = () => {
 	// 	return <Box key={review.id} {...review} />;
 	// });
 	return (
-		<main className='dark:bg-dark dark:text-gray-300 relative z-[0] border dark:border-dark border-body'>
-			<section className='flex flex-col justify-center items-center my-10 bg-body dark:bg-dark gap-3 py-6'>
+		<main className='dark:bg-dark dark:text-gray-300 relative z-[0] border dark:border-dark border-body '>
+			<section className='flex flex-col justify-center items-center my-10 bg-body dark:bg-dark gap-3 py-6 '>
 				{proalx.map(item => (
 					<Item key={item.id} {...item} />
 				))}
