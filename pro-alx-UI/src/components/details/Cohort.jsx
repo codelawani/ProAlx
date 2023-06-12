@@ -2,7 +2,7 @@ import Button from '../Button';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useUser } from '../../hooks/customContexts';
-import localDataMgr from '../../hooks/localDataMgr';
+import localDataMgr from '../../utils/localDataMgr';
 import PropTypes from 'prop-types';
 import { useCustomMutation } from '../../hooks/useCustomQuery';
 
@@ -15,11 +15,14 @@ const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
 
 	const style =
 		'hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center dark:text-main dark:border-warm';
+
+	// reference to cohort number input
 	const cohortNumber = useRef();
 
 	const handleCohortSubmit = async e => {
 		e.preventDefault();
 		const cohort = cohortNumber.current.value;
+		// validate input
 		if (cohort === '') {
 			toast.error('Cohort must be a number');
 			return;

@@ -12,6 +12,8 @@ emailjs.init(PUBLIC_KEY);
 
 const ContactForm = () => {
 	const totalCohorts = 30;
+
+	// create a list of cohort options starting from cohort 8
 	const cohorts = Array.from(
 		{ length: totalCohorts },
 		(_, idx) => `cohort ${8 + idx}`
@@ -33,22 +35,21 @@ const ContactForm = () => {
 	} = useForm();
 
 	const submitForm = data => {
+		// use emailjs to send form data to gmail account
 		emailjs
 			.send(SERVICE_ID, TEMPLATE_ID, data)
-			.then(response => {
-				console.log('Email sent successfully!', response);
-				toast.success('Message sent successfully!');
+			.then(res => {
+				toast.success(`${res.status}: Message sent successfully!`);
 				reset();
 			})
-			.catch(error => {
-				toast.error('Error sending message.');
-				console.error('Error sending email:', error);
+			.catch(err => {
+				toast.error(`${err.status}: Error sending message.`);
 			});
 	};
 	return (
 		<form
 			onSubmit={handleSubmit(submitForm)}
-			className=' w-full px-6 py-[4rem] self-center flex flex-col justify-center md:w-6/12 border rounded-lg bg-gradient-to-br from-purple-400 dark:from-purple-950 via-lime-300 dark:via-dark to-red-400'
+			className=' w-full px-3 py-7 self-center flex flex-col justify-center md:w-6/12 border rounded-lg bg-gradient-to-br from-purple-400 dark:from-purple-950 via-lime-300 dark:via-dark to-red-400'
 		>
 			<div className='mb-4'>
 				<label htmlFor='from_name' className='text-lg'>
@@ -58,7 +59,7 @@ const ContactForm = () => {
 					type='text'
 					{...register('from_name', { required: true })}
 					aria-invalid={errors.fullname ? 'true' : 'false'}
-					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2'
+					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2 px-2'
 					id='from_name'
 				/>
 				{errors.from_name && (
@@ -81,7 +82,7 @@ const ContactForm = () => {
 						},
 					})}
 					aria-invalid={errors.from_email ? 'true' : 'false'}
-					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 rounded-lg py-2 focus:border-2'
+					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 rounded-lg py-2 focus:border-2 px-2'
 					id='from_email'
 				/>
 				{errors.from_email && (
@@ -94,7 +95,7 @@ const ContactForm = () => {
 				<label htmlFor='cohort'>Cohort</label>
 				<select
 					{...register('cohort')}
-					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2'
+					className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2 px-2'
 					id='cohort'
 				>
 					<option value='' />
@@ -107,7 +108,7 @@ const ContactForm = () => {
 					cols='30'
 					rows='5'
 					{...register('message', { required: true })}
-					className='border-b-2 block w-full border-red-950 outline-none focus:border-blue-300 dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-2 rounded-lg'
+					className='border-b-2 block w-full border-red-950 outline-none focus:border-blue-300 dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-2 rounded-lg px-2'
 					name='message'
 				/>
 				{errors.message && (

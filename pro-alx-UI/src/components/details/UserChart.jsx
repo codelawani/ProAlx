@@ -3,15 +3,19 @@ import { BarChart, Bar, XAxis, Tooltip, Legend } from 'recharts';
 import { useState, useLayoutEffect } from 'react';
 import { useTheme } from '../../hooks/customContexts';
 
+// convert time in seconds to hours and minutes string
 const getTime = value => {
 	const hours = Math.floor(value / 3600);
 	const minutes = Math.floor((value % 3600) / 60);
 	return `${hours > 0 ? hours + 'hrs' : ''} ${minutes}mins`;
 };
 
+// parsed dataset values
 const updatedDataset = {};
+
 const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 	if (active && payload && payload.length) {
+		// current tooltip item
 		const tooltipItem = Object.entries(updatedDataset[payload[0].payload.name]);
 		return (
 			<div
@@ -25,10 +29,13 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 						<p key={index} className='py-1'>{`${key}: ${getTime(value)}`}</p>
 					))}
 
+				{/* use commits instead of time for github data */}
 				{isGithubData &&
 					tooltipItem.map(([key, value], index) => (
 						<p key={index} className=''>{`${key}: ${value} commits`}</p>
 					))}
+
+				{/* display hours and minutes if it's wakatime data */}
 				{!isGithubData &&
 					payload.map((entry, index) => (
 						<p key={index} className='py-1'>
@@ -44,6 +51,8 @@ const CustomTooltip = ({ active, payload, label, isGithubData }) => {
 const UserChart = ({ value, isGithubData = false }) => {
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	const { theme } = useTheme();
+
+	// handle resize of bar width depending on current screen size
 	useLayoutEffect(() => {
 		const handleResize = () => {
 			setScreenWidth(window.innerWidth);
@@ -64,16 +73,6 @@ const UserChart = ({ value, isGithubData = false }) => {
 	} else {
 		barWidth = 600;
 	}
-
-	// const days = [
-	// 	'sunday',
-	// 	'monday',
-	// 	'tuesday',
-	// 	'wednesday',
-	// 	'thursday',
-	// 	'friday',
-	// 	'saturday',
-	// ];
 
 	const monthNames = [
 		'January',
@@ -99,6 +98,7 @@ const UserChart = ({ value, isGithubData = false }) => {
 		return `${monthNames[month]} ${day}`;
 	};
 
+	// sum all values for a paricular date/property key
 	const data = Object.entries(value).map(([date, values]) => {
 		return {
 			name: getDate(date),
@@ -106,9 +106,12 @@ const UserChart = ({ value, isGithubData = false }) => {
 		};
 	});
 
+	// save the updated/parsed data from server to be used in the chart
 	Object.keys(value).forEach(key => {
 		updatedDataset[getDate(key)] = value[key];
 	});
+
+	// if theres no data in the object don't display the chart
 	if (Object.keys(value).length === 0)
 		return (
 			<p className='dark:bg-warm dark:text-transparent text-bar-dark bg-clip-text text-xl'>

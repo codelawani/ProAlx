@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import SmallLoader from '../loader/SmallLoader';
-import { Details, DisplayChart, ImageName } from '../View';
+import { Details, DisplayChart, ImageName } from './View';
 //import { dataset } from '../../data';
 
 const ViewUser = () => {

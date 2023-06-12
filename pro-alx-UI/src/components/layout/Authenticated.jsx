@@ -4,8 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../dashboard/Bar';
 import { useEffect } from 'react';
-import api from '../../hooks/api';
-import localDataMgr from '../../hooks/localDataMgr';
+import api from '../../utils/api';
+import localDataMgr from '../../utils/localDataMgr';
 import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
@@ -17,6 +17,7 @@ const Authenticated = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const code = urlParams.get('code');
 
+		// wakatime authorization flow
 		const handleConnect = code => {
 			updateLoading(true);
 			api

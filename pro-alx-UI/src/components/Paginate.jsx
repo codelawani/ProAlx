@@ -3,15 +3,11 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 
 /**
- * This is a higher-order component that adds pagination functionality to a component.
- * Usage:
- * To use this higher order component, wrap your component like this:
- *  const PaginatedComponent = withPagination(Component,<queryKey>, <endpoint>, <itemsPerPge>)
- * @params
- * Component - component that needs pagination(React component)
- * queryKey - unique key to identify data fetched(array) i.e ['user']
- * endpoint - route where data is fetched(string)
- * itemsPerPage - number of items displayed per page (number)
+ * withPagination - A higher-order component that adds pagination functionality to a wrapped component.
+ *
+ * @params {Function} Component - component that needs pagination
+ * @params {integer} itemsPerPage - number of items displayed per page
+ * @returns {Function} - The wrapped component with pagination added
  */
 
 const withPagination = (Component, itemsPerPage) => {
@@ -20,24 +16,28 @@ const withPagination = (Component, itemsPerPage) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const lastIndex = currentPage * itemsPerPage;
 		const firstIndex = lastIndex - itemsPerPage;
-		const items = data ? data?.slice(firstIndex, lastIndex) : [];
+		const items = data ? data?.slice(firstIndex, lastIndex) : []; // current page data
 		const totalPages = data ? Math.ceil(data?.length / itemsPerPage) : 0;
 		const pagesList = [...Array(totalPages + 1).keys()].slice(1);
 
 		const style =
 			'disabled:cursor-not-allowed disabled:text-gray-600 text-blue-400 border p-2 disabled:border-gray-300 border-blue-400 hover:bg-blue-500 hover:text-white disabled:hover:bg-inherit';
 
+		// switch to next page
 		const getNextPage = () => {
 			if (currentPage !== lastIndex) {
 				setCurrentPage(prev => prev + 1);
 			}
 		};
+
+		// switch to previous page
 		const getPrevPage = () => {
 			if (currentPage !== firstIndex) {
 				setCurrentPage(prev => prev - 1);
 			}
 		};
 
+		// switch current page depending on page id/number
 		const changeCurrent = id => {
 			setCurrentPage(id);
 		};

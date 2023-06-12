@@ -1,9 +1,11 @@
 import { MdOutlineAlternateEmail } from 'react-icons/md';
 import { BsTwitter } from 'react-icons/bs';
-import SmallLoader from './loader/SmallLoader';
+import SmallLoader from '../loader/SmallLoader';
 import { IoLocationSharp, IoLogoWhatsapp, IoLogoGithub } from 'react-icons/io5';
 import PropTypes from 'prop-types';
-import UserChart from './details/UserChart';
+import UserChart from './UserChart';
+
+// utility components to help display user information
 
 export const ImageName = ({ name, photo_url, cohort_number }) => {
 	return (
@@ -30,7 +32,10 @@ ImageName.propTypes = {
 };
 
 export const Details = ({ user }) => {
+	// styles for span elements
 	const span = 'flex gap-2 items-center py-2 text-xl';
+
+	// styles for react icons used
 	const iconStyle = 'text-2xl';
 	return (
 		<div>
@@ -95,7 +100,7 @@ export const DisplayChart = ({ waka_stats, git_stats }) => {
 	const isWakaEmpty = Object.values(waka_stats || []).every(
 		item => Object.values(item).length > 0
 	);
-
+	// return a loader while data is being fetched from server
 	if (!waka_stats && !git_stats) return <SmallLoader />;
 
 	return (

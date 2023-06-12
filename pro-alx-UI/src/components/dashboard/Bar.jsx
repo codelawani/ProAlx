@@ -16,10 +16,14 @@ const Bar = () => {
 
 	const style =
 		'hover:bg-primary py-2 hover:text-white hover:border-white dark: text-sm uppercase font-mono font-bold text-blue-500 border py-1';
+
+	// get client id from .env file
 	const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
 	const handleClick = () => {
 		setShowSidebar(prev => !prev);
 	};
+
+	// redirect user to wakatime OAuth endpoint for OAuth authorization of the app
 	const handleConnect = () => {
 		updateLoading(true);
 		const scope = 'email read_stats read_logged_time';
@@ -63,7 +67,7 @@ const Bar = () => {
 						)}
 						<Login style=' hover:bg-primary py-1 hover:text-white  self-start' />
 						<div
-							className='flex gap-2 items-center'
+							className='flex gap-2 items-center cursor-pointer hover:border-b hover:pb-2'
 							onClick={() => navigate('/profile')}
 						>
 							<img

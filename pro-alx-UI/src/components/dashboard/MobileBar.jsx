@@ -37,7 +37,7 @@ const MobileBar = ({ handleClick, handleConnect }) => {
 				/>
 
 				<div
-					className='flex gap-2 items-center rounded-lg mb-2 w-fit px-2'
+					className='flex gap-2 items-center rounded-lg mb-2 w-fit px-2 cursor-pointer'
 					onClick={() => {
 						navigate('/profile');
 						handleClick();

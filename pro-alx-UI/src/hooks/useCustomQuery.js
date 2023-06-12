@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import api from './api';
+import api from '../utils/api';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 /**
@@ -43,6 +43,12 @@ export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
 	};
 };
 
+/**
+ * getMutateFn - This is a utility function to help create an object that contains a mutation function.
+ * @param {string} endpoint - The API endpoint.
+ * @param {string} method - The http verb/method to be used i.e post, put.
+ * @returns {object} an object with a function property.
+ */
 const getMutateFn = (endpoint, method) => {
 	return {
 		mutationFn: body => {
@@ -51,6 +57,13 @@ const getMutateFn = (endpoint, method) => {
 	};
 };
 
+/**
+ * useCustomMutation - This is a custom hook that uses useMutation to handle sending data to server.
+ * @param {string} endpoint - The endpoint to make request to.
+ * @param {string} method - The http verb/method to be used i.e post, put.
+ * @param {object} others - additional options to be passed to useMutation.
+ * @returns {object} an object containing the mutate function and other results.
+ */
 export const useCustomMutation = ({ endpoint, method, ...others }) => {
 	const { mutationFn } = getMutateFn(endpoint, method);
 
@@ -58,7 +71,7 @@ export const useCustomMutation = ({ endpoint, method, ...others }) => {
 		mutationFn,
 		others,
 		onError: err => {
-			toast.error('An error occurred');
+			toast.error('Error making request.');
 			return err;
 		},
 		onSettled: () => {

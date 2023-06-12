@@ -1,14 +1,8 @@
-// import { reviews } from '../data';
-// import Box from '../components/Box';
 import { Link } from 'react-router-dom';
-// import waka from '../assets/stats.png';
 import { proalx } from '../data';
 import Item from './Item';
 
 const Main = () => {
-	// const review = reviews.map(review => {
-	// 	return <Box key={review.id} {...review} />;
-	// });
 	return (
 		<main className='dark:bg-dark dark:text-gray-300 relative z-[0] border dark:border-dark border-body '>
 			<section className='flex flex-col justify-center items-center my-10 bg-body dark:bg-dark gap-3 py-6 '>

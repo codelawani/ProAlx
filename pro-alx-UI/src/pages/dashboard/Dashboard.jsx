@@ -1,6 +1,6 @@
 import { useCustomQuery, useCustomMutation } from '../../hooks/useCustomQuery';
-import TempLoader from '../../components/TempLoader';
-import Table from '../../components/Table';
+import TempLoader from '../../components/loader/TempLoader';
+import Table from './Table';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button';
 import { useRef } from 'react';

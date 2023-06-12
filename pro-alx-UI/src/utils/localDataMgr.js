@@ -37,6 +37,7 @@ const localDataMgr = {
 		window.localStorage.clear();
 	},
 };
+
 function base64UrlDecode(str) {
 	const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
 	const padding = base64.length % 4 === 0 ? 0 : 4 - (base64.length % 4);
@@ -51,6 +52,8 @@ function decodeJWTToken(token) {
 	const payload = JSON.parse(decodedPayload);
 	return payload;
 }
+
+// retrieve user info from token stored in local storage
 export function getUser() {
 	const token = localDataMgr.get('access_token');
 	if (token) {

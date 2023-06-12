@@ -1,7 +1,7 @@
 import { useCustomQuery } from '../../hooks/useCustomQuery';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
-import { Details, DisplayChart, ImageName, OverLay } from '../View';
+import { Details, DisplayChart, ImageName, OverLay } from './View';
 import SmallLoader from '../loader/SmallLoader';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 //import { dataset } from '../../data';
