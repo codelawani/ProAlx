@@ -5,8 +5,9 @@ import { IoLocationSharp, IoLogoWhatsapp, IoLogoGithub } from 'react-icons/io5';
 import PropTypes from 'prop-types';
 import UserChart from './UserChart';
 
-// utility components to help display user information
+/* utility components to help display user information */
 
+// display user image, name and cohort
 export const ImageName = ({ name, photo_url, cohort_number }) => {
   return (
     <div className='flex items-center justify-start gap-4 pb-2 ml:flex-col ml:items-start'>
@@ -31,6 +32,7 @@ ImageName.propTypes = {
   cohort_number: PropTypes.number
 };
 
+// display relevant user information
 export const Details = ({ user }) => {
   // styles for span elements
   const span = 'flex gap-2 items-center py-2 text-xl';
@@ -84,8 +86,14 @@ export const Details = ({ user }) => {
           <span>
             {`${user?.name} currently needs ${user?.requested_partners} Partner(s) for the ${user?.requested_project} team project`}
           </span>
-          <span className='inline-block'>{`Date requested: ${user?.last_request_date}`}</span>
+          <span className='block pt-2'>{`Date requested: ${user?.last_request_date}`}</span>
         </p>
+      )}
+      {/* display only when user has not connected wakatime */}
+      {!user?.waka_connected && (
+        <span className='text-dark-hero text-base dark:text-main'>
+          *Wakatime not connected
+        </span>
       )}
     </div>
   );
@@ -95,31 +103,41 @@ Details.propTypes = {
   user: PropTypes.object
 };
 
-export const DisplayChart = ({ waka_stats, git_stats }) => {
+export const DisplayChart = ({ waka_stats, git_stats, waka_connected }) => {
   // checks if the wakatime stats for a user has data
-  const isWakaEmpty = Object.values(waka_stats || []).every(
+  const isWakatimeNotEmpty = Object.values(waka_stats || []).some(
     item => Object.values(item).length > 0
   );
+
   // return a loader while data is being fetched from server
   if (!waka_stats && !git_stats) return <SmallLoader />;
 
   return (
     <>
       {/* use wakatime stats if it contains data otherwise display github commits */}
-      {isWakaEmpty && !waka_stats?.error
+      {isWakatimeNotEmpty && !waka_stats?.error
         ? (
           <UserChart value={waka_stats} />
           )
         : (
           <UserChart value={git_stats} isGithubData />
           )}
+      {/* display if no wakatime data and user has connected wakatime */}
+      {waka_connected && !isWakatimeNotEmpty
+        ? (
+          <span className='block text-bar dark:text-bar-dark pt-5'>
+            No wakatime activity for the week
+          </span>
+          )
+        : null}
     </>
   );
 };
 
 DisplayChart.propTypes = {
   waka_stats: PropTypes.object,
-  git_stats: PropTypes.object
+  git_stats: PropTypes.object,
+  waka_connected: PropTypes.bool.isRequired
 };
 
 export const OverLay = () => {

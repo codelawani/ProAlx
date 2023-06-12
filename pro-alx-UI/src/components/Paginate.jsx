@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from './Button';
 
@@ -14,6 +14,13 @@ const withPagination = (Component, itemsPerPage) => {
   const PaginatedComponent = props => {
     const { data, ...others } = props;
     const [currentPage, setCurrentPage] = useState(1);
+
+    // change current page to the first page when it is filtered
+    // reset to beginning when data changes
+    useEffect(() => {
+      setCurrentPage(1);
+    }, [data]);
+
     const lastIndex = currentPage * itemsPerPage;
     const firstIndex = lastIndex - itemsPerPage;
     const items = data ? data?.slice(firstIndex, lastIndex) : []; // current page data

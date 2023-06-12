@@ -69,7 +69,7 @@ const UserChart = ({ value, isGithubData = false }) => {
   if (screenWidth < 600) {
     barWidth = 320;
   } else if (screenWidth < 1200) {
-    barWidth = 500;
+    barWidth = 450;
   } else {
     barWidth = 600;
   }
@@ -121,27 +121,32 @@ const UserChart = ({ value, isGithubData = false }) => {
   }
 
   return (
-    <div className='w-fit bg-chart dark:bg-black dark:bg-none rounded'>
-      <BarChart
-        width={barWidth}
-        height={500}
-        data={data}
-        margin={{
-				  top: 5,
-				  right: 5,
-				  left: 5,
-				  bottom: 5
-        }}
-      >
-        <XAxis dataKey='name' tick={{ fill: 'white' }} />
-        <Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
-        <Legend />
-        <Bar
-          dataKey='coding'
-          barSize={30}
-          fill={theme === 'dark' ? 'rgb(10,10,50)' : '#9CA2D2'}
-        />
-      </BarChart>
+    <div>
+      <h6 className='text-center pb-3 uppercase font-mono'>
+        {isGithubData ? 'Github contributions' : 'Wakatime activity'} last week
+      </h6>
+      <div className='w-fit bg-chart dark:bg-black dark:bg-none rounded'>
+        <BarChart
+          width={barWidth}
+          height={500}
+          data={data}
+          margin={{
+					  top: 5,
+					  right: 5,
+					  left: 5,
+					  bottom: 5
+          }}
+        >
+          <XAxis dataKey='name' tick={{ fill: 'white' }} />
+          <Tooltip content={<CustomTooltip isGithubData={isGithubData} />} />
+          <Legend />
+          <Bar
+            dataKey='coding'
+            barSize={30}
+            fill={theme === 'dark' ? 'rgb(10,10,50)' : '#9CA2D2'}
+          />
+        </BarChart>
+      </div>
     </div>
   );
 };

@@ -75,7 +75,11 @@ const Profile = () => {
           <Details user={user} />
         </div>
         <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end pt-9 lg:pt-0 h-full'>
-          <DisplayChart waka_stats={waka_stats} git_stats={git_stats} />
+          <DisplayChart
+            waka_stats={waka_stats}
+            git_stats={git_stats}
+            waka_connected={user?.waka_connected}
+          />
         </div>
       </div>
 
@@ -92,10 +96,7 @@ const Profile = () => {
       {showModal.cohort && (
         <>
           <OverLay />
-          <Cohort
-            cohortChange
-            handleClick={() => handleModalClose('cohort')}
-          />
+          <Cohort cohortChange handleClick={() => handleModalClose('cohort')} />
         </>
       )}
     </div>
