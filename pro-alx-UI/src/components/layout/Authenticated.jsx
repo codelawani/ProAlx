@@ -34,7 +34,7 @@ const Authenticated = () => {
         })
         .catch(err => {
           toast.error('Something went wrong');
-          console.log(err.message);
+          toast.error(err.message);
           updateLoading(false);
         });
     };
@@ -44,8 +44,7 @@ const Authenticated = () => {
   }, []);
   return (
     <div
-      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
-    >
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}>
       {isLoggedIn
         ? (
           <>
