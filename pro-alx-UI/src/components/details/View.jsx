@@ -91,7 +91,7 @@ export const Details = ({ user }) => {
       )}
       {/* display only when user has not connected wakatime */}
       {!user?.waka_connected && (
-        <span className='text-dark-hero text-base dark:text-main'>
+        <span className='text-dark-hero text-base dark:text-main block pt-4'>
           *Wakatime not connected
         </span>
       )}
