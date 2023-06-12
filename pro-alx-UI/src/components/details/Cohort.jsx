@@ -33,6 +33,7 @@ const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
 				// update local storage with the new token received
 				localDataMgr.set('access_token', res.data.access_token);
 				setUser(prev => ({ ...prev, cohort }));
+				handleClick();
 			} else {
 				toast.error('Failed to update cohort, please try again');
 			}

@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const BoardList = ({ data }) => {
 	const navigate = useNavigate();
 
+	// view a user's profile
 	const handleClick = id => {
 		navigate(`/user/${id}`);
 	};
 
+	// convert time in seconds to hours and minutes
 	const getTime = seconds => {
 		const hour = Math.floor(seconds / 3600);
 		const minute = Math.floor((seconds % 3600) / 60);
