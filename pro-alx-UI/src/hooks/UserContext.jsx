@@ -1,7 +1,8 @@
 import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getUser } from './localDataMgr';
+import { getUser } from '../utils/localDataMgr';
 
+// create global user context to be used when required in any component
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {

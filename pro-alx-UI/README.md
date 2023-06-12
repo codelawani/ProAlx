@@ -1,7 +1,16 @@
 ## ProAlx Frontend
 
+### How to setup locally
 
-- Run npm install after updating your branch locally in this directory to update your dependencies
+```
+1. Ensure you are in the frontend root directory [pro-alx-UI]
+ - cd pro-alx-UI
 
-- To test the wakatime integration, use port 5174
-i.e npm run dev -- --port 5174
+ 2. install all project dependencies using
+ - npm install
+
+ 3. run project locally
+ - npm run dev
+
+ 4. open http://localhost:5173 on your browser
+```

@@ -1,12 +1,22 @@
 import { useForm } from 'react-hook-form';
 import Button from '../../components/Button';
 import { toast } from 'react-toastify';
+import emailjs from 'emailjs-com';
+const {
+  VITE_SERVICE_ID: SERVICE_ID,
+  VITE_TEMPLATE_ID: TEMPLATE_ID,
+  VITE_PUBLIC_KEY: PUBLIC_KEY
+} = import.meta.env;
+
+emailjs.init(PUBLIC_KEY);
 
 const ContactForm = () => {
-  const totalCohorts = 17;
+  const totalCohorts = 30;
+
+  // create a list of cohort options starting from cohort 8
   const cohorts = Array.from(
     { length: totalCohorts },
-    (_, idx) => `cohort ${idx + 1}`
+    (_, idx) => `cohort ${8 + idx}`
   );
   const style =
 		'border-2 text border-yellow w-1/2 self-center py-2 hover:text-dark hover:bg-yellow transition ease-in-out duration-200 text-xl capitalize active:scale-x-[0.8] mt-4';
@@ -25,49 +35,57 @@ const ContactForm = () => {
   } = useForm();
 
   const submitForm = data => {
-    console.log(data);
-    toast('message sent successfully!');
-    reset();
+    // use emailjs to send form data to gmail account
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, data)
+      .then(res => {
+        toast.success(`${res.status}: Message sent successfully!`);
+        reset();
+      })
+      .catch(err => {
+        toast.error(`${err.status}: Error sending message.`);
+      });
   };
   return (
     <form
       onSubmit={handleSubmit(submitForm)}
-      className=' w-full px-6 py-[4rem] self-center flex flex-col justify-center md:w-6/12 border rounded-lg bg-gradient-to-br from-purple-400 dark:from-purple-950 via-lime-300 dark:via-dark to-red-400'
+      className=' w-full px-3 py-7 self-center flex flex-col justify-center md:w-6/12 border rounded-lg bg-gradient-to-br from-purple-400 dark:from-purple-950 via-lime-300 dark:via-dark to-red-400'
     >
       <div className='mb-4'>
-        <label htmlFor='fullname' className='text-lg'>
+        <label htmlFor='from_name' className='text-lg'>
           Fullname
         </label>
         <input
           type='text'
-          {...register('fullname', { required: true })}
+          {...register('from_name', { required: true })}
           aria-invalid={errors.fullname ? 'true' : 'false'}
-          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2'
+          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2 px-2'
+          id='from_name'
         />
-        {errors.fullname && (
+        {errors.from_name && (
           <span role='alert' className='text-red-600'>
             please enter your full name
           </span>
         )}
       </div>
       <div className='mb-4'>
-        <label htmlFor='email' className='text-lg'>
+        <label htmlFor='from_email' className='text-lg'>
           Email
         </label>
         <input
-          name='email'
           type='email'
-          {...register('email', {
+          {...register('from_email', {
 					  required: true,
 					  pattern: {
 					    value:
 								/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-            }
+					  }
           })}
-          aria-invalid={errors.email ? 'true' : 'false'}
-          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 rounded-lg py-2 focus:border-2'
+          aria-invalid={errors.from_email ? 'true' : 'false'}
+          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 rounded-lg py-2 focus:border-2 px-2'
+          id='from_email'
         />
-        {errors.email && (
+        {errors.from_email && (
           <span role='alert' className='text-red-600'>
             please enter a valid email
           </span>
@@ -77,8 +95,8 @@ const ContactForm = () => {
         <label htmlFor='cohort'>Cohort</label>
         <select
           {...register('cohort')}
-          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2'
-          name='cohort'
+          className='border-b-2 block w-full border-red-950 outline-none dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-lg py-2 px-2'
+          id='cohort'
         >
           <option value='' />
           {options}
@@ -90,7 +108,7 @@ const ContactForm = () => {
           cols='30'
           rows='5'
           {...register('message', { required: true })}
-          className='border-b-2 block w-full border-red-950 outline-none focus:border-blue-300 dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-2 rounded-lg'
+          className='border-b-2 block w-full border-red-950 outline-none focus:border-blue-300 dark:bg-black dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-2 rounded-lg px-2'
           name='message'
         />
         {errors.message && (

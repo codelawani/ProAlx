@@ -15,11 +15,7 @@ const ErrorPage = () => {
         Oops! The page you are looking for does not exist. It might have been
         moved or deleted
       </p>
-      <Button
-        value='Go back'
-        handleClick={() => navigate(-1)}
-        style={style}
-      />
+      <Button value='Go back' handleClick={() => navigate(-1)} style={style} />
     </div>
   );
 };

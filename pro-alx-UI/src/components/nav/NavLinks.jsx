@@ -12,12 +12,6 @@ const NavLinks = ({ color = 'dark', handleClick = () => {} }) => {
       >
         <Link to='contact'>Contact</Link>
       </li>
-      {/* <li
-        className='pr-2 hover:border-b hover:border-main rounded hover:px-2'
-        onClick={handleClick}
-      >
-        <Link to='/'>Setup Wakatime</Link>
-      </li> */}
     </ul>
   );
 };

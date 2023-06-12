@@ -8,7 +8,7 @@ const Header = () => {
         className='flex  justify-between
 			 p-6 px-[5rem] fixed inset-x-0 top-0 bg-white dark:bg-dark dark:text-body shadow-ul'
       >
-        <h1 className=' font-bold text-3xl bg-clip-text bg-gradient-to-tl from-dark to-red-950 text-transparent hover:opacity-80 transform hover:scale-[0.9] dark:via-main'>
+        <h1 className=' font-bold text-3xl hover:opacity-80 transform hover:scale-[0.9] text-dark dark:text-white'>
           <Link to='/'>ProAlx</Link>
         </h1>
         <NavMenu />

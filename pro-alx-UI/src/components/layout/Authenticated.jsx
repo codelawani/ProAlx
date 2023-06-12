@@ -1,20 +1,23 @@
 import { useUser, useTheme } from '../../hooks/customContexts';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../dashboard/Bar';
 import { useEffect } from 'react';
-import api from '../../hooks/api';
-import localDataMgr, { getUser } from '../../hooks/localDataMgr';
+import api from '../../utils/api';
+import localDataMgr from '../../utils/localDataMgr';
+import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
   const API = 'http://127.0.0.1:5000/api/v1';
+  const navigate = useNavigate();
   const { theme } = useTheme();
-  const { user, setUser, updateLoading, isLoggedIn } = useUser();
+  const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
+    // wakatime authorization flow
     const handleConnect = code => {
       updateLoading(true);
       api
@@ -23,13 +26,10 @@ const Authenticated = () => {
           if (res.status === 200) {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
-            console.log('b4', user);
-            setUser(getUser());
-            console.log('after', user);
-            if (user.waka) {
-              updateLoading(false);
-              toast.success('Wakatime connected successfully!');
-            }
+            setUser(prev => ({ ...prev, waka: true }));
+            updateLoading(false);
+            navigate(-1);
+            toast.success('Wakatime connected successfully!');
           }
         })
         .catch(err => {
@@ -44,8 +44,7 @@ const Authenticated = () => {
   }, []);
   return (
     <div
-      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
-    >
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}>
       {isLoggedIn
         ? (
           <>
@@ -57,6 +56,7 @@ const Authenticated = () => {
                   please connect wakatime!!
                 </p>
               )}
+              {isLoading && <SmallLoader />}
               <Outlet />
             </div>
           </>

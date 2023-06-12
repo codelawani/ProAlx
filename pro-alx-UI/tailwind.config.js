@@ -61,7 +61,8 @@ export default {
         ul: '0px 4px 6px -2px rgba(46, 49, 146, 0.06), 0px 2px 4px -2px rgba(231, 215, 215, 0.06);'
       },
       screens: {
-        ml: '970px'
+        ml: '985px',
+        tb: '650px'
       }
     }
   },

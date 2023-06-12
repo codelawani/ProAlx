@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DashboardNav from './DashboardNav';
 import { BiMenu } from 'react-icons/bi';
 import Button from '../Button';
@@ -10,15 +10,22 @@ import Theme from '../Theme';
 
 const Bar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const { user } = useUser();
+  const { user, updateLoading } = useUser();
+
+  const navigate = useNavigate();
 
   const style =
 		'hover:bg-primary py-2 hover:text-white hover:border-white dark: text-sm uppercase font-mono font-bold text-blue-500 border py-1';
+
+  // get client id from .env file
   const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
   const handleClick = () => {
     setShowSidebar(prev => !prev);
   };
+
+  // redirect user to wakatime OAuth endpoint for OAuth authorization of the app
   const handleConnect = () => {
+    updateLoading(true);
     const scope = 'email read_stats read_logged_time';
     const redirectUrl = 'http://localhost:5173/dashboard';
     const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;
@@ -59,7 +66,10 @@ const Bar = () => {
               />
             )}
             <Login style=' hover:bg-primary py-1 hover:text-white  self-start' />
-            <div className='flex gap-2 items-center'>
+            <div
+              className='flex gap-2 items-center cursor-pointer hover:border-b hover:pb-2'
+              onClick={() => navigate('/profile')}
+            >
               <img
                 src={user.photo_url}
                 alt='profile photo'
@@ -72,7 +82,11 @@ const Bar = () => {
       </div>
 
       {showSidebar && (
-        <MobileBar handleClick={handleClick} showSidebar={showSidebar} />
+        <MobileBar
+          handleClick={handleClick}
+          showSidebar={showSidebar}
+          handleConnect={handleConnect}
+        />
       )}
     </header>
   );

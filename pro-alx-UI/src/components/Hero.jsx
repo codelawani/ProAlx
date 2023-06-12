@@ -1,5 +1,4 @@
 import Button from './Button';
-// import img from '../assets/shape2.svg';
 
 const Hero = () => {
   const scrollToSection = id => {
@@ -37,7 +36,7 @@ const Hero = () => {
       <svg
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 1440 320'
-        className='absolute bottom-0 z-[-1]  dark:fill-dark fill-body'
+        className='absolute bottom-0 z-[-1]  dark:fill-inherit fill-body'
       >
         <path
           fill=''

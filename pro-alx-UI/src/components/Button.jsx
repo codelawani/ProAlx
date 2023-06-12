@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const Button = ({
   type = 'button',
-  handleClick = null,
+  handleClick = () => {},
   value,
   style = '',
   ...others

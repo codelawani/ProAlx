@@ -2,7 +2,6 @@ import { MdHome, MdLeaderboard } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TfiEmail } from 'react-icons/tfi';
-// MdSettings
 
 const DashboardNav = ({ handleClick = () => {} }) => {
   return (

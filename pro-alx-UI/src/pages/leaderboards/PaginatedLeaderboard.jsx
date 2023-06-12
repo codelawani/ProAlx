@@ -1,20 +1,24 @@
 import { useState } from 'react';
 import withPagination from '../../components/Paginate';
 import BoardList from './BoardList';
-import { useUserData } from '../../hooks/fetchData';
+import { useCustomQuery } from '../../hooks/useCustomQuery';
 import { IoMdFunnel } from 'react-icons/io';
 
+// add pagination to the leaderboard table
 const PaginatedBoardList = withPagination(BoardList, 15);
 
 const Leaderboards = () => {
+  // filter the leaderboard list using cohort number
+  // if no value is entered use the general leaderboard list
   const [filterKey, setFilterKey] = useState('');
-  const { value, refetch } = useUserData({
+  const { value, refetch } = useCustomQuery({
     queryKey: ['leaderboard', filterKey],
     endpoint: `${
 			filterKey ? `cohorts/${filterKey}/leaderboard` : '/users/leaderboard'
 		}`
   });
 
+  // add ranking property to the leaderboard list returned from the server/db
   const rankedList = value?.map((item, index) => ({
     ...item,
     rank: index + 1

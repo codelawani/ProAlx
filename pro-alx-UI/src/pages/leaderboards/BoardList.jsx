@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const BoardList = ({ data }) => {
   const navigate = useNavigate();
 
+  // view a user's profile
   const handleClick = id => {
     navigate(`/user/${id}`);
   };
 
+  // convert time in seconds to hours and minutes
   const getTime = seconds => {
     const hour = Math.floor(seconds / 3600);
     const minute = Math.floor((seconds % 3600) / 60);
@@ -17,12 +19,12 @@ const BoardList = ({ data }) => {
   const BoardItems = data?.map(item => {
     return (
       <tr
-        className='flex items-center md:grid grid-cols-7 content-center dark:even:bg-bar-light rounded dark:border-blur last:border-none py-[1.5rem] md:gap-9 border-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:rounded-lg text-xs md:text-sm even:bg-bar even:text-white hover:even:bg-gray-400 transition-all duration-300 ease-in-out'
+        className='flex items-center md:grid grid-cols-7 content-center dark:even:bg-bar-light rounded dark:border-blur last:border-none py-[1.5rem] md:gap-9 border-gray-300 hover:bg-gray-200 dark:hover:bg-gray-900 hover:rounded-lg text-xs md:text-sm even:bg-bar even:text-white hover:even:bg-gray-800 transition-all duration-300 ease-in-out'
         key={item.id}
       >
         <td className='basis-1/6 text-center col-span-1'>{item.rank}</td>
         <td
-          className='basis-3/4 text-center text-blue-500 dark:text-blue-300 cursor-pointer col-span-2 flex items-center gap-1 md:gap-2'
+          className='basis-3/4 text-center text-blue-500 dark:text-blue-700 cursor-pointer col-span-2 flex items-center gap-1 md:gap-2'
           onClick={() => handleClick(item.id)}
         >
           <img

@@ -5,18 +5,12 @@ import PropTypes from 'prop-types';
 import { useUser } from '../../hooks/customContexts';
 import Theme from '../Theme';
 import LoginWithGithub from '../GithubLogin';
+import { useNavigate } from 'react-router-dom';
 
-const MobileBar = ({ handleClick }) => {
+const MobileBar = ({ handleClick, handleConnect }) => {
   const { user } = useUser();
+  const navigate = useNavigate();
   const style = 'text-body font-mono uppercase border px-3 py-1';
-  const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
-
-  const handleConnect = () => {
-    const scope = 'email read_stats read_logged_time';
-    const redirectUrl = 'http://localhost:5173/dashboard';
-    const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;
-    window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
-  };
   return (
     <>
       <div
@@ -42,7 +36,13 @@ const MobileBar = ({ handleClick }) => {
           handleClick={handleClick}
         />
 
-        <div className='flex gap-2 items-center rounded-lg mb-2 w-fit px-2'>
+        <div
+          className='flex gap-2 items-center rounded-lg mb-2 w-fit px-2 cursor-pointer'
+          onClick={() => {
+					  navigate('/profile');
+					  handleClick();
+          }}
+        >
           <img
             src={user.photo_url}
             alt='profile photo'
@@ -58,7 +58,8 @@ const MobileBar = ({ handleClick }) => {
 };
 
 MobileBar.propTypes = {
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  handleConnect: PropTypes.func
 };
 
 export default MobileBar;
