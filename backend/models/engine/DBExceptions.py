@@ -14,11 +14,10 @@ class DatabaseException(Exception):
         super().__init__(self.message)
 
 
-log_msg = "\nPlease check the logs for more details."
-
-
 def error_handler(method):
     """Returns a wrapper that handles errors"""
+    log_msg = "\nPlease check the logs for more details."
+
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         """ Wrapper that handles errors"""
@@ -41,6 +40,8 @@ def error_handler(method):
             logger.exception(f'Error ID: {str(uuid4())}')
             raise DatabaseException(error_message, code)
         except Exception:
+            if self.session:
+                self.session.rollback()
             error_message = "An unexpected error occurred :(" + log_msg
             logger.exception(f'Error ID: {str(uuid4())}')
             raise DatabaseException(error_message)

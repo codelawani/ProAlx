@@ -18,6 +18,6 @@ def create_user_request():
     user = storage.get(User, jwt_id())
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    user_dict = storage.set_user_data(user.id, data)
-    print(user_dict)
-    return jsonify(user_dict), 201
+    result = storage.update_user_request(user, data)
+    print(result)
+    return jsonify(result), 201

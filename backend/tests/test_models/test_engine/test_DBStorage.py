@@ -7,8 +7,7 @@ from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_ENV
 from models.user import User
 from models.engine.DBStorage import DBStorage
 from sqlalchemy import inspect
-from sqlalchemy.exc import SQLAlchemyError
-from datetime import datetime
+from models.partner_request import PartnerRequest
 from models.engine.DBExceptions import DatabaseException
 DATABASE_URI = "mysql+mysqlconnector://{}:***@{}/{}".format(DB_USERNAME,
                                                             DB_HOST,
@@ -161,7 +160,7 @@ class TestDBStorageNew(TestDBStorage):
         self.db.session.expunge(user)
         self.db.close()  # Close the session
         self.db.reload()  # Create a new session
-        retrieved_user = self.db.session.query(User).get(user.id)
+        retrieved_user = self.db.get(User, user.id)
         self.assertIsNotNone(retrieved_user)
 
     def test_new_handles_integrity_error(self):
@@ -279,20 +278,18 @@ class TestSetUserMethod(TestDBStorage):
         data = {
             'name': 'John Doe',
             'email': 'john.doe@example.com',
-            'requested_partners': 5
         }
 
         result = self.db.set_user_data(user.id, data)
 
         self.assertEqual(result['name'], 'John Doe')
         self.assertEqual(result['email'], 'john.doe@example.com')
-        self.assertEqual(result['requested_partners'], 5)
         self.assertIsNotNone(result['created_at'])
         self.assertIsNotNone(result['updated_at'])
 
     def test_set_user_data_invalid_attribute(self):
         # Create a user object for testing
-        user = User(name="Kams")
+        user = User(name="Sylver")
         self.db.new(user)
         data = {
             'invalid_attribute': 'test'
@@ -354,3 +351,51 @@ class TestCreateNewCohortIfNotExists(TestDBStorage):
         result = self.db.create_new_cohort_if_not_exists(cohort_number)
 
         self.assertIsNone(result)
+
+
+class TestUpdateUserRequest(TestDBStorage):
+
+    def test_update_existing_request(self):
+        user = User()
+        request = PartnerRequest(user=user, number=2, project='Project A')
+        user.partner_request = request
+        data = {'requested_partners': 3, 'requested_project': 'Project B'}
+        updated_user = self.db.update_user_request(user, data)
+        self.assertEqual(updated_user['requested_partners'], 3)
+        self.assertEqual(updated_user['requested_project'], 'Project B')
+
+    def test_create_new_request(self):
+        user = User(name='John')
+        data = {'requested_partners': 4, 'requested_project': 'Project C'}
+        updated_user = self.db.update_user_request(user, data)
+        self.assertIsNotNone(updated_user['requested_partners'])
+        self.assertEqual(updated_user['requested_partners'], 4)
+        self.assertEqual(updated_user['requested_project'], 'Project C')
+
+    def test_missing_requested_partners(self):
+        user = User(name='Jane')
+        data = {'requested_project': 'Project D'}
+        with self.assertRaises(DatabaseException) as cm:
+            self.db.update_user_request(user, data)
+        self.assertEqual(str(
+            cm.exception), "Both 'requested_partners' and 'requested_project' must be provided.")
+        self.assertEqual(cm.exception.code, 400)
+
+    def test_missing_requested_project(self):
+        user = User(name='Nico')
+        data = {'requested_partners': 5}
+        with self.assertRaises(DatabaseException) as cm:
+            self.db.update_user_request(user, data)
+        self.assertEqual(str(
+            cm.exception), "Both 'requested_partners' and 'requested_project' must be provided.")
+        self.assertEqual(cm.exception.code, 400)
+
+    def test_invalid_requested_partners(self):
+        user = User(name='Zee')
+        data = {'requested_partners': 'invalid',
+                'requested_project': 'Project E'}
+        with self.assertRaises(DatabaseException) as cm:
+            self.db.update_user_request(user, data)
+        self.assertEqual(str(cm.exception),
+                         "'requested_partners' must be a positive integer.")
+        self.assertEqual(cm.exception.code, 400)
