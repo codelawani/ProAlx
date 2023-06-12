@@ -2,17 +2,15 @@
 """
 This module contains a basic view for the login route
 """
-from flask import jsonify, abort, redirect, request, Flask, make_response
+from flask import jsonify, request, Flask, make_response
 from api.v1.views import app_views
 from os import getenv
 import requests
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
-import json
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from api.v1 import error_handler
 from models import storage
-from datetime import datetime
-from secrets import token_hex
 load_dotenv(find_dotenv())
 wakatime_url = "https://wakatime.com/api/v1/"
 
@@ -22,32 +20,28 @@ app = Flask(__name__)
 api = 'http://localhost:5000/api/v1'
 
 
-def update_user(id, data, token):
-    """
-    Sends a PUT request to update a user's data in the API using the provided user ID, data, and authentication token.
+def update_user(id, data):
+    """ This function updates a user's data in the database.
 
-    :param id: The ID of the user to be updated.
-    :type id: int
-    :param data: The updated data for the user.
-    :type data: dict
-    :param token: The authentication token for the API.
-    :type token: str
-    :return: The JSON response from the API if the update was successful, otherwise raises an HTTPError or returns the error response.
-    :rtype: dict or str
+    Args:
+        id (str): The user's id.
+        data (dicr): A dictionary containing the data to be updated.
+
+    Returns:
+        dict: A dictionary containing the updated user's data is successful.
     """
-    res = requests.put(f'{api}/users/{id}', json=data, headers={
-        'Authorization': f'Bearer {token}'}
-    )
-    if res.ok:
+    user_dict = storage.set_user_data(id, data)
+    if user_dict:
         print('Updated successfully')
-        return res.json()
+        return user_dict
     else:
-        res.raise_for_status()
-        return res.text
+        print('Update failed')
+        return {}
 
 
 @app_views.route('/waka/authorize', strict_slashes=False)
 @jwt_required()
+@error_handler
 def authorize():
     """
     This function authorizes a user using OAuth with Wakatime. The user's code is received as a request parameter and is used to get an access token from Wakatime using the OAuth 2.0 authorization code flow. The access token is then used to update the user's data with Wakatime information and create a new JWT access token with the user's data for future use. The function returns a JSON response containing the new access token or an error message if the request fails.
@@ -74,6 +68,7 @@ def authorize():
     }
     encoded_data = urlencode(data)
     response = requests.post(url,  data=encoded_data, headers=headers)
+    err_res = make_response(jsonify({'msg': 'failed'}), 404)
     if response.status_code == 200:
         # Request was successful
         print('POST request succeeded')
@@ -86,10 +81,10 @@ def authorize():
             'waka_token_expires': user.get('expires_at')
         }
         user_id = get_jwt_identity()
-        authorization_header = request.headers.get('Authorization')
-        token = authorization_header.split(' ')[1]
-        user = update_user(user_id, waka_data, token)
+        user = update_user(user_id, waka_data)
         print(user)
+        if not user:
+            return err_res
         public_user_data = {
             'name': user.get('name', ''),
             'cohort': user.get('cohort_number', 0),
@@ -101,11 +96,11 @@ def authorize():
             identity=user_id,
             additional_claims={'user_data': public_user_data}
         )
+        storage.save_waka_weekly_stats(user_id)
         res = jsonify({'access_token': access_token})
     else:
         # Request failed
         print('POST request failed')
         print(f'response is {response.text}')
-        # abort(404)
-        res = make_response(jsonify({'msg': "failed"}), 404)
+        res = err_res
     return res

@@ -1,0 +1,1 @@
+* 9,21 * * * /usr/bin/python3 /home/nico/Documents/xcode/ProAlx/backend/api/v1/views/waka_stats.py >> /home/nico/Documents/xcode/ProAlx/backend/logs/logfile.log 2>&1; echo "$(date) Cron job executed" >> /home/nico/Documents/xcode/ProAlx/backend/logs/logfile.log

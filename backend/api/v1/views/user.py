@@ -1,48 +1,27 @@
-import traceback
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from models.user import User
 from models import storage
-from datetime import datetime
-from models.cohort import Cohort
+from api.v1 import error_handler
 from models.engine.DBExceptions import DatabaseException
 import requests
-from logs import logger
 API = 'http://localhost:5000/api/v1'
 
 
-def error_handler(e, msg=None):
-    """
-    A function to handle errors in the application.
-
-    Parameters:
-    - e (Exception): The exception to be handled.
-    - msg (str): The error message to be returned. If None, it defaults to e.client_msg.
-
-    Returns:
-    - A JSON object with the error message (str) and the status code (int).
-    """
-    if not msg:
-        msg = e.client_msg
-    return jsonify({'error': msg}), e.code
-
-
 @app_views.route('/users', strict_slashes=False)
+@error_handler
 def get_users():
     """
     Retrieves all users from storage and returns them in JSON format.
     Returns:
         A JSON representation of a list of dictionaries, each representing a user.
     """
-    try:
-        all_users = storage.all(User).values()
-        list_users = []
-        for user in all_users:
-            list_users.append(user.to_dict())
-        return jsonify(list_users)
-    except DatabaseException as e:
-        return error_handler(e)
+    all_users = storage.all(User).values()
+    list_users = []
+    for user in all_users:
+        list_users.append(user.to_dict())
+    return jsonify(list_users)
 
 
 @app_views.route('/user/daily_commits', strict_slashes=False)
@@ -68,6 +47,7 @@ def get_users_daily_commits():
 
 
 @app_views.route('/users/<id>/details', strict_slashes=False)
+@error_handler
 def get_user(id):
     """
     Retrieves the public data of a user with the given id.
@@ -82,17 +62,15 @@ def get_user(id):
         404 Error: if no user with the given id exists.
         DatabaseException: if there is an error retrieving the data from the database.
     """
-    try:
-        user = storage.get_user_public_data(id)
-        print(user)
-        if not user:
-            abort(404)
-        return jsonify(user.to_dict())
-    except DatabaseException as e:
-        return error_handler(e)
+    user = storage.get_user_public_data(id)
+    print(user)
+    if not user:
+        return jsonify({'err': 'User not found'})
+    return jsonify(user)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
+@error_handler
 def delete_user(user_id):
     """
     Deletes a user from the system.
@@ -104,20 +82,24 @@ def delete_user(user_id):
         A tuple containing an empty JSON object and a status code of 200 on success.
         Otherwise, it returns the result of the error_handler function.
     """
-    try:
-        user = storage.get(User, user_id)
+    user = storage.get(User, user_id)
 
-        if not user:
-            abort(404)
+    if not user:
+        abort(404)
 
-        user.delete()
+    user.delete()
 
-        return jsonify({}), 200
-    except DatabaseException as e:
-        return error_handler(e)
+    return jsonify({}), 200
+
+
+@app_views.route('/user/profile', strict_slashes=False)
+@jwt_required()
+def get_user_profile():
+    return jsonify(storage.get_user_public_data(get_jwt_identity()))
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
+@error_handler
 def create_user():
     """
     Creates a user
@@ -150,40 +132,8 @@ def create_user():
     instance = User(**data)
     instance_dict = instance.to_dict()
 
-    try:
-        storage.new(instance)
-        return jsonify(instance_dict), 201
-    except DatabaseException as e:
-        return error_handler(e)
-
-
-# @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-# @jwt_required()
-# def update_user(user_id):
-#     """
-#     Updates an existing user in the database.
-
-#     :param user_id: The ID of the user to update.
-#     :type user_id: str
-#     :return: A JSON object containing the updated user information if the
-#         update was successful, or an error message otherwise.
-#     :rtype: json
-#     """
-#     if user_id != get_jwt_identity():
-#         return jsonify(error="Unauthorized"), 401
-#     user = storage.get(User, user_id)
-#     if not user:
-#         return jsonify(error="User not found"), 404
-#     if not request.is_json:
-#         return jsonify(error="Invalid JSON"), 400
-#     data = request.get_json()
-#     user_dict = storage.set_user_data(user, data)
-#     if not user_dict:
-#         return jsonify(error="Invalid data"), 400
-#     try:
-#         return jsonify(user_dict), 200
-#     except DatabaseException as e:
-#         return error_handler(e)
+    storage.new(instance)
+    return jsonify(instance_dict), 201
 
 
 @app_views.route('/user', methods=['PUT'], strict_slashes=False)
@@ -202,7 +152,7 @@ def put_user():
     if not request.is_json:
         return jsonify(error="Invalid JSON"), 400
     data = request.get_json()
-    user_dict = storage.set_user_data(user, data)
+    user_dict = storage.set_user_data(user.id, data)
     if not user_dict:
         return jsonify(error="Invalid data"), 400
     try:
@@ -253,20 +203,19 @@ def update_user_cohort():
 
 
 @app_views.route('/users/needs_partners', strict_slashes=False)
+@error_handler
 def get_users_who_needs_partners():
     """
     Retrieves the list of all users that need partners
     Returns:
         list of users(empty list if no users need partners)
     """
-    try:
-        users = storage.get_users_who_needs_partners()
-        return jsonify(users)
-    except DatabaseException as e:
-        return error_handler(e)
+    users = storage.get_users_who_needs_partners()
+    return jsonify(users)
 
 
 @app_views.route('users/leaderboard', strict_slashes=False)
+@error_handler
 def get_overall_leaderboard():
     """
     Retrieves the overall leaderboard of users.
@@ -274,8 +223,5 @@ def get_overall_leaderboard():
     :return: A JSON object containing the user leaderboard information.
     :raises DatabaseException: If there is an issue with retrieving the leaderboard from the database.
     """
-    try:
-        users = storage.get_overall_leaderboard()
-        return jsonify(users)
-    except DatabaseException as e:
-        return error_handler(e)
+    users = storage.get_overall_leaderboard()
+    return jsonify(users)

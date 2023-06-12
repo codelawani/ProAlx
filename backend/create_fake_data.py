@@ -4,9 +4,8 @@ from models import storage
 import random
 from datetime import datetime, timedelta
 from models.cohort import Cohort
-from models.request import RequestedPartners
+from models.partner_request import PartnerRequest
 from models.engine.DBExceptions import DatabaseException
-from mysql.connector import Error
 fake = Faker()
 # If u want the fake data to be location specific
 # use this:
@@ -65,7 +64,7 @@ def create_fake_users():
 def create_fake_requests(users):
     for user in users:
         number_of_partners = fake.random_int(min=0, max=2)
-        requested_partners = RequestedPartners(
+        requested_partners = PartnerRequest(
             number=number_of_partners, user=user)
         storage.new(requested_partners)
         print(f'Created {number_of_partners} request(s) for {user.name}')

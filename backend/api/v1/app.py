@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from os import getenv
 from dotenv import load_dotenv, find_dotenv
 from datetime import timedelta
+from models import storage
 load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -30,6 +31,12 @@ def print_urls():
 @app.route('/')
 def index():
     return 'Home'
+
+
+@app.teardown_appcontext
+def close_db(e):
+    """Close storage"""
+    storage.close()
 
 
 @app.errorhandler(404)
