@@ -6,14 +6,11 @@ from os import getenv
 from urllib.parse import parse_qs
 import json
 from models import storage
-import jwt
 import requests
 from api.v1.views import app_views
 from dotenv import find_dotenv, load_dotenv
-from flask import jsonify, make_response, request, abort
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
-from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidTokenError
+from flask import jsonify, make_response, request
+from flask_jwt_extended import (create_access_token)
 
 load_dotenv(find_dotenv())
 CLIENT_ID = getenv("GITHUB_ID")
@@ -21,7 +18,7 @@ CLIENT_SECRET = getenv("GITHUB_SECRET")
 TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
-api = 'http://localhost:5000/api/v1'
+api = 'http://localhost:5002/api/v1'
 
 
 def get_github_user_data(token):

@@ -3,9 +3,9 @@
 # To run this script
 # sudo bash sql_setup.sh
 
-env_file=$(locate "ProAlx/.env" | head -n 1)
-
-if [ -f "$env_file" ]; then
+# env_file=$(locate "ProAlx/.env" | head -n 1)
+env_file=../../.env
+if [ "$env_file" ]; then
     # shellcheck source=/dev/null
     source "$env_file"
 else
