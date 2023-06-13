@@ -143,6 +143,15 @@ class DBStorage:
 
     @error_handler
     def get_user_public_data(self, id):
+        """
+        Decorated function that retrieves public data for a user given an ID.
+        
+        :param id: The ID of the user whose data to retrieve.
+        :type id: int
+        
+        :return: A dictionary containing user data, daily Wakatime stats, and daily GitHub stats.
+        :rtype: dict
+        """
         from api.v1.views.waka_stats import get_daily_logs
         from api.v1.views.git_stats import get_daily_commits
 
@@ -165,7 +174,15 @@ class DBStorage:
                     'git_stats': daily_commits}
 
     def github_uid_exists(self, g_uid):
-        """Check if a GitHub UID exists in the database"""
+        """
+        Query the database to check if a user with a GitHub UID exists.
+
+        :param g_uid: The GitHub UID to search for.
+        :type g_uid: int
+        :return: A User object if found, otherwise None.
+        :rtype: User or None
+        :raises: DatabaseException if an error occurs while checking the database.
+        """
         try:
             query = self.session.query(User).filter(User.github_uid == g_uid)
             # Use .one() instead of .first() to raise an exception if no result is found
@@ -180,7 +197,12 @@ class DBStorage:
 
     @error_handler
     def clear_github_session(self, id):
-        """Clear GitHub session for a user"""
+        """
+        This function clears the Github session of a given user by setting their `github_session` attribute to False. 
+        It takes in two parameters - self and id. The `self` parameter refers to the instance of the class that calls 
+        this method, and the `id` parameter refers to the id of the user whose Github session needs to be cleared. 
+        This function does not return any value.
+        """
         user = self.get(User, id)
         if user:
             user.github_session = False
@@ -188,7 +210,12 @@ class DBStorage:
 
     @error_handler
     def save_waka_weekly_stats(self, user_id):
-        """ Save weekly stats for a user """
+        """
+        Decorated function that saves weekly stats for a given user.
+        :param self: An instance of the class.
+        :param user_id: An integer representing the user id.
+        :return: None.
+        """
         from api.v1.views.waka_stats import get_waka_data
         user = self.get(User, user_id)
         if user:
@@ -197,6 +224,17 @@ class DBStorage:
     def filter_necessary_data(method):
         @wraps(method)
         def wrapper(self, *args, **kwargs):
+            """
+            This function is a decorator that takes a method and returns a new method.
+            The new method queries a database table to get a list of users and converts each user
+            to a dictionary. It accepts *args and **kwargs to pass to the original method.
+            
+            :param self: The instance of the class.
+            :param *args: Arguments to be passed to the method being decorated.
+            :param **kwargs: Keyword arguments to be passed to the method being decorated.
+            
+            :return: A list of dictionaries where each dictionary represents a user.
+            """
             query = method(self, *args, **kwargs)
             entities = (User.id, User.name, User.cohort_number,
                         User.photo_url,
@@ -211,14 +249,26 @@ class DBStorage:
 
     @filter_necessary_data
     def get_users_by_cohort(self, n):
-        """Get users by cohort"""
+        """
+        Applies a filter to the necessary data and gets all users from a specific cohort.
+
+        Args:
+            n (int): The cohort number to filter users by.
+
+        Returns:
+            sqlalchemy.orm.query.Query: A query object containing all users from the specified cohort.
+        """
         query = self.session.query(User).filter(User.cohort_number == n)
         return query
 
     @error_handler
     @filter_necessary_data
     def get_users_who_needs_partners(self):
-        """Get users who need partners"""
+        """
+        Decorated function that retrieves all the users who need partners from the database.
+
+        :return: A SQLAlchemy query object that fetches all the users who have requested partners.
+        """
         query = self.session.query(User).filter(
             User.requested_partners > 0)
         return query
@@ -226,7 +276,16 @@ class DBStorage:
     @error_handler
     @filter_necessary_data
     def get_users_who_need_partners_by_cohort(self, n):
-        """Get the users who need partners by cohort ordered by most recent request"""
+        """
+        A function that retrieves a list of users who have requested partners, filtered by cohort number.
+        
+        Args:
+            self: object instance of the class containing the function.
+            n (int): the cohort number to filter by.
+            
+        Returns:
+            query: a SQLAlchemy query object that retrieves the necessary data.
+        """
         query = self.session.query(User).join(PartnerRequest).filter(
             PartnerRequest.number > 0,
             User.cohort_number == n
@@ -236,7 +295,16 @@ class DBStorage:
     @error_handler
     @filter_necessary_data
     def get_cohort_leaderboard(self, n):
-        """Get leaderboard for cohort n"""
+        """
+        Decorated function to get the leaderboard of users in a specified cohort based on the total number of seconds
+        spent coding on Wakatime. Filters necessary data and handles errors. 
+
+        :param n: an integer representing the cohort number
+        :type n: int
+        
+        :return: an SQLAlchemy query object with user information sorted in descending order by their total seconds
+        :rtype: sqlalchemy.orm.query.Query
+        """
         query = self.session.query(User).filter(
             User.cohort_number == n).order_by(
                 User.waka_week_total_seconds.desc())
@@ -245,14 +313,32 @@ class DBStorage:
     @error_handler
     @filter_necessary_data
     def get_overall_leaderboard(self):
-        """Get overall leaderboard"""
+        """
+        This function returns the overall leaderboard of users based on their total seconds performed in WakaTime in descending order.
+
+        :param self: The object instance.
+
+        :return: A SQLAlchemy query object.
+        """
         query = self.session.query(User).order_by(
             User.waka_week_total_seconds.desc())
         return query
 
     @error_handler
     def set_user_data(self, id, data):
-        """Sets user data"""
+        """
+        Decorated function that sets user data based on the given id and data. The function
+        retrieves the user data by id from the database, modifies the data, and saves the changes.
+        The function returns the user data as a dictionary if it exists, otherwise an empty
+        dictionary.
+
+        :param id: The user id.
+        :type id: Any
+        :param data: The user data to set.
+        :type data: dict
+        :return: The user data as a dictionary if it exists, otherwise an empty dictionary.
+        :rtype: dict
+        """
         user = self.get(User, id)
         ignore = ['gh_access_token', 'requested_partners',
                   'requested_project', 'id', 'created_at',
