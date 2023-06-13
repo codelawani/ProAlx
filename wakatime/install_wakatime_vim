@@ -1,0 +1,53 @@
+#!/bin/bash
+# Check if the script is being run as root
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root"
+  exit 1
+fi
+# Check if pip is installed and install it if it's not found
+if ! command -v pip3 &> /dev/null; then
+  echo "pip not found. Installing pip..."
+  if ! sudo apt-get install -y python3-pip; then
+    echo "Failed to install pip. Please install pip and try again."
+    exit 1
+  fi
+fi
+# Check if Wakatime is installed and install it if it's not found
+if ! command -v wakatime &> /dev/null; then
+  echo "Wakatime not found. Installing Wakatime..."
+  if ! pip3 install --trusted-host pypi.org --trusted-host files.pythonhosted.org wakatime; then
+    echo "Failed to install Wakatime. Please check your internet connection and try again."
+    exit 1
+  fi
+fi
+# Check if Git is installed and install it if it's not found
+if ! command -v git &> /dev/null; then
+  echo "Git not found. Installing Git..."
+  if ! sudo apt-get install -y git; then
+    echo "Failed to install Git. Please check your internet connection and try again."
+    exit 1
+  fi
+fi
+# Check if Vundle is installed and clone it if it's not found
+if [ ! -d ~/.vim/bundle/Vundle.vim ]; then
+  if ! git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim; then
+    echo "Failed to clone Vundle. Please check your internet connection and try again."
+    exit 1
+  fi
+fi
+# Update .vimrc with Wakatime and Vundle configuration
+if ! echo "set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'wakatime/vim-wakatime'
+call vundle#end()
+filetype plugin indent on" >> ~/.vimrc; then
+  echo "Failed to update your .vimrc file. Please check your permissions and try again."
+  exit 1
+fi
+# Install Wakatime plugin using Vundle
+if ! vim +PluginInstall +qall; then
+  echo "Failed to install the Vim Wakatime plugin. Please check your internet connection and try again."
+  exit 1
+fi
+vim
+exit 0

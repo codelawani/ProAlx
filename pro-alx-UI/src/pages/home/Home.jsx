@@ -8,7 +8,7 @@ import Main from '../../components/Main';
 import localDataMgr, { getUser } from '../../utils/localDataMgr';
 import TempLoader from '../../components/loader/TempLoader';
 
-const URL = 'http://127.0.0.1:5000/api/v1';
+const { VITE_API_URL: URL } = import.meta.env;
 
 const Home = () => {
   const navigate = useNavigate();

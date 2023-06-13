@@ -9,7 +9,7 @@ import localDataMgr from '../../utils/localDataMgr';
 import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
-  const API = 'http://127.0.0.1:5000/api/v1';
+  const { VITE_API_URL: API } = import.meta.env;
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
@@ -44,7 +44,8 @@ const Authenticated = () => {
   }, []);
   return (
     <div
-      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}>
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
+    >
       {isLoggedIn
         ? (
           <>
