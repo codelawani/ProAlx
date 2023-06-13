@@ -9,7 +9,7 @@ from models import storage
 load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.register_blueprint(app_views)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 app.config['JWT_SECRET_KEY'] = getenv('JWT_SECRET_KEY')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
@@ -53,6 +53,6 @@ def not_found(error):
 if __name__ == "__main__":
     """ Main Function """
     print_urls()
-    host = getenv('HBNB_API_HOST') or '0.0.0.0'
-    port = getenv('HBNB_API_PORT') or 5000
+    host = getenv('API_HOST') or '0.0.0.0'
+    port = getenv('API_PORT') or 5000
     app.run(host=host, port=port, threaded=True, debug=1)
