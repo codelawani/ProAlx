@@ -39,7 +39,7 @@ jobs:
           VITE_WAKA_ID: ${{ env.WAKA_ID }}
           VITE_PROALX: ${{ env.PROALX }}
 
-        - name: Deploy to server
+      - name: Deploy to server
   uses: appleboy/ssh-action@master
   with:
     host: ${{ secrets.SERVER_HOST }}
@@ -49,7 +49,7 @@ jobs:
       sudo rm -rf /var/www/html/proalx/*
       mkdir -p /var/www/html/proalx
 
-       - name: Transfer dist directory to server
+      - name: Transfer dist directory to server
   run: |
     sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
 
