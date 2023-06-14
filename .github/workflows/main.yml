@@ -52,5 +52,6 @@ jobs:
       - name: Transfer dist directory to server
         run: |
           ls
-          echo $GITHUB_WORKSPACE
-          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
+          echo "hi $GITHUB_WORKSPACE"
+          ls pro-alx-UI
+          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} pro-alx-UI/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
