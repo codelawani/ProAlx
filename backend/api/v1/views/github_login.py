@@ -9,7 +9,7 @@ from models import storage
 import requests
 from api.v1.views import app_views
 from dotenv import find_dotenv, load_dotenv
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response, request, url_for
 from flask_jwt_extended import (create_access_token)
 
 load_dotenv(find_dotenv())
@@ -18,7 +18,7 @@ CLIENT_SECRET = getenv("GITHUB_SECRET")
 TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
-api = 'http://localhost:5002/api/v1'
+users_api = url_for('users')
 
 
 def get_github_user_data(token):
@@ -66,7 +66,7 @@ def create_user(user_data):
         user_data.update({'id': user.id, })
         print(user_data)
         return user.to_dict()
-    res = requests.post(f'{api}/users', json=user_data)
+    res = requests.post(users_api, json=user_data)
     if res.ok:
         return res.json()
     else:

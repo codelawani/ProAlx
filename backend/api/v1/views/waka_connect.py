@@ -17,8 +17,7 @@ wakatime_url = "https://wakatime.com/api/v1/"
 CLIENT_ID = getenv("WAKATIME_ID")
 CLIENT_SECRET = getenv("WAKATIME_SECRET")
 app = Flask(__name__)
-api = 'http://localhost:5000/api/v1'
-
+URL = getenv('PROALX','https://www.proalx.live')
 
 def update_user(id, data):
     """ This function updates a user's data in the database.
@@ -58,7 +57,7 @@ def authorize():
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
         'code': code,
-        'redirect_uri': "http://localhost:5173/dashboard",
+        'redirect_uri': f"{URL}/dashboard",
         'grant_type': "authorization_code",
     }
 

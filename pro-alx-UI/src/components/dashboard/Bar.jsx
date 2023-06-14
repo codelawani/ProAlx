@@ -18,7 +18,10 @@ const Bar = () => {
 		'hover:bg-primary py-2 hover:text-white hover:border-white dark: text-sm uppercase font-mono font-bold text-blue-500 border py-1';
 
   // get client id from .env file
-  const { VITE_WAKA_ID: CLIENT_ID } = import.meta.env;
+  const {
+    VITE_WAKA_ID: CLIENT_ID,
+    VITE_PROALX: URL
+  } = import.meta.env;
   const handleClick = () => {
     setShowSidebar(prev => !prev);
   };
@@ -27,7 +30,7 @@ const Bar = () => {
   const handleConnect = () => {
     updateLoading(true);
     const scope = 'email read_stats read_logged_time';
-    const redirectUrl = 'http://localhost:5173/dashboard';
+    const redirectUrl = URL + '/dashboard';
     const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;
     window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
   };
