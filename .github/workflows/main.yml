@@ -1,0 +1,45 @@
+name: Deploy Vite App
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Vite app
+        run: |
+          export WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh"
+          export GITHUB_ID="94a0ffa989a216e4c779"
+          export PROALX="https://www.proalx.live"
+          export API_URL="https://www.proalx.live/api/v1"
+          npm run build
+        env:
+          API_URL: ${{ env.API_URL }}
+          VITE_GITHUB_ID: ${{ env.GITHUB_ID }}
+          VITE_WAKA_ID: ${{ env.WAKA_ID }}
+          VITE_PROALX: ${{ env.PROALX }}
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /var/www/html/proalx/*
+            sudo cp -r dist/* /var/www/html/proalx
