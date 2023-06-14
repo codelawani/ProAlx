@@ -18,7 +18,6 @@ CLIENT_SECRET = getenv("GITHUB_SECRET")
 TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
-users_api = url_for('users')
 
 
 def get_github_user_data(token):
@@ -66,6 +65,7 @@ def create_user(user_data):
         user_data.update({'id': user.id, })
         print(user_data)
         return user.to_dict()
+    users_api = url_for('app_views.create_user', _external=True)
     res = requests.post(users_api, json=user_data)
     if res.ok:
         return res.json()
