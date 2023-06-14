@@ -19,7 +19,9 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          mv pro-alx-UI
+          npm install
 
       - name: Build Vite app
         run: |
