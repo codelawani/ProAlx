@@ -31,13 +31,6 @@ jobs:
           export API_URL="https://www.proalx.live/api/v1"
           cd pro-alx-UI
           npm run build
-          pwd
-          ls
-        env:
-          VITE_API_URL: ${{ env.API_URL }}
-          VITE_GITHUB_ID: ${{ env.GITHUB_ID }}
-          VITE_WAKA_ID: ${{ env.WAKA_ID }}
-          VITE_PROALX: ${{ env.PROALX }}
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
@@ -46,12 +39,13 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /var/www/html/proalx/*
-            mkdir -p /var/www/html/proalx
+            sudo rm -rf /var/www/html/proalx
 
       - name: Transfer dist directory to server
         run: |
-          ls
-          echo "hi $GITHUB_WORKSPACE"
           ls pro-alx-UI/dist
-          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/pro-alx-UI/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
+          cd pro-alx-UI
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > private_key.pem
+          mv dist proalx
+          sudo scp -i private_key.pem -r proalx "${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx"
+          rm private_key.pem
