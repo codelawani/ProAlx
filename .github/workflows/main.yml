@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          mv pro-alx-UI
+          cd pro-alx-UI
           npm install
 
       - name: Build Vite app
