@@ -40,15 +40,17 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
             sudo rm -rf /var/www/html/proalx
-            ls
+
+      - name: Set private key permissions
+        run: |
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
 
       - name: Transfer dist directory to server
         run: |
           ls pro-alx-UI/dist
           cd pro-alx-UI
-          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > private_key.pem
-          cat private_key.pem
           mv dist proalx
           sudo apt-get -y install rsync
-          rsync -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" -r proalx/ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/
-          rm private_key.pem
+          sudo rsync -e "ssh -i ../private_key.pem -o StrictHostKeyChecking=no" -r proalx/ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/
+          sudo rm ../private_key.pem
