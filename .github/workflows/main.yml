@@ -47,6 +47,6 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
             pwd
-            ls
+            ls ProAlx/pro-alx-UI
             sudo rm -rf /var/www/html/proalx/*
-            sudo cp -r dist/* /var/www/html/proalx
+            sudo cp ProAlx/pro-alx-UI/dist/* /var/www/html/proalx
