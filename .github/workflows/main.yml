@@ -25,11 +25,11 @@ jobs:
 
       - name: Build Vite app
         run: |
-          export WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh"
-          export GITHUB_ID="94a0ffa989a216e4c779"
-          export PROALX="https://www.proalx.live"
-          export API_URL="https://www.proalx.live/api/v1"
           cd pro-alx-UI
+          VITE_WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh" \
+          VITE_GITHUB_ID="94a0ffa989a216e4c779" \
+          VITE_PROALX="https://www.proalx.live" \
+          VITE_API_URL="https://www.proalx.live/api/v1" \
           npm run build
 
       - name: Deploy to server
