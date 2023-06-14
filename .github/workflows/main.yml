@@ -49,4 +49,4 @@ jobs:
             pwd
             ls ProAlx/pro-alx-UI
             sudo rm -rf /var/www/html/proalx/*
-            sudo cp ProAlx/pro-alx-UI/dist/* /var/www/html/proalx
+            sudo cp dist/* /var/www/html/proalx
