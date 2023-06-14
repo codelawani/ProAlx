@@ -25,6 +25,7 @@ jobs:
 
       - name: Build Vite app
         run: |
+          cd pro-alx-UI
           export WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh"
           export GITHUB_ID="94a0ffa989a216e4c779"
           export PROALX="https://www.proalx.live"
@@ -44,4 +45,4 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
             sudo rm -rf /var/www/html/proalx/*
-            sudo cp -r dist/* /var/www/html/proalx
+            sudo cp -r pro-alx-UI/dist/* /var/www/html/proalx
