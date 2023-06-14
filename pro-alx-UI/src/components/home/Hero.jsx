@@ -1,6 +1,6 @@
-import Button from './Button';
-import { handleAuth } from '../utils/githubOauth';
-import { useUser } from '../hooks/customContexts';
+import Button from '../Button';
+import { handleAuth } from '../../utils/githubOauth';
+import { useUser } from '../../hooks/customContexts';
 
 const Hero = () => {
 	const { updateLoading } = useUser();

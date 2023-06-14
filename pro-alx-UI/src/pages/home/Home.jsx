@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import Hero from '../../components/Hero';
+import Hero from '../../components/home/Hero';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../hooks/customContexts';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Main from '../../components/Main';
+import Main from '../../components/home/Main';
 import localDataMgr, { getUser } from '../../utils/localDataMgr';
 import TempLoader from '../../components/loader/TempLoader';
 
