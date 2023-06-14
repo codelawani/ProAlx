@@ -17,7 +17,9 @@ wakatime_url = "https://wakatime.com/api/v1/"
 CLIENT_ID = getenv("WAKATIME_ID")
 CLIENT_SECRET = getenv("WAKATIME_SECRET")
 app = Flask(__name__)
-URL = getenv('PROALX','https://www.proalx.live')
+URL = getenv('PROALX', 'https://www.proalx.live')
+print('URL', URL)
+
 
 def update_user(id, data):
     """ This function updates a user's data in the database.
@@ -43,7 +45,13 @@ def update_user(id, data):
 @error_handler
 def authorize():
     """
-    This function authorizes a user using OAuth with Wakatime. The user's code is received as a request parameter and is used to get an access token from Wakatime using the OAuth 2.0 authorization code flow. The access token is then used to update the user's data with Wakatime information and create a new JWT access token with the user's data for future use. The function returns a JSON response containing the new access token or an error message if the request fails.
+    This function authorizes a user using OAuth with Wakatime.
+    The user's code is received as a request parameter and is used
+    to get an access token from Wakatime using the OAuth 2.0
+    authorization code flow. The access token is then used to update
+    the user's data with Wakatime information and create a new JWT access token
+    with the user's data for future use. The function returns a JSON response
+    containing the new access token or an error message if the request fails.
 
     Args:
         None

@@ -1,5 +1,5 @@
 import { useUser, useTheme } from '../../hooks/customContexts';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../dashboard/Bar';
@@ -10,9 +10,13 @@ import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
   const { VITE_API_URL: API } = import.meta.env;
-  const navigate = useNavigate();
   const { theme } = useTheme();
   const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
+  function clearCodeParam () {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('code');
+    window.history.replaceState({}, '', url);
+  }
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -27,10 +31,11 @@ const Authenticated = () => {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
             setUser(prev => ({ ...prev, waka: true }));
+            clearCodeParam();
             updateLoading(false);
-            navigate(-1);
             toast.success('Wakatime connected successfully!');
           }
+          updateLoading(false);
         })
         .catch(err => {
           toast.error('Something went wrong');

@@ -5,6 +5,8 @@ This module contains a basic view for the github login route
 from os import getenv
 from urllib.parse import parse_qs
 import json
+from models.engine.DBExceptions import DatabaseException
+from models.user import User
 from models import storage
 import requests
 from api.v1.views import app_views
@@ -59,19 +61,17 @@ def create_user(user_data):
         HTTPError: If an unsuccessful response is received from the API.
 
     """
-    user = storage.github_uid_exists(user_data.get('github_uid'))
-    print(user)
-    if user:
-        user_data.update({'id': user.id, })
-        print(user_data)
+    try:
+        user = storage.github_uid_exists(user_data.get('github_uid'))
+        if user:
+            user_data.update({'id': user.id, })
+            print(user_data)
+        else:
+            user = User(**user_data)
+            storage.new(user)
         return user.to_dict()
-    users_api = url_for('app_views.create_user', _external=True)
-    res = requests.post(users_api, json=user_data)
-    if res.ok:
-        return res.json()
-    else:
-        res.raise_for_status()
-        print('create user failed')
+    except DatabaseException:
+        return {}
 
 
 @app_views.route('/github/login', strict_slashes=False)
@@ -100,8 +100,6 @@ def login():
         parsed_res = parse_qs(res.content.decode('utf-8'))
         token = parsed_res['access_token'][0]
         user = get_github_user_data(token)
-        with open('user.json', 'w') as f:
-            json.dump(user, f)
         user_data = {
             'github_login': user.get('login'),
             'github_uid': user.get('id'),
