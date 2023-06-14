@@ -18,10 +18,7 @@ const Bar = () => {
 		'hover:bg-primary py-2 hover:text-white hover:border-white dark: text-sm uppercase font-mono font-bold text-blue-500 border py-1';
 
   // get client id from .env file
-  const {
-    VITE_WAKA_ID: CLIENT_ID,
-    VITE_PROALX: URL
-  } = import.meta.env;
+  const { VITE_WAKA_ID: CLIENT_ID, VITE_PROALX: URL } = import.meta.env;
   const handleClick = () => {
     setShowSidebar(prev => !prev);
   };
