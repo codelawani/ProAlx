@@ -25,11 +25,11 @@ jobs:
 
       - name: Build Vite app
         run: |
-          cd pro-alx-UI
           export WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh"
           export GITHUB_ID="94a0ffa989a216e4c779"
           export PROALX="https://www.proalx.live"
           export API_URL="https://www.proalx.live/api/v1"
+          cd pro-alx-UI
           npm run build
         env:
           VITE_API_URL: ${{ env.API_URL }}
