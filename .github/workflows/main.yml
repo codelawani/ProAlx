@@ -53,5 +53,5 @@ jobs:
         run: |
           ls
           echo "hi $GITHUB_WORKSPACE"
-          ls pro-alx-UI
-          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} pro-alx-UI/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
+          ls pro-alx-UI/dist
+          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/pro-alx-UI/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
