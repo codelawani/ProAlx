@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 19.8.1
+          node-version: 14
 
       - name: Install dependencies
         run: |
@@ -40,16 +40,15 @@ jobs:
           VITE_PROALX: ${{ env.PROALX }}
 
       - name: Deploy to server
-  uses: appleboy/ssh-action@master
-  with:
-    host: ${{ secrets.SERVER_HOST }}
-    username: ${{ secrets.SERVER_USERNAME }}
-    key: ${{ secrets.SERVER_PRIVATE_KEY }}
-    script: |
-      sudo rm -rf /var/www/html/proalx/*
-      mkdir -p /var/www/html/proalx
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /var/www/html/proalx/*
+            mkdir -p /var/www/html/proalx
 
       - name: Transfer dist directory to server
-  run: |
-    sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
-
+        run: |
+          sudo scp -r -i ${{ secrets.SERVER_PRIVATE_KEY }} $GITHUB_WORKSPACE/pro-alx-UI/dist/* ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/proalx
