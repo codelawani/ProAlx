@@ -13,7 +13,6 @@
 	"dependencies": {
 		"@tanstack/react-query": "^4.29.7",
 		"axios": "^1.4.0",
-		"chart.js": "^4.3.0",
 		"emailjs-com": "^3.2.0",
 		"js-cookie": "^3.0.5",
 		"jsonwebtoken": "^9.0.0",
