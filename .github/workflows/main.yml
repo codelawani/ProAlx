@@ -31,6 +31,8 @@ jobs:
           export API_URL="https://www.proalx.live/api/v1"
           cd pro-alx-UI
           npm run build
+          pwd
+          ls
         env:
           VITE_API_URL: ${{ env.API_URL }}
           VITE_GITHUB_ID: ${{ env.GITHUB_ID }}
@@ -44,5 +46,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
+            pwd
+            ls
             sudo rm -rf /var/www/html/proalx/*
-            sudo cp -r pro-alx-UI/dist/* /var/www/html/proalx
+            sudo cp -r dist/* /var/www/html/proalx
