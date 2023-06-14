@@ -29,7 +29,7 @@ jobs:
           export API_URL="https://www.proalx.live/api/v1"
           npm run build
         env:
-          API_URL: ${{ env.API_URL }}
+          VITE_API_URL: ${{ env.API_URL }}
           VITE_GITHUB_ID: ${{ env.GITHUB_ID }}
           VITE_WAKA_ID: ${{ env.WAKA_ID }}
           VITE_PROALX: ${{ env.PROALX }}
