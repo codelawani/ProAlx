@@ -18,6 +18,7 @@ const Table = ({ data }) => {
           <tr
             key={index}
             className='cursor-pointer text-black whitespace-nowrap dark:text-white dark:bg-black dark:hover:bg-bar hover:bg-bar hover:text-white transition-colors duration-200 bg-white'
+            onClick={() => navigate(`/user/${row.id}`)}
           >
             <td className='py-4 px-3 w-1/6'>
               <div className='flex items-center'>
@@ -26,10 +27,7 @@ const Table = ({ data }) => {
                   alt={row.name}
                   className='w-10 h-10 rounded-full'
                 />
-                <span
-                  className='ml-2 truncate text-blue-600 group-hover:text-white hover:underline cursor-pointer '
-                  onClick={() => navigate(`/user/${row.id}`)}
-                >
+                <span className='ml-2 truncate text-blue-600 group-hover:text-white hover:underline '>
                   {row.name}
                 </span>
               </div>
