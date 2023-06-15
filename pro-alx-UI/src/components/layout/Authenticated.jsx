@@ -9,10 +9,10 @@ import localDataMgr from '../../utils/localDataMgr';
 import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
-  const API = 'http://127.0.0.1:5000/api/v1';
-  const navigate = useNavigate();
+  const { VITE_API_URL: API } = import.meta.env;
   const { theme } = useTheme();
   const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
+  const navigate = useNavigate();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -27,10 +27,11 @@ const Authenticated = () => {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
             setUser(prev => ({ ...prev, waka: true }));
-            updateLoading(false);
             navigate(-1);
+            updateLoading(false);
             toast.success('Wakatime connected successfully!');
           }
+          updateLoading(false);
         })
         .catch(err => {
           toast.error('Something went wrong');
@@ -38,13 +39,14 @@ const Authenticated = () => {
           updateLoading(false);
         });
     };
-    if (code) {
+    if (code && !user.waka) {
       handleConnect(code);
     }
   }, []);
   return (
     <div
-      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}>
+      className={`${theme}  flex w-screen h-screen overflow-hidden dark:bg-black dark:text-gray-300`}
+    >
       {isLoggedIn
         ? (
           <>

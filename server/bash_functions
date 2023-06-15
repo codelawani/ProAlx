@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -rf /var/www/html/proalx/
+# mv dist/ proalx
+mv proalx/ /var/www/html/
+sudo service nginx restart

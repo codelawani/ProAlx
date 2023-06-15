@@ -1,8 +1,9 @@
 import axios from 'axios';
 import localDataMgr from './localDataMgr';
+const { VITE_API_URL: API } = import.meta.env;
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api/v1'
+  baseURL: API
 });
 
 // add authorization token to api requests
