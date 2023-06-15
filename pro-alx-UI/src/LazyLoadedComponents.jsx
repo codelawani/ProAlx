@@ -1,12 +1,10 @@
 import { lazy } from 'react';
 
 // lazy loaded components
-export const App = lazy(() => import('./App.jsx'));
 import './index.css';
 export const ErrorPage = lazy(() => import('./pages/error/ErrorPage.jsx'));
 export const Dashboard = lazy(() => import('./pages/dashboard/Dashboard.jsx'));
 export const Contact = lazy(() => import('./pages/contact/Contact.jsx'));
-export const Home = lazy(() => import('./pages/home/Home.jsx'));
 export const Leaderboard = lazy(() =>
 	import('./pages/leaderboards/PaginatedLeaderboard.jsx')
 );
