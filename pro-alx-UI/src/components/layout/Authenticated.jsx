@@ -11,7 +11,7 @@ import SmallLoader from '../loader/SmallLoader';
 const Authenticated = () => {
   const { VITE_API_URL: API } = import.meta.env;
   const { theme } = useTheme();
-  const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
+  const { user, setUser, isLoggedIn, isLoading } = useUser();
   const navigate = useNavigate();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -19,7 +19,6 @@ const Authenticated = () => {
 
     // wakatime authorization flow
     const handleConnect = code => {
-      updateLoading(true);
       api
         .get(`${API}/waka/authorize?code=${code}`)
         .then(res => {
@@ -28,15 +27,12 @@ const Authenticated = () => {
             localDataMgr.set('access_token', data.access_token);
             setUser(prev => ({ ...prev, waka: true }));
             navigate(-1);
-            updateLoading(false);
             toast.success('Wakatime connected successfully!');
           }
-          updateLoading(false);
         })
         .catch(err => {
-          toast.error('Something went wrong');
+          toast.error('Error connecting Wakatime');
           toast.error(err.message);
-          updateLoading(false);
         });
     };
     if (code && !user.waka) {

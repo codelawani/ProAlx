@@ -40,7 +40,7 @@ const ViewUser = () => {
         />
       </div>
 
-      <div className='flex flex-col ml:flex-row lg:grid ml:gap-3 lg:justify-between lg:grid-cols-5 justify-center items-center lg:content-between lg:px-2'>
+      <div className='flex flex-col ml:flex-row lg:grid ml:gap-3 lg:justify-between lg:grid-cols-5 justify-center  lg:content-between lg:px-2 items-center'>
         <div className='lg:col-span-2'>
           <ImageName
             name={user?.name}
@@ -50,7 +50,7 @@ const ViewUser = () => {
           <Details user={user} />
         </div>
 
-        <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end pt-9 lg:pt-0 h-full'>
+        <div className='w-full flex  flex-col items-center justify-start lg:col-span-3 lg:self-end pt-9 lg:pt-0 h-full'>
           <DisplayChart
             waka_stats={waka_stats}
             git_stats={git_stats}

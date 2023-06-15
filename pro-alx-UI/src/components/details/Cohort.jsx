@@ -1,13 +1,17 @@
 import Button from '../Button';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useUser } from '../../hooks/customContexts';
 import localDataMgr from '../../utils/localDataMgr';
 import PropTypes from 'prop-types';
 import { useCustomMutation } from '../../hooks/useCustomQuery';
 
-const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
-  const { setUser } = useUser();
+const Cohort = ({
+  handleClick = () => {},
+  cohortChange = false,
+  refetch = () => {}
+}) => {
+  const { setUser, user } = useUser();
   const { mutateAsync } = useCustomMutation({
     endpoint: '/user/cohort',
     method: 'put'
@@ -17,25 +21,26 @@ const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
 		'hover:bg-dark-blue hover:text-body border py-1 px-4 text-dark-blue mt-2 border-dark-blue self-center dark:text-main dark:border-warm';
 
   // reference to cohort number input
-  const cohortNumber = useRef();
+  const [cohortNumber, setCohortNumber] = useState(user?.cohort);
 
   const handleCohortSubmit = async e => {
     e.preventDefault();
-    const cohort = cohortNumber.current.value;
+
     // validate input
-    if (cohort === '') {
+    if (cohortNumber === '') {
       toast.error('Cohort must be a number');
       return;
     }
     try {
       const res = await mutateAsync({
-        cohort_number: parseInt(cohort)
+        cohort_number: parseInt(cohortNumber)
       });
       if (res.status === 201) {
         toast('cohort updated successfully!');
         // update local storage with the new token received
         localDataMgr.set('access_token', res.data.access_token);
-        setUser(prev => ({ ...prev, cohort }));
+        setUser(prev => ({ ...prev, cohortNumber }));
+        refetch();
         handleClick();
       } else {
         toast.error('Failed to update cohort, please try again');
@@ -55,11 +60,12 @@ const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
             name='cohort_number'
             id='cohort_number'
             className='border block w-full border-warm-tone outline-none dark:bg-dark dark:text-[#e5e5e5] dark:border-blue-300 dark:border-b focus:border-blue-300 focus:border-2 rounded-md py-2 px-3'
-            ref={cohortNumber}
             type='number'
             placeholder='cohort number'
             min={8}
-            max={24}
+            max={40}
+            value={cohortNumber}
+            onChange={e => setCohortNumber(e.target.value)}
           />
         </div>
 
@@ -80,6 +86,7 @@ const Cohort = ({ handleClick = () => {}, cohortChange = false }) => {
 
 Cohort.propTypes = {
   handleClick: PropTypes.func,
-  cohortChange: PropTypes.bool
+  cohortChange: PropTypes.bool,
+  refetch: PropTypes.func
 };
 export default Cohort;

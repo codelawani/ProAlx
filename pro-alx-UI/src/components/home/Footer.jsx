@@ -10,7 +10,7 @@ const Footer = () => {
           <h2 className='font-bold text-3xl bg-clip-text dark:bg-yellow text-transparent hover:opacity-80 transform hover:scale-[0.9] dark:via-main md:mb-3 bg-bar-dark '>
             ProAlx
           </h2>
-          <span>Find the right partner easily</span>
+          <span>Unlock your productivity</span>
         </div>
         <ul className='flex flex-col justify-between gap-3'>
           <li>

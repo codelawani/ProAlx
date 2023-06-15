@@ -10,7 +10,7 @@ import Theme from '../Theme';
 
 const Bar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const { user, updateLoading } = useUser();
+  const { user } = useUser();
 
   const navigate = useNavigate();
 
@@ -25,7 +25,6 @@ const Bar = () => {
 
   // redirect user to wakatime OAuth endpoint for OAuth authorization of the app
   const handleConnect = () => {
-    updateLoading(true);
     const scope = 'email read_stats read_logged_time';
     const redirectUrl = URL + '/dashboard';
     const query = `response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirectUrl}&scope=${scope}`;

@@ -1,7 +1,6 @@
 import { MdHome, MdLeaderboard } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { TfiEmail } from 'react-icons/tfi';
 
 const DashboardNav = ({ handleClick = () => {} }) => {
   return (
@@ -38,7 +37,7 @@ const DashboardNav = ({ handleClick = () => {} }) => {
 						<span className=''>Settings</span>
 					</NavLink>
 				</li> */}
-        <li className='relative group flex w-fit'>
+        {/* <li className='relative group flex w-fit'>
           <NavLink
             to='contact'
             className={({ isActive }) => (isActive ? 'active' : 'inactive')}
@@ -47,7 +46,7 @@ const DashboardNav = ({ handleClick = () => {} }) => {
             <TfiEmail style={{ fontSize: '1.5rem' }} />
             <span className=''>contact us</span>
           </NavLink>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

@@ -10,10 +10,9 @@ const NavMenu = () => {
   const openMobileNav = () => {
     setMobileMenu(prev => !prev);
   };
-  const style =
-		'md:hidden text-warm-tone dark:text-body text-2xl';
+  const style = 'md:hidden text-warm-tone dark:text-body text-3xl';
   return (
-    <nav className='text-white'>
+    <nav className='text-white flex'>
       <DeskTopView />
       <Button
         value={<GiHamburgerMenu />}

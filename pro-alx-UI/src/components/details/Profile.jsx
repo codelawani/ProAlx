@@ -96,7 +96,11 @@ const Profile = () => {
       {showModal.cohort && (
         <>
           <OverLay />
-          <Cohort cohortChange handleClick={() => handleModalClose('cohort')} />
+          <Cohort
+            cohortChange
+            handleClick={() => handleModalClose('cohort')}
+            refetch={refetch}
+          />
         </>
       )}
     </div>

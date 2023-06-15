@@ -1,12 +1,10 @@
-import Button from './Button';
+import Button from '../Button';
+import { handleAuth } from '../../utils/githubOauth';
+import { useUser } from '../../hooks/customContexts';
 
 const Hero = () => {
-  const scrollToSection = id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const { updateLoading } = useUser();
+
   const style =
 		'border-2 p-2 text-black border-yellow w-60 dark:text-dark dark: lg:text-2xl bg-yellow hover:text-dark dark:hover:text-dark hover:border-body ';
 
@@ -26,7 +24,7 @@ const Hero = () => {
         <Button
           style={style}
           value='Get Started'
-          handleClick={() => scrollToSection('wakatime')}
+          handleClick={() => handleAuth(updateLoading)}
         />
       </div>
       <div

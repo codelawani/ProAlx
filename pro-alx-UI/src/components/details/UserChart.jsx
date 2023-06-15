@@ -66,6 +66,7 @@ const UserChart = ({ value, isGithubData = false }) => {
   }, []);
 
   let barWidth = null;
+  const barHeight = 300;
   if (screenWidth < 600) {
     barWidth = 320;
   } else if (screenWidth < 1200) {
@@ -106,6 +107,12 @@ const UserChart = ({ value, isGithubData = false }) => {
     };
   });
 
+  // calculate the highest commit or time spent
+  const highestValue = Math.max(...data.map(item => item.coding));
+
+  // highestValueStyling
+  const highestStyles = 'py-2 px-2 rounded-lg font-light text-xs';
+
   // save the updated/parsed data from server to be used in the chart
   Object.keys(value).forEach(key => {
     updatedDataset[getDate(key)] = value[key];
@@ -128,7 +135,7 @@ const UserChart = ({ value, isGithubData = false }) => {
       <div className='w-fit bg-chart dark:bg-black dark:bg-none rounded'>
         <BarChart
           width={barWidth}
-          height={500}
+          height={barHeight}
           data={data}
           margin={{
 					  top: 5,
@@ -146,6 +153,16 @@ const UserChart = ({ value, isGithubData = false }) => {
             fill={theme === 'dark' ? 'rgb(10,10,50)' : '#9CA2D2'}
           />
         </BarChart>
+      </div>
+      <div className='py-3 flex justify-center w-fit ms-auto me-auto'>
+        <p className={highestStyles}>
+          {isGithubData && `Highest commit : ${highestValue} commit(s)`}
+        </p>
+        {!isGithubData && (
+          <p className={highestStyles}>
+            Longest Time : {getTime(highestValue)}{' '}
+          </p>
+        )}
       </div>
     </div>
   );
