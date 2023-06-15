@@ -9,17 +9,16 @@ import localDataMgr from '../../utils/localDataMgr';
 import SmallLoader from '../loader/SmallLoader';
 
 const Authenticated = () => {
-	const API = 'http://127.0.0.1:5000/api/v1';
-	const navigate = useNavigate();
+	const { VITE_API_URL: API } = import.meta.env;
 	const { theme } = useTheme();
-	const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
+	const { user, setUser, isLoggedIn, isLoading } = useUser();
+	const navigate = useNavigate();
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const code = urlParams.get('code');
 
 		// wakatime authorization flow
 		const handleConnect = code => {
-			updateLoading(true);
 			api
 				.get(`${API}/waka/authorize?code=${code}`)
 				.then(res => {
@@ -27,18 +26,16 @@ const Authenticated = () => {
 						const data = res.data;
 						localDataMgr.set('access_token', data.access_token);
 						setUser(prev => ({ ...prev, waka: true }));
-						updateLoading(false);
 						navigate(-1);
 						toast.success('Wakatime connected successfully!');
 					}
 				})
 				.catch(err => {
-					toast.error('Something went wrong');
+					toast.error('Error connecting Wakatime');
 					toast.error(err.message);
-					updateLoading(false);
 				});
 		};
-		if (code) {
+		if (code && !user.waka) {
 			handleConnect(code);
 		}
 	}, []);

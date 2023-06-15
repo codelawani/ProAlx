@@ -5,15 +5,14 @@ This module contains a basic view for the github login route
 from os import getenv
 from urllib.parse import parse_qs
 import json
+from models.engine.DBExceptions import DatabaseException
+from models.user import User
 from models import storage
-import jwt
 import requests
 from api.v1.views import app_views
 from dotenv import find_dotenv, load_dotenv
-from flask import jsonify, make_response, request, abort
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
-from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidTokenError
+from flask import jsonify, make_response, request, url_for
+from flask_jwt_extended import (create_access_token)
 
 load_dotenv(find_dotenv())
 CLIENT_ID = getenv("GITHUB_ID")
@@ -21,7 +20,6 @@ CLIENT_SECRET = getenv("GITHUB_SECRET")
 TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 USER_ENDPOINT = "https://api.github.com/user"
 key = getenv('JWT_SECRET_KEY')
-api = 'http://localhost:5000/api/v1'
 
 
 def get_github_user_data(token):
@@ -63,18 +61,17 @@ def create_user(user_data):
         HTTPError: If an unsuccessful response is received from the API.
 
     """
-    user = storage.github_uid_exists(user_data.get('github_uid'))
-    print(user)
-    if user:
-        user_data.update({'id': user.id, })
-        print(user_data)
+    try:
+        user = storage.github_uid_exists(user_data.get('github_uid'))
+        if user:
+            user_data.update({'id': user.id, })
+            print(user_data)
+        else:
+            user = User(**user_data)
+            storage.new(user)
         return user.to_dict()
-    res = requests.post(f'{api}/users', json=user_data)
-    if res.ok:
-        return res.json()
-    else:
-        res.raise_for_status()
-        print('create user failed')
+    except DatabaseException:
+        return {}
 
 
 @app_views.route('/github/login', strict_slashes=False)
@@ -103,8 +100,6 @@ def login():
         parsed_res = parse_qs(res.content.decode('utf-8'))
         token = parsed_res['access_token'][0]
         user = get_github_user_data(token)
-        with open('user.json', 'w') as f:
-            json.dump(user, f)
         user_data = {
             'github_login': user.get('login'),
             'github_uid': user.get('id'),

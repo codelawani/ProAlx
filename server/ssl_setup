@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo certbot certonly --standalone -d proalx.live -d www.proalx.live --non-interactive --agree-tos --email codeLawani@gmail.com
+sudo mkdir -p /etc/haproxy/certs
+DOMAIN='proalx.live' sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
+sudo chmod -R go-rwx /etc/haproxy/certs

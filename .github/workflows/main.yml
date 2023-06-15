@@ -1,0 +1,56 @@
+name: Deploy Vite App
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19
+
+      - name: Install dependencies
+        run: |
+          cd pro-alx-UI
+          npm install
+
+      - name: Build Vite app
+        run: |
+          cd pro-alx-UI
+          VITE_WAKA_ID="TFIToZ5WWJ14zwuza5IWKbHh" \
+          VITE_GITHUB_ID="94a0ffa989a216e4c779" \
+          VITE_PROALX="https://www.proalx.live" \
+          VITE_API_URL="https://www.proalx.live/api/v1" \
+          npm run build
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          script: |
+            cd ProAlx
+            git switch dev
+            git pull
+
+      - name: Set private key permissions
+        run: |
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Transfer dist directory to server
+        run: |
+          cd pro-alx-UI
+          sudo apt-get -y install rsync
+          sudo rsync -e "ssh -i ../private_key.pem -o StrictHostKeyChecking=no" -r dist/ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/html/
+          sudo rm ../private_key.pem
