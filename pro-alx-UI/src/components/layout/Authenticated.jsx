@@ -1,5 +1,5 @@
 import { useUser, useTheme } from '../../hooks/customContexts';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../dashboard/Bar';
@@ -12,11 +12,7 @@ const Authenticated = () => {
   const { VITE_API_URL: API } = import.meta.env;
   const { theme } = useTheme();
   const { user, setUser, updateLoading, isLoggedIn, isLoading } = useUser();
-  function clearCodeParam () {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('code');
-    window.history.replaceState({}, '', url);
-  }
+  const navigate = useNavigate();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -31,7 +27,7 @@ const Authenticated = () => {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
             setUser(prev => ({ ...prev, waka: true }));
-            clearCodeParam();
+            navigate(-1);
             updateLoading(false);
             toast.success('Wakatime connected successfully!');
           }
@@ -43,7 +39,7 @@ const Authenticated = () => {
           updateLoading(false);
         });
     };
-    if (code) {
+    if (code && !user.waka) {
       handleConnect(code);
     }
   }, []);

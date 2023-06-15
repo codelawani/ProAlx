@@ -12,7 +12,7 @@ const { VITE_API_URL: URL } = import.meta.env;
 
 const Home = () => {
   const navigate = useNavigate();
-  const { updateLoading, isLoading, setIsLoggedIn, setUser } = useUser();
+  const { updateLoading, isLoading, setIsLoggedIn, setUser, user } = useUser();
   useEffect(() => {
     // get an object containing query parameters present in the current url
     const urlParams = new URLSearchParams(window.location.search);
@@ -41,7 +41,7 @@ const Home = () => {
         });
     };
 
-    if (code) {
+    if (code && !user) {
       handleLogin(code);
     }
   }, []);
