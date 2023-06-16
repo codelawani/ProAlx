@@ -49,7 +49,7 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
       <h3 className='w-fit py-4 border-b border-blur mb-2'>Update Profile</h3>
       <form onSubmit={handleSubmit(onSubmit)} className=''>
         <div className={fieldStyle}>
-          <label htmlFor='name'>Name</label>
+          <label htmlFor='name'>*Name</label>
           <div className='flex flex-col'>
             <input
               {...register('name', { required: true })}
@@ -67,7 +67,7 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
           </div>
         </div>
         <div className={fieldStyle}>
-          <label htmlFor='email'>Email</label>
+          <label htmlFor='email'>*Email</label>
           <div className='flex flex-col'>
             <input
               {...register('email', {
@@ -120,6 +120,12 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
               </span>
             )}
           </div>
+          <p className='dark:text-red-700 text-amber-500 text-xs'>
+            *U may not be contacted if invalid details are provided
+          </p>
+          <p className='text-xs text-amber-500 dark:text-red-700'>
+            Fields marked with * are required
+          </p>
         </div>
         <div className='flex items-center justify-between py-3 pt-7'>
           <Button value='Close' handleClick={handleClick} style={style} />

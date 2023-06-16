@@ -1,7 +1,7 @@
 import { MdOutlineAlternateEmail } from 'react-icons/md';
 import { BsTwitter } from 'react-icons/bs';
 import SmallLoader from '../loader/SmallLoader';
-import { IoLocationSharp, IoLogoWhatsapp, IoLogoGithub } from 'react-icons/io5';
+import { IoLocationSharp, IoLogoWhatsapp, IoLogoGithub, IoMail } from 'react-icons/io5';
 import PropTypes from 'prop-types';
 import UserChart from './UserChart';
 
@@ -14,7 +14,7 @@ export const ImageName = ({ name, photo_url, cohort_number }) => {
       <img
         src={photo_url}
         alt={`profile picture of ${name}`}
-        className='mb-3 rounded-lg h-2/4 w-1/2 md:w-3/5'
+        className='mb-3 rounded-lg h-1/4 w-1/2 md:w-3/5'
       />
       <div className='flex gap-1 items-start text-lg pb-4 flex-col ml:flex-row ml:items-center ml:gap-3'>
         <span className='text-2xl'>{name}</span>
@@ -57,14 +57,38 @@ export const Details = ({ user }) => {
         {user?.timezone || '-'}
       </span>
       <span className={span}>
-        <MdOutlineAlternateEmail className={`${iconStyle} text-bar-dark`} />{' '}
-        {user?.email || '-'}
+        <IoMail className={`${iconStyle} text-bar-dark`} />{' '}
+        {user?.email && (
+          <a
+            href={`mailto:${user.email}`}
+            className='text-blue-500 hover:underline'
+            target='_blank'
+            title={`Send mail to ${user.email}`}
+            rel='noreferrer'
+          >
+            {user.email}
+          </a>
+        )}
+        {!user?.email && '-'}
       </span>
-      <span className={`${span}`}>
+      {/* <span className={`${span}`}>
         <IoLogoWhatsapp className={`${iconStyle} text-green-700`} />{' '}
         {user?.whatsapp || '-'}
+      </span> */}
+      <span className={span}>
+        <IoLogoWhatsapp className={`${iconStyle} text-green-700`} />{' '}
+        {user?.whatsapp && (
+          <a
+            href={`https://wa.me/${user.whatsapp}`}
+            className='hover:underline'
+            target='_blank' rel='noreferrer'
+            title='chat on whatsapp or try a call'
+          >
+            {user.whatsapp}
+          </a>
+        )}
+        {!user?.whatsapp && '-'}
       </span>
-
       <span className={`${span}`}>
         <BsTwitter className={`${iconStyle} text-blue-600`} />
         <a

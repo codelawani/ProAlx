@@ -97,7 +97,8 @@ def authorize():
             'cohort': user.get('cohort_number', 0),
             'photo_url': user.get('photo_url', ''),
             'github_login': user.get('github_login', ''),
-            'waka': user.get('waka_connected', False)
+            'waka': user.get('waka_connected', False),
+            'id': user.get('id')
         }
         access_token = create_access_token(
             identity=user_id,

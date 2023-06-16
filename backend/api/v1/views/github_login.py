@@ -65,7 +65,6 @@ def create_user(user_data):
         user = storage.github_uid_exists(user_data.get('github_uid'))
         if user:
             user_data.update({'id': user.id, })
-            print(user_data)
         else:
             user = User(**user_data)
             storage.new(user)
@@ -119,7 +118,9 @@ def login():
             'github_login': created_user.get('github_login', ''),
             'waka': created_user.get('waka_connected', False),
             'cohort': created_user.get('cohort_number', 0),
+            'id': created_user.get('id'),
         }
+        print(public_user_data)
         access_token = create_access_token(
             identity=created_user['id'],
             additional_claims={'user_data': (public_user_data)}

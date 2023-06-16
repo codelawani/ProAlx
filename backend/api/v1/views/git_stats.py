@@ -59,7 +59,6 @@ def fetch_commits(url, headers):
     """
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        print(response.json())
         return response.json().get("items", [])
     else:
         print(f"Error fetching commits: {response.status_code}")
