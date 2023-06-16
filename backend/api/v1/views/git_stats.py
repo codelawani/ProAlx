@@ -88,7 +88,7 @@ def process_commits(commits, username):
         repo_name = commit["repository"]["full_name"]
         if username in repo_name:
             repo_name = repo_name.replace(f'{username}/', '')
-        if repo_name in alx_repos:  # Check if the repository is in the allowed repos
+        if repo_name:  # Check if the repository is in the allowed repos
             commit_date = commit["commit"]["author"]["date"][:10]
             if commit_date in commit_counts:
                 if repo_name in commit_counts[commit_date]:
