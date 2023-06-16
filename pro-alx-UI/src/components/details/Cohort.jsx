@@ -39,7 +39,7 @@ const Cohort = ({
         toast('cohort updated successfully!');
         // update local storage with the new token received
         localDataMgr.set('access_token', res.data.access_token);
-        setUser(prev => ({ ...prev, cohortNumber }));
+        setUser(prev => ({ ...prev, cohort: cohortNumber }));
         refetch();
         handleClick();
       } else {
@@ -76,7 +76,7 @@ const Cohort = ({
           <Button
             value='Submit'
             type='submit'
-            style='hover:bg-dark-blue hover:text-body border py-1 px-4 dark:text-yellow mt-2 dark:border-cool self-center border-dark'
+            style='hover:bg-dark-blue hover:text-body border py-1 px-4 dark:text-yellow mt-2 dark:border-bar-dark self-center border-dark'
           />
         </div>
       </form>

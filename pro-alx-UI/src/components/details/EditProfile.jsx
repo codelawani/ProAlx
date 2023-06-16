@@ -16,9 +16,11 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
     defaultValues: {
       name: user?.name,
       timezone: user?.timezone,
-      whatsapp: user?.whatsapp
+      whatsapp: user?.whatsapp,
+      email: user?.email
     }
   });
+
   const { mutateAsync } = useCustomMutation({
     endpoint: '/user',
     method: 'put'
@@ -65,6 +67,31 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
           </div>
         </div>
         <div className={fieldStyle}>
+          <label htmlFor='email'>Email</label>
+          <div className='flex flex-col'>
+            <input
+              {...register('email', {
+							  required: true,
+							  pattern: {
+							    value:
+										/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+							  }
+              })}
+              type='email'
+              className={`dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500 ${
+								errors.email ? error : ''
+							}`}
+              placeholder='Enter your email'
+              id='email'
+            />
+            {errors.email && (
+              <span className='text-xs text-red-700 pt-1'>
+                Enter a valid email address
+              </span>
+            )}
+          </div>
+        </div>
+        <div className={fieldStyle}>
           <label htmlFor='timezone'>Country</label>
           <input
             {...register('timezone')}
@@ -78,14 +105,13 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
           <div className='flex flex-col'>
             <input
               {...register('whatsapp', {
-							  pattern: /^\+[1-9]{1}[0-9]{3,14}$/,
-							  required: true
+							  pattern: /^\+[1-9]{1}[0-9]{3,14}$/
               })}
               type='text'
               className={`dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500 ${
 								errors.whatsapp ? error : ''
 							}`}
-              placeholder='+23490909898'
+              placeholder='+ whatsapp number'
               id='whatsapp'
             />
             {errors.whatsapp && (

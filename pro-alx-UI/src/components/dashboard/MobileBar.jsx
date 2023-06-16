@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 const MobileBar = ({ handleClick, handleConnect }) => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const style = 'text-body font-mono uppercase border px-3 py-1';
+  const style =
+		'text-body font-mono uppercase border px-3 py-1 border-bar-dark shadow-sm px-1 lg:px-2 shadow-sky-900 ';
   return (
     <>
       <div

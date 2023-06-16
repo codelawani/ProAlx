@@ -10,7 +10,7 @@ import UserChart from './UserChart';
 // display user image, name and cohort
 export const ImageName = ({ name, photo_url, cohort_number }) => {
   return (
-    <div className='flex items-center justify-start gap-4 pb-2 ml:flex-col ml:items-start'>
+    <div className='flex items-center justify-start gap-4 pb-2 ml:flex-col ml:items-start border-b mb-3 border-gray-500 dark:border-gray-700'>
       <img
         src={photo_url}
         alt={`profile picture of ${name}`}
@@ -82,7 +82,7 @@ export const Details = ({ user }) => {
 				}`}
       </span>
       {user?.requested_partners && (
-        <p className='py-4 border-y my-3 dark:border-gray-700 text-blue-900'>
+        <p className='py-4 border-y my-3 dark:border-gray-700 text-blue-900 border-gray-500'>
           <span>
             {`${user?.name} currently needs ${user?.requested_partners} Partner(s) for the ${user?.requested_project} team project`}
           </span>
@@ -140,6 +140,15 @@ DisplayChart.propTypes = {
   waka_connected: PropTypes.bool.isRequired
 };
 
-export const OverLay = () => {
-  return <div className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen' />;
+export const OverLay = ({ handleClick }) => {
+  return (
+    <div
+      className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen'
+      onClick={handleClick}
+    />
+  );
+};
+
+OverLay.propTypes = {
+  handleClick: PropTypes.func
 };

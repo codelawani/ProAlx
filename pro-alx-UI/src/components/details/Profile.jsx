@@ -58,7 +58,7 @@ const Profile = () => {
             photo_url={user?.photo_url}
             cohort_number={user?.cohort_number}
           />
-          <div className='flex items-center gap-10 justify-between ml:justify-start'>
+          <div className='flex items-center gap-10 justify-between ml:justify-start pb-5 border-b dark:border-gray-700 border-gray-400 mb-5'>
             <Button
               value='edit profile'
               style={style}
@@ -72,6 +72,11 @@ const Profile = () => {
 							  setShowModal(prev => ({ ...prev, cohort: true }))}
             />
           </div>
+          {!user?.email && (
+            <p className='text-blue-700 animate-bounce'>
+              Kindly update your email
+            </p>
+          )}
           <Details user={user} />
         </div>
         <div className='w-full flex items-center flex-col justify-center lg:col-span-3 lg:self-end pt-9 lg:pt-0 h-full'>
@@ -85,7 +90,7 @@ const Profile = () => {
 
       {showModal.profile && (
         <>
-          <OverLay />
+          <OverLay handleClick={() => handleModalClose('profile')} />
           <EditProfile
             user={user}
             handleClick={() => handleModalClose('profile')}
@@ -95,7 +100,7 @@ const Profile = () => {
       )}
       {showModal.cohort && (
         <>
-          <OverLay />
+          <OverLay handleClick={() => handleModalClose('cohort')} />
           <Cohort
             cohortChange
             handleClick={() => handleModalClose('cohort')}
