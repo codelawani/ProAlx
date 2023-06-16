@@ -56,7 +56,7 @@ const Dashboard = () => {
         requested_project: name
       });
       if (res.status === 201) {
-        toast.success('Successful!');
+        toast.success('Successful! Please update your contact info');
         refetch();
       } else {
         toast.error('An error occurred');
@@ -90,7 +90,7 @@ const Dashboard = () => {
             <select
               ref={projectName}
               name='requested_project'
-              className='md:px-2 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur w-28'
+              className='md:px-2 pl-1 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur w-28'
             >
               <option defaultValue='' value=''>
                 Project
@@ -101,7 +101,7 @@ const Dashboard = () => {
               name='requested_partners'
               id='requested_partners'
               ref={numberOfPartners}
-              className='md:px-3 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur'
+              className='md:px-3 pl-1 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur'
             >
               <option value='' defaultValue=''>
                 Partners

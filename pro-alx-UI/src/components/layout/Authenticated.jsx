@@ -26,7 +26,7 @@ const Authenticated = () => {
             const data = res.data;
             localDataMgr.set('access_token', data.access_token);
             setUser(prev => ({ ...prev, waka: true }));
-            navigate(-1);
+            navigate(-1, { replace: true });
             toast.success('Wakatime connected successfully!');
           }
         })

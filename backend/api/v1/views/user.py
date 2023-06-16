@@ -193,6 +193,7 @@ def update_user_cohort():
             'github_login': user.github_login,
             'waka': user.waka_connected,
             'cohort': user.cohort_number,
+            'id': user.id
         }
         print(public_data)
         token = create_access_token(
