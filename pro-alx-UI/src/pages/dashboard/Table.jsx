@@ -6,7 +6,7 @@ const Table = ({ data }) => {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  const handleNavigation = id => {
+  const handleNavigation = (id) => {
     const url = user.id === id ? '/profile' : `/user/${id}`;
     navigate(url);
   };
@@ -43,7 +43,7 @@ const Table = ({ data }) => {
                 {row.name}
               </span>
             </td>
-            <td className='basis-2/4 md:col-span-2 align-middle'>
+            <td className='basis-1/3 md:col-span-2 align-middle'>
               {row?.waka_week_daily_average
 							  ? formatTotalHours(row.waka_week_daily_average)
 							  : '-'}
