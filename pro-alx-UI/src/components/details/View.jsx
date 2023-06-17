@@ -67,7 +67,7 @@ export const Details = ({ user }) => {
         {user?.email && (
           <a
             href={`mailto:${user.email}`}
-            className='text-blue-300 hover:underline'
+            className='text-blue-500 hover:underline'
             target='_blank'
             title={`Send mail to ${user.email}`}
             rel='noreferrer'
