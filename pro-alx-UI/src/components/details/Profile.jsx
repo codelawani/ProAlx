@@ -23,7 +23,8 @@ const Profile = () => {
     refetch
   } = useCustomQuery({
     queryKey: ['profile'],
-    endpoint: '/user/profile'
+    endpoint: '/user/profile',
+    staleTime: 5000
   });
   const navigate = useNavigate();
 

@@ -28,7 +28,7 @@ export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
 	const results = useQuery({
 		queryKey: queryKey,
 		queryFn,
-		others,
+		...others,
 		onError: err => {
 			toast.error('An error occurred');
 			return err;

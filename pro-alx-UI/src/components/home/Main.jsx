@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { proalx } from '../../data';
 import Item from './Item';
 import { teamInfo } from './teamData';
@@ -18,9 +18,9 @@ const Main = () => {
         {proalx.map(item => (
           <Item key={item.id} {...item} />
         ))}
-        <Link to='' className={buttonStyles}>
+        {/* <Link to='' className={buttonStyles}>
           view our guide
-        </Link>
+        </Link> */}
       </section>
 
       <section id='about' className=''>

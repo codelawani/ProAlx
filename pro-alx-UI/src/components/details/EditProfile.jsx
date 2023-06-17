@@ -17,7 +17,8 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
       name: user?.name,
       timezone: user?.timezone,
       whatsapp: user?.whatsapp,
-      email: user?.email
+      email: user?.email,
+      most_active_time: user?.most_active_time
     }
   });
 
@@ -40,16 +41,38 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
     }
   };
 
+  const validateEmail = value => {
+    const emailPattern =
+			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const maxLength = 50;
+
+    if (!value) {
+      return 'Email is required';
+    }
+
+    if (!emailPattern.test(value)) {
+      return 'Invalid email address';
+    }
+
+    if (value.length > maxLength) {
+      return `Email address exceeds the maximum length of ${maxLength} characters`;
+    }
+
+    return true;
+  };
+
   const error = 'border border-red-500';
   const fieldStyle =
 		'flex flex-col md:flex-row gap-2 md:items-center py-2 relative';
 
   return (
-    <div className=' fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4/5 md:w-fit z-[20] bg-bar-dark rounded-xl p-[2rem] dark:bg-bar md:text-base'>
+    <div className=' absolute transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4/5 md:w-fit z-[20] bg-bar-dark rounded-xl p-[2rem] dark:bg-bar md:text-base'>
       <h3 className='w-fit py-4 border-b border-blur mb-2'>Update Profile</h3>
       <form onSubmit={handleSubmit(onSubmit)} className=''>
         <div className={fieldStyle}>
-          <label htmlFor='name'>*Name</label>
+          <label htmlFor='name'>
+            <span className='text-red-500'>*</span>Name
+          </label>
           <div className='flex flex-col'>
             <input
               {...register('name', { required: true })}
@@ -67,15 +90,13 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
           </div>
         </div>
         <div className={fieldStyle}>
-          <label htmlFor='email'>*Email</label>
+          <label htmlFor='email'>
+            <span className='text-red-500'>*</span>Email
+          </label>
           <div className='flex flex-col'>
             <input
               {...register('email', {
-							  required: true,
-							  pattern: {
-							    value:
-										/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-							  }
+							  validate: validateEmail
               })}
               type='email'
               className={`dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500 ${
@@ -86,7 +107,7 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
             />
             {errors.email && (
               <span className='text-xs text-red-700 pt-1'>
-                Enter a valid email address
+                {errors.email.message || 'Email required'}
               </span>
             )}
           </div>
@@ -99,6 +120,22 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
             className='dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500'
             id='timezone'
           />
+        </div>
+        <div className={fieldStyle}>
+          <label htmlFor='most_active_time' className='basis-2/4'>
+            Active Time
+          </label>
+          <select
+            {...register('most_active_time')}
+            className='dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500'
+            id='timezone'
+          >
+            <option value=''>When are you most active?</option>
+            <option value='Morning'>Morning</option>
+            <option value='Afternoon'>Afternoon</option>
+            <option value='Evening'>Evening</option>
+            <option value='Night'>Night</option>
+          </select>
         </div>
         <div className={fieldStyle}>
           <label htmlFor='whatsapp'>Whatsapp</label>
@@ -120,6 +157,8 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
               </span>
             )}
           </div>
+        </div>
+        <div className='py-2'>
           <p className='dark:text-red-700 text-amber-500 text-xs'>
             *U may not be contacted if invalid details are provided
           </p>
