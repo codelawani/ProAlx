@@ -13,3 +13,5 @@ export const Profile = lazy(() => import('./components/details/Profile.jsx'));
 export const Authenticated = lazy(() =>
   import('./components/layout/Authenticated.jsx')
 );
+
+export const WakatimeGuide = lazy(() => import('./pages/wakatime/Index'));

@@ -7,11 +7,10 @@ import Theme from '../Theme';
 import LoginWithGithub from '../GithubLogin';
 import { useNavigate } from 'react-router-dom';
 
-const MobileBar = ({ handleClick, handleConnect }) => {
+const MobileBar = ({ handleClick }) => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const style =
-		'text-body font-mono uppercase border px-3 py-1 border-bar-dark shadow-sm px-1 lg:px-2 shadow-sky-900 ';
+
   return (
     <>
       <div
@@ -24,13 +23,6 @@ const MobileBar = ({ handleClick, handleConnect }) => {
           <Button value={<TfiClose />} style='' handleClick={handleClick} />
         </div>
         <DashboardNav handleClick={handleClick} />
-        {!user?.waka && (
-          <Button
-            value='connect wakatime'
-            style={style}
-            handleClick={handleConnect}
-          />
-        )}
 
         <LoginWithGithub
           style='font-mono text-sm font-bold uppercase pb-2 px-2'

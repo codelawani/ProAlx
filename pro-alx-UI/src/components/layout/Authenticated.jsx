@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import api from '../../utils/api';
 import localDataMgr from '../../utils/localDataMgr';
 import SmallLoader from '../loader/SmallLoader';
+import Button from '../Button';
 
 const Authenticated = () => {
   const { VITE_API_URL: API } = import.meta.env;
@@ -48,11 +49,13 @@ const Authenticated = () => {
           <>
             <SideBar />
             <ToastContainer />
-            <div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-dark dark:text-gray-300 relative'>
+            <div className=' pt-20 md:pt-5 md:px-8 px-2  w-full col-span-2 overflow-y-scroll dark:bg-dark dark:text-gray-300 relative flex flex-col'>
               {!user?.waka && (
-                <p className='absolute right-4 text-red-700 uppercase animate-pulse dark:text-red-500'>
-                  please connect wakatime!!
-                </p>
+                <Button
+                  value='please connect wakatime!!'
+                  style='relative right-4 text-red-700 uppercase animate-pulse dark:text-red-500 block cursor-pointer py-2 self-end'
+                  handleClick={() => navigate('guide')}
+                />
               )}
               {isLoading && <SmallLoader />}
               <Outlet />
