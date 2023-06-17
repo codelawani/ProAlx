@@ -8,7 +8,7 @@ const BoardList = ({ data }) => {
 
   // view a user's profile
   const handleClick = id => {
-    const route = user.id === id ? 'profile' : `/user/${id}`;
+    const route = user.id === id ? '/profile' : `/user/${id}`;
     navigate(route);
   };
 
