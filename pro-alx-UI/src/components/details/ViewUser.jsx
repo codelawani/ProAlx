@@ -17,7 +17,8 @@ const ViewUser = () => {
     isLoading
   } = useCustomQuery({
     queryKey: ['user', id],
-    endpoint: `/users/${id}/details`
+    endpoint: `/users/${id}/details`,
+    staleTime: 5000
   });
 
   const navigate = useNavigate();

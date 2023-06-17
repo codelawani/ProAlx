@@ -9,7 +9,8 @@ import {
   Profile,
   ErrorPage,
   ViewUser,
-  Authenticated
+  Authenticated,
+  WakatimeGuide
 } from './LazyLoadedComponents.jsx';
 
 import { ThemeProvider } from './hooks/ThemeContext.jsx';
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile />
+      },
+      {
+        path: 'guide',
+        element: <WakatimeGuide />
       }
     ]
   }

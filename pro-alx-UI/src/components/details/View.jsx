@@ -1,7 +1,11 @@
-import { MdOutlineAlternateEmail } from 'react-icons/md';
 import { BsTwitter } from 'react-icons/bs';
 import SmallLoader from '../loader/SmallLoader';
-import { IoLocationSharp, IoLogoWhatsapp, IoLogoGithub, IoMail } from 'react-icons/io5';
+import {
+  IoLocationSharp,
+  IoLogoWhatsapp,
+  IoLogoGithub,
+  IoMail
+} from 'react-icons/io5';
 import PropTypes from 'prop-types';
 import UserChart from './UserChart';
 
@@ -35,17 +39,17 @@ ImageName.propTypes = {
 // display relevant user information
 export const Details = ({ user }) => {
   // styles for span elements
-  const span = 'flex gap-2 items-center py-2 text-xl';
+  const span = 'flex gap-2 items-center py-2 text-sm tb:text-xl md:text-2xl';
 
   // styles for react icons used
   const iconStyle = 'text-2xl';
   return (
-    <div>
+    <div className='w-full'>
       <span className={span}>
         <IoLogoGithub className={iconStyle} />
         <a
           href={`https://github.com/${user?.github_login}`}
-          className=' hover:underline'
+          className='hover:underline'
           target='_blank'
           rel='noreferrer'
         >
@@ -56,12 +60,12 @@ export const Details = ({ user }) => {
         <IoLocationSharp className={iconStyle} />
         {user?.timezone || '-'}
       </span>
-      <span className={span}>
-        <IoMail className={`${iconStyle} text-bar-dark`} />{' '}
+      <span className={`${span}`}>
+        <IoMail className={`${iconStyle} text-bar-dark o`} />{' '}
         {user?.email && (
           <a
             href={`mailto:${user.email}`}
-            className='text-blue-500 hover:underline'
+            className='text-blue-500 hover:underline truncate text-sm max-w-xs md:text-lg'
             target='_blank'
             title={`Send mail to ${user.email}`}
             rel='noreferrer'
@@ -71,17 +75,15 @@ export const Details = ({ user }) => {
         )}
         {!user?.email && '-'}
       </span>
-      {/* <span className={`${span}`}>
-        <IoLogoWhatsapp className={`${iconStyle} text-green-700`} />{' '}
-        {user?.whatsapp || '-'}
-      </span> */}
+
       <span className={span}>
         <IoLogoWhatsapp className={`${iconStyle} text-green-700`} />{' '}
         {user?.whatsapp && (
           <a
             href={`https://wa.me/${user.whatsapp}`}
             className='hover:underline'
-            target='_blank' rel='noreferrer'
+            target='_blank'
+            rel='noreferrer'
             title='chat on whatsapp or try a call'
           >
             {user.whatsapp}
@@ -100,7 +102,7 @@ export const Details = ({ user }) => {
           {user?.twitter_username}
         </a>
       </span>
-      <span>
+      <span className='capitalize'>
         {`most active time - ${
 					user?.most_active_time ? user?.most_active_time : 'not available'
 				}`}

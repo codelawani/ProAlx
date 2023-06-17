@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../hooks/customContexts';
 
 const BoardList = ({ data }) => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   // view a user's profile
   const handleClick = id => {
-    navigate(`/user/${id}`);
+    const route = user.id === id ? '/profile' : `/user/${id}`;
+    navigate(route);
   };
 
   // convert time in seconds to hours and minutes

@@ -29,7 +29,7 @@ const Leaderboards = () => {
   };
 
   return (
-    <div className='pt-7 px-2 relative'>
+    <div className='pt-7 px-2 relative pb-5'>
       <h3 className='pb-4 font-semibold text-lg uppercase'>Leaderboard</h3>
       <form className='flex justify-end pb-5' onSubmit={handleSubmit}>
         <div className='relative w-[70%] md:w-[30%]'>
