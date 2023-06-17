@@ -45,7 +45,7 @@ export const Details = ({ user }) => {
         <IoLogoGithub className={iconStyle} />
         <a
           href={`https://github.com/${user?.github_login}`}
-          className=' hover:underline'
+          className='text-blue-300 hover:underline'
           target='_blank'
           rel='noreferrer'
         >
@@ -61,12 +61,12 @@ export const Details = ({ user }) => {
         {user?.email && (
           <a
             href={`mailto:${user.email}`}
-            className='text-blue-500 hover:underline'
+            className='text-blue-300 hover:underline'
             target='_blank'
             title={`Send mail to ${user.email}`}
             rel='noreferrer'
           >
-            {user.email}
+            email
           </a>
         )}
         {!user?.email && '-'}
@@ -80,9 +80,9 @@ export const Details = ({ user }) => {
         {user?.whatsapp && (
           <a
             href={`https://wa.me/${user.whatsapp}`}
-            className='hover:underline'
+            className='text-blue-300 hover:underline'
             target='_blank' rel='noreferrer'
-            title='chat on whatsapp or try a call'
+            title='chat on whatsapp'
           >
             {user.whatsapp}
           </a>
@@ -93,7 +93,7 @@ export const Details = ({ user }) => {
         <BsTwitter className={`${iconStyle} text-blue-600`} />
         <a
           href={`https://twitter.com/${user?.twitter_username}`}
-          className='text-blue-500 hover:underline'
+          className='text-blue-300 hover:underline'
           target='_blank'
           rel='noreferrer'
         >

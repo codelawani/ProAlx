@@ -138,6 +138,7 @@ def create_user():
 
 @app_views.route('/user', methods=['PUT'], strict_slashes=False)
 @jwt_required()
+@error_handler
 def put_user():
     """
     Updates an existing user in the database.
@@ -155,10 +156,7 @@ def put_user():
     user_dict = storage.set_user_data(user.id, data)
     if not user_dict:
         return jsonify(error="Invalid data"), 400
-    try:
-        return jsonify(user_dict), 200
-    except DatabaseException as e:
-        return error_handler(e)
+    return jsonify(user_dict), 200
 
 
 @app_views.route('/user/cohort', methods=['PUT'], strict_slashes=False)

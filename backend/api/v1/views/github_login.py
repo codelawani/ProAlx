@@ -68,12 +68,10 @@ def create_user(user_data):
             print('old', user)
         else:
             user = User(**user_data)
-            # print('new', user)
-            # print('dict', user.to_dict())
             storage.new(user)
         return user.to_dict()
     except DatabaseException as e:
-        print(e)
+        print(e.client_msg)
         return {}
 
 

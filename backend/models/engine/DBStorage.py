@@ -82,7 +82,6 @@ class DBStorage:
             bind=self.engine, expire_on_commit=False)
         self.session = scoped_session(session_factory)()
 
-    @error_handler
     def save(self):
         """Commit all changes of the current db session
         Returns:
@@ -96,7 +95,6 @@ class DBStorage:
             logger.exception(error_message)
             raise DatabaseException(error_message)
 
-    @error_handler
     def close(self):
         """Close the working SQLAlchemy session"""
         try:
@@ -145,10 +143,10 @@ class DBStorage:
     def get_user_public_data(self, id):
         """
         Decorated function that retrieves public data for a user given an ID.
-        
+
         :param id: The ID of the user whose data to retrieve.
         :type id: int
-        
+
         :return: A dictionary containing user data, daily Wakatime stats, and daily GitHub stats.
         :rtype: dict
         """
@@ -228,11 +226,11 @@ class DBStorage:
             This function is a decorator that takes a method and returns a new method.
             The new method queries a database table to get a list of users and converts each user
             to a dictionary. It accepts *args and **kwargs to pass to the original method.
-            
+
             :param self: The instance of the class.
             :param *args: Arguments to be passed to the method being decorated.
             :param **kwargs: Keyword arguments to be passed to the method being decorated.
-            
+
             :return: A list of dictionaries where each dictionary represents a user.
             """
             query = method(self, *args, **kwargs)
@@ -278,11 +276,11 @@ class DBStorage:
     def get_users_who_need_partners_by_cohort(self, n):
         """
         A function that retrieves a list of users who have requested partners, filtered by cohort number.
-        
+
         Args:
             self: object instance of the class containing the function.
             n (int): the cohort number to filter by.
-            
+
         Returns:
             query: a SQLAlchemy query object that retrieves the necessary data.
         """
@@ -301,7 +299,7 @@ class DBStorage:
 
         :param n: an integer representing the cohort number
         :type n: int
-        
+
         :return: an SQLAlchemy query object with user information sorted in descending order by their total seconds
         :rtype: sqlalchemy.orm.query.Query
         """
