@@ -129,7 +129,7 @@ def get_commits(token, username, n=7, page_size=100):
 
     for page in range(total_pages):
         page_url = f"{url}&per_page={page_size}&page={page + 1}"
-        retries = 3
+        retries = 1  # May increase this later
         while retries > 0:
             commits = fetch_commits(page_url, headers)
             if commits:
