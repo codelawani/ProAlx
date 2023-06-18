@@ -21,10 +21,10 @@ export const ImageName = ({ name, photo_url, cohort_number }) => {
         alt={`profile picture of ${name}`}
         className='mb-3 rounded-lg h-1/4 w-1/2 md:w-3/5'
       />
-      <div className='flex gap-1 items-start text-lg pb-4 flex-col ml:flex-row ml:items-center ml:gap-3'>
+      <div className='flex gap-1 items-start text-lg pb-4 flex-col ml:gap-3'>
         <span className='text-2xl'>{truncateName(name)}</span>
         {cohort_number && (
-          <span className='text-sm'>{`Cohort ${cohort_number}`}</span>
+          <div className='text-sm'>{`Cohort ${cohort_number}`}</div>
         )}
       </div>
 
