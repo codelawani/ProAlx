@@ -31,8 +31,6 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
       if (res.status === 200) {
         toast('profile updated successfully!');
         refetch();
-        user = res.data;
-        console.log(user);
         handleClick();
       } else {
         toast.error('Failed to update profile, please try again');

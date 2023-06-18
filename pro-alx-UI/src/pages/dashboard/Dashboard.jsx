@@ -15,10 +15,6 @@ const PaginatedDashboard = withPagination(Table, 15);
 
 const Dashboard = () => {
   const { user } = useUser();
-  useEffect(() => {
-    // refetch();
-    console.log(user);
-  }, [user]);
   const numberOfPartners = useRef();
   const projectName = useRef();
   const { value, isInitialLoading, refetch } = useCustomQuery({
