@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import api from '../utils/api';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUser } from './customContexts';
 import { handleLogout } from '../utils/githubOauth';
 
@@ -34,8 +34,9 @@ export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
 		queryFn,
 		...others,
 		onError: err => {
+			// log user out when token is no longer authorized
 			if (err.response.status === 401) {
-				toast.error('session timeout. Login again');
+				toast.error('session expired. Login again');
 				handleLogout(setIsLoggedIn, setUser, updateLoading);
 				return;
 			}
@@ -73,8 +74,14 @@ const getMutateFn = (endpoint, method) => {
  * @param {object} others - additional options to be passed to useMutation.
  * @returns {object} an object containing the mutate function and other results.
  */
-export const useCustomMutation = ({ endpoint, method, ...others }) => {
+export const useCustomMutation = ({
+	endpoint,
+	method,
+	key = [],
+	...others
+}) => {
 	const { mutationFn } = getMutateFn(endpoint, method);
+	const queryClient = useQueryClient();
 
 	const results = useMutation({
 		mutationFn,
@@ -83,11 +90,26 @@ export const useCustomMutation = ({ endpoint, method, ...others }) => {
 			toast.error('Error making request.');
 			return err;
 		},
+		onSuccess: data => {
+			if (key.length > 0) {
+				queryClient.setQueryData(key, prev => {
+					const newData = prev.data.map(item => {
+						if (item.id === data.data.id) {
+							return { ...data.data };
+						}
+						return item;
+					});
+					return { ...prev, data: newData };
+				});
+				return data;
+			}
+		},
 		onSettled: () => {
 			return;
 		},
 	});
 	return {
 		...results,
+		value: results?.data?.data,
 	};
 };
