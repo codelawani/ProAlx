@@ -1,16 +1,19 @@
 import { toast } from 'react-toastify';
 import api from '../utils/api';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useUser } from './customContexts';
+import { handleLogout } from '../utils/githubOauth';
 
 /**
  * getQueryFunction - This is a utility to help create an object that contains a query function.
  * @param {string} endpoint - The API endpoint.
+ * @param {string} method - The request method/http verb.
  * @returns {object} an object with a function property.
  */
-const getQueryFunction = endpoint => {
+const getQueryFunction = (endpoint, method = 'get') => {
 	return {
 		queryFn: () => {
-			return api.get(endpoint);
+			return api[method](endpoint);
 		},
 	};
 };
@@ -25,11 +28,17 @@ const getQueryFunction = endpoint => {
 export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
 	// get a query function using the endpoint
 	const { queryFn } = getQueryFunction(endpoint);
+	const { setIsLoggedIn, setUser, updateLoading } = useUser();
 	const results = useQuery({
 		queryKey: queryKey,
 		queryFn,
 		...others,
 		onError: err => {
+			if (err.response.status === 401) {
+				toast.error('session timeout. Login again');
+				handleLogout(setIsLoggedIn, setUser, updateLoading);
+				return;
+			}
 			toast.error('An error occurred');
 			return err;
 		},
