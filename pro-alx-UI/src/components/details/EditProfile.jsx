@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
   const style = 'border p-2 bg-yellow px-3 hover:bg-main dark:text-black';
-
   // use react-hook-form to handle form
   const {
     register,

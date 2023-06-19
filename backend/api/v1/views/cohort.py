@@ -8,13 +8,13 @@ from models.engine.DBExceptions import DatabaseException
 def error_handler(e, msg=None):
     """
     This function handles errors and returns a JSON response with an error message and code.
-    
+
     :param e: An exception object.
     :type e: Exception
-    
+
     :param msg: A custom error message to be included in the response body. Default is None.
     :type msg: str
-    
+
     :return: A JSON response with an error message and code.
     :rtype: tuple
     """
@@ -27,7 +27,7 @@ def error_handler(e, msg=None):
 def get_cohorts():
     """
     Retrieves all cohorts and returns them as a JSON response.
-    
+
     Returns:
         A JSON response containing a list of dictionaries representing each cohort.
     """
@@ -85,7 +85,7 @@ def delete_cohort(id):
 def post_cohort():
     """
     Creates a new cohort instance with the data provided in the request body. 
-    Expects a JSON format. 
+    Expects a JSON format.
 
     Args:
         None
@@ -140,13 +140,13 @@ def put_cohort(id):
 def get_users_by_cohort(c_number):
     """
     Route that retrieves all users that belong to a given cohort.
-    
+
     Args:
         c_number (str): The number associated with the cohort.
-        
+
     Returns:
         Flask Response: A JSON object containing information about all users within the given cohort.
-        
+
     Raises:
         DatabaseException: If there was an error in the database.
     """

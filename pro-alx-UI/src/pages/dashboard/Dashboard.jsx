@@ -3,7 +3,7 @@ import TempLoader from '../../components/loader/TempLoader';
 import Table from './Table';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useUser } from '../../hooks/customContexts';
 import withPagination from '../../components/Paginate';

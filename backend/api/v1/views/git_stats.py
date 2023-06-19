@@ -88,7 +88,7 @@ def process_commits(commits, username):
         repo_name = commit["repository"]["full_name"]
         if username in repo_name:
             repo_name = repo_name.replace(f'{username}/', '')
-        if repo_name in alx_repos:  # Check if the repository is in the allowed repos
+        if repo_name:  # Check if the repository is in the allowed repos
             commit_date = commit["commit"]["author"]["date"][:10]
             if commit_date in commit_counts:
                 if repo_name in commit_counts[commit_date]:
@@ -129,7 +129,7 @@ def get_commits(token, username, n=7, page_size=100):
 
     for page in range(total_pages):
         page_url = f"{url}&per_page={page_size}&page={page + 1}"
-        retries = 3
+        retries = 1  # May increase this later
         while retries > 0:
             commits = fetch_commits(page_url, headers)
             if commits:
