@@ -10,14 +10,32 @@ API = 'http://localhost:5000/api/v1'
 @app_views.route('/user/request_partners', strict_slashes=False, methods=['PUT'])
 @jwt_required()
 @error_handler
-def create_user_request():
+def update_user_request():
     """
-    Updates the number of partners a user requests
+    Updates a user's partner request
     """
     data = request.get_json()
     user = storage.get(User, jwt_id())
     if not user:
         return jsonify({'error': 'User not found'}), 404
     result = storage.update_user_request(user, data)
-    print(result)
     return jsonify(result), 201
+
+
+@app_views.route('/user/request_partners', strict_slashes=False, methods=['DELETE'])
+@jwt_required()
+@error_handler
+def delete_user_request():
+    """
+    Deletes a user's partner request
+    """
+    user = storage.get(User, jwt_id())
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    request = user.partner_request
+    if request:
+        storage.delete(request, save=False)
+        user.save()
+        return {}
+    else:
+        return jsonify({'err': 'user has no request data'})

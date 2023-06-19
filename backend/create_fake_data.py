@@ -12,6 +12,20 @@ fake = Faker()
 # fake = Faker('ja_JP') 🌚 -- maybe Uchiha Itachi will pop up
 # sadly Nigeria unavailable 😮‍💨
 
+teamProjects = [
+    '0x11. C - printf',
+    '0x19. C -Stacks,Queues - LIFO, FIFO',
+    '0x1B. C - sorting algorithms & Big O',
+    '0x1D. C - Binary trees',
+    '0x16. C - Simple Shell',
+    '0x09. Web infrastructure design',
+    '0x00. AirBnB_clone - The console',
+    '0x02. AirBnB_clone - MySQL',
+    '0x05. AirBnB_clone - Restful Api',
+    '0x06. AirBnB_clone - Web dynamic',
+    'Research & project approval'
+]
+
 
 def generate_random_boolean():
     return fake.random_element(elements=(True, False))
@@ -64,8 +78,9 @@ def create_fake_users():
 def create_fake_requests(users):
     for user in users:
         number_of_partners = fake.random_int(min=0, max=2)
+        project = random.choice(teamProjects)
         requested_partners = PartnerRequest(
-            number=number_of_partners, user=user)
+            number=number_of_partners, user=user, project=project)
         storage.new(requested_partners)
         print(f'Created {number_of_partners} request(s) for {user.name}')
 

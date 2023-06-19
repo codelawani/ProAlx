@@ -8,6 +8,7 @@ import {
 } from 'react-icons/io5';
 import PropTypes from 'prop-types';
 import UserChart from './UserChart';
+import { truncateEmail, truncateName } from '../../utils/helper_functions';
 
 /* utility components to help display user information */
 
@@ -20,12 +21,13 @@ export const ImageName = ({ name, photo_url, cohort_number }) => {
         alt={`profile picture of ${name}`}
         className='mb-3 rounded-lg h-1/4 w-1/2 md:w-3/5'
       />
-      <div className='flex gap-1 items-start text-lg pb-4 flex-col ml:flex-row ml:items-center ml:gap-3'>
-        <span className='text-2xl'>{name}</span>
+      <div className='flex gap-1 items-start text-lg pb-4 flex-col ml:gap-3'>
+        <span className='text-2xl'>{truncateName(name)}</span>
         {cohort_number && (
-          <span className='text-sm'>{`Cohort ${cohort_number}`}</span>
+          <div className='text-sm'>{`Cohort ${cohort_number}`}</div>
         )}
       </div>
+
     </div>
   );
 };
@@ -39,7 +41,7 @@ ImageName.propTypes = {
 // display relevant user information
 export const Details = ({ user }) => {
   // styles for span elements
-  const span = 'flex gap-2 items-center py-2 text-sm tb:text-xl md:text-2xl';
+  const span = 'flex gap-2 items-center py-2 text-base tb:text-xl md:text-xl';
 
   // styles for react icons used
   const iconStyle = 'text-2xl';
@@ -49,7 +51,7 @@ export const Details = ({ user }) => {
         <IoLogoGithub className={iconStyle} />
         <a
           href={`https://github.com/${user?.github_login}`}
-          className='hover:underline'
+          className='text-blue-500 hover:underline'
           target='_blank'
           rel='noreferrer'
         >
@@ -65,12 +67,12 @@ export const Details = ({ user }) => {
         {user?.email && (
           <a
             href={`mailto:${user.email}`}
-            className='text-blue-500 hover:underline truncate text-sm max-w-xs md:text-lg'
+            className='text-blue-500 hover:underline'
             target='_blank'
             title={`Send mail to ${user.email}`}
             rel='noreferrer'
           >
-            {user.email}
+            {truncateEmail(user.email)}
           </a>
         )}
         {!user?.email && '-'}
@@ -81,9 +83,8 @@ export const Details = ({ user }) => {
         {user?.whatsapp && (
           <a
             href={`https://wa.me/${user.whatsapp}`}
-            className='hover:underline'
-            target='_blank'
-            rel='noreferrer'
+            className='text-blue-500 hover:underline'
+            target='_blank' rel='noreferrer'
             title='chat on whatsapp or try a call'
           >
             {user.whatsapp}
@@ -104,8 +105,8 @@ export const Details = ({ user }) => {
       </span>
       <span className='capitalize'>
         {`most active time - ${
-					user?.most_active_time ? user?.most_active_time : 'not available'
-				}`}
+          user?.most_active_time ? user?.most_active_time : 'not available'
+        }`}
       </span>
       {user?.requested_partners && (
         <p className='py-4 border-y my-3 dark:border-gray-700 text-blue-900 border-gray-500'>

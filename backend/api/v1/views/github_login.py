@@ -65,11 +65,13 @@ def create_user(user_data):
         user = storage.github_uid_exists(user_data.get('github_uid'))
         if user:
             user_data.update({'id': user.id, })
+            print('old', user)
         else:
             user = User(**user_data)
             storage.new(user)
         return user.to_dict()
-    except DatabaseException:
+    except DatabaseException as e:
+        print(e.client_msg)
         return {}
 
 
@@ -102,7 +104,7 @@ def login():
         user_data = {
             'github_login': user.get('login'),
             'github_uid': user.get('id'),
-            'name': user.get('name'),
+            'name': user.get('name') or user.get('login'),
             'email': user.get('email'),
             'photo_url': user.get('avatar_url'),
             'twitter_username': user.get('twitter_username'),
@@ -110,8 +112,9 @@ def login():
             'github_session': True
         }
         # Create a new user if one doesn't already exist
-        print(user_data)
         created_user = create_user(user_data)
+        if not created_user:
+            return jsonify({'err': 'User creation failed'}), 500
         public_user_data = {
             'name': created_user.get('name', ''),
             'photo_url': created_user.get('photo_url', ''),
@@ -120,7 +123,7 @@ def login():
             'cohort': created_user.get('cohort_number', 0),
             'id': created_user.get('id'),
         }
-        print(public_user_data)
+        # print(public_user_data)
         access_token = create_access_token(
             identity=created_user['id'],
             additional_claims={'user_data': (public_user_data)}

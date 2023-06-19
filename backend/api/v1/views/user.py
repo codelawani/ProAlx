@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from models.user import User
 from models import storage
 from api.v1 import error_handler
-from models.engine.DBExceptions import DatabaseException
 import requests
 API = 'http://localhost:5000/api/v1'
 
@@ -94,6 +93,7 @@ def delete_user(user_id):
 
 @app_views.route('/user/profile', strict_slashes=False)
 @jwt_required()
+@error_handler
 def get_user_profile():
     return jsonify(storage.get_user_public_data(get_jwt_identity()))
 
@@ -138,6 +138,7 @@ def create_user():
 
 @app_views.route('/user', methods=['PUT'], strict_slashes=False)
 @jwt_required()
+@error_handler
 def put_user():
     """
     Updates an existing user in the database.
@@ -155,14 +156,12 @@ def put_user():
     user_dict = storage.set_user_data(user.id, data)
     if not user_dict:
         return jsonify(error="Invalid data"), 400
-    try:
-        return jsonify(user_dict), 200
-    except DatabaseException as e:
-        return error_handler(e)
+    return jsonify(user_dict), 200
 
 
 @app_views.route('/user/cohort', methods=['PUT'], strict_slashes=False)
 @jwt_required()
+@error_handler
 def update_user_cohort():
     """
     Updates the cohort of a user.
@@ -185,22 +184,19 @@ def update_user_cohort():
         return jsonify(error="Invalid data"), 400
     c_number = storage.create_new_cohort_if_not_exists(c_number)
     setattr(user, 'cohort_number', int(c_number))
-    try:
-        user.save()
-        public_data = {
-            'name': user.name,
-            'photo_url': user.photo_url,
-            'github_login': user.github_login,
-            'waka': user.waka_connected,
-            'cohort': user.cohort_number,
-            'id': user.id
-        }
-        print(public_data)
-        token = create_access_token(
-            identity=user.id, additional_claims={'user_data': (public_data)})
-        return jsonify({'access_token': token}), 201
-    except DatabaseException as e:
-        return error_handler(e)
+    user.save()
+    public_data = {
+        'name': user.name,
+        'photo_url': user.photo_url,
+        'github_login': user.github_login,
+        'waka': user.waka_connected,
+        'cohort': user.cohort_number,
+        'id': user.id
+    }
+    print(public_data)
+    token = create_access_token(
+        identity=user.id, additional_claims={'user_data': (public_data)})
+    return jsonify({'access_token': token}), 201
 
 
 @app_views.route('/users/needs_partners', strict_slashes=False)

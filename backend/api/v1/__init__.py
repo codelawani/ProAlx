@@ -33,5 +33,6 @@ def error_handler(method):
             print(
                 f'{RED}pls Check ProAlx/backend/errors.log for '
                 f'more details as regards this error{RESET}')
+            print(e.client_msg)
             return jsonify({'error': e.client_msg}), e.code
     return wrapper
