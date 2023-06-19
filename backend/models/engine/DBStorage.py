@@ -66,12 +66,13 @@ class DBStorage:
         self.session.commit()
 
     @error_handler
-    def delete(self, obj=None):
-        """Deletes the cohort from the database"""
+    def delete(self, obj=None, save=True):
+        """Deletes the object from the database"""
         if obj:
             # Detach the object from the current session
             self.session.expunge(obj)
             self.session.delete(obj)
+        if save:
             self.session.commit()
 
     @error_handler
