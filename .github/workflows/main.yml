@@ -42,6 +42,7 @@ jobs:
             cd ProAlx
             git switch dev
             git pull
+            sudo systemctl restart palx_backend.service
 
       - name: Set private key permissions
         run: |
