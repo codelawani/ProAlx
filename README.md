@@ -44,23 +44,34 @@ But if you want to run this locally, kindly follow these steps:
 ```
 git clone https://github.com/angelofdeity/ProAlx.git
 ```
+You will need some env variables to run the app. Create a `.env` file in the ProAlx directory as a replica of the `.env.example` file [here](env_example). Then you can replace the values if you want to.
 
 - navigate to the backend directory:
 ```
 cd backend/
 ```
 
-- run the app:
+- Run the setup db script:
+```
+cd setup_db
+sudo ./sql_setup.sh
+```
+- Install the requirements:
+```
+pip3 install -r requirements.txt
+```
+- run the flask app:
 ```
 python3 -m api.v1.app
 ```
 
-- open another terminal and navigate to `pro-alx-Ui`:
+- open another terminal and navigate to `pro-alx-UI`:
 ```
 cd pro-alx-Ui
 ```
-
-- then run the following commands:
+You would need the env variables according to the `pro-alx-UI/env.example` file [here](pro-alx-UI/env_example). Then you can replace the values if you want to.
+> You would also need to have node installed on your machine
+- Now you can run the following commands:
 ```
 npm install
 npm run dev
@@ -70,12 +81,8 @@ npm run dev
 
 ## APIs Used
 
-All available endpoints can be found in the `api.v1.views` directory. 
+All available endpoints can be found in the `api.v1.views` directory.
 Here's a description of some endpoint used:
-
-- GET /search/commits: This endpoint is used to search for commits based on specific criteria, such as the author and author date. The code constructs a search query to retrieve commits authored by a specific user within a given date range.
-
-- GET /repos/{owner}/{repo}: Although not explicitly used in the provided code, it is common to fetch repository information using this endpoint. The code might use it indirectly if it receives commit data that includes the repository name and needs to extract relevant information from it.
 
 - GET /cohorts: Retrieves all cohorts and returns them as a JSON response.
 
