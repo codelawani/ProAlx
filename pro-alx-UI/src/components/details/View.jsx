@@ -108,7 +108,7 @@ export const Details = ({ user }) => {
 					user?.most_active_time ? user?.most_active_time : 'not available'
 				}`}
       </span>
-      {user?.requested_partners && (
+      {user?.requested_project && (
         <p className='py-4 border-y my-3 dark:border-gray-700  border-gray-500 text-blue-950 dark:text-blue-100 '>
           <span>
             {`${user?.name} currently needs ${user?.requested_partners} Partner(s) for the ${user?.requested_project} team project`}
