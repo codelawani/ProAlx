@@ -1,31 +1,37 @@
 import { useCustomQuery, useCustomMutation } from '../../hooks/useCustomQuery';
 import TempLoader from '../../components/loader/TempLoader';
 import Table from './Table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useUser } from '../../hooks/customContexts';
 import withPagination from '../../components/Paginate';
 import { teamProjects } from '../../data';
 import Cohort from '../../components/details/Cohort';
+import { TfiClose } from 'react-icons/tfi';
 
 // use the higher order component to add pagination to the partner's table
-const PaginatedDashboard = withPagination(Table, 15);
+const PaginatedDashboard = withPagination(Table, 30);
 
 const Dashboard = () => {
+	const [method, setMethod] = useState('');
 	const { user } = useUser();
 	const numberOfPartners = useRef();
 	const projectName = useRef();
-	const { value, isInitialLoading, refetch } = useCustomQuery({
+	const navigate = useNavigate();
+	const [showPopup, setShowPopup] = useState(false);
+	const { value, isInitialLoading } = useCustomQuery({
 		queryKey: ['partners', user.cohort],
 		endpoint: `/cohorts/${user.cohort}/needs_partners`,
+		staleTime: 5 * 60 * 1000,
 	});
 
 	const { mutateAsync: requestPartners } = useCustomMutation({
 		endpoint: '/user/request_partners',
-		method: 'put',
-		key: ['partners', user.cohort],
+		method: method,
+		firstKey: ['partners', user.cohort],
+		secondKey: ['profile'],
 	});
 
 	// create a list of options using project names
@@ -35,8 +41,12 @@ const Dashboard = () => {
 		</option>
 	));
 
+	// get the index of the current user from the partner's list if it exists
+	const idExistsIndex = value?.findIndex(obj => obj.id === user.id);
+
 	const handleFormSubmit = async e => {
 		e.preventDefault();
+		setMethod('put');
 		// get the user input for number of partners and convert to integer
 		const partners = parseInt(numberOfPartners.current.value);
 		const name = projectName.current.value; // get user input for project name
@@ -57,8 +67,10 @@ const Dashboard = () => {
 				requested_project: name,
 			});
 			if (res.status === 201) {
-				toast.success('Successful! Please update your contact info');
-				//refetch();
+				projectName.current.value = '';
+				numberOfPartners.current.value = '';
+				toast.success('Successful!');
+				setShowPopup(true);
 			} else {
 				toast.error('An error occurred');
 			}
@@ -67,7 +79,15 @@ const Dashboard = () => {
 		}
 	};
 
-	const handleRemovalFromList = () => {};
+	const handleRemovalFromList = async () => {
+		setMethod('delete');
+		const res = await requestPartners();
+		if (res.status === 200) {
+			toast.success("You're no longer on the list");
+		} else {
+			toast.error('Failed to get off list');
+		}
+	};
 
 	if (isInitialLoading) return <TempLoader />;
 
@@ -81,7 +101,7 @@ const Dashboard = () => {
 		);
 	}
 	return (
-		<div className='w-full font-light flex flex-col mt-4 md:mt-0'>
+		<div className='w-full font-light flex flex-col mt-4 md:mt-0 pb-10'>
 			<h2 className='font-bold text-xl'>Find a Partner</h2>
 
 			<div className='self-end mb-[3rem] md:px-[2rem] w-3/4 md:w-fit flex flex-col'>
@@ -94,6 +114,7 @@ const Dashboard = () => {
 							ref={projectName}
 							name='requested_project'
 							className='md:px-2 pl-1 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur w-28'
+							disabled={idExistsIndex >= 0 ? true : false}
 						>
 							<option defaultValue='' value=''>
 								Project
@@ -105,6 +126,7 @@ const Dashboard = () => {
 							id='requested_partners'
 							ref={numberOfPartners}
 							className='md:px-3 pl-1 rounded-md py-1 focus:outline-none shadow-ul outline-none self-end dark:bg-blur'
+							disabled={idExistsIndex >= 0 ? true : false}
 						>
 							<option value='' defaultValue=''>
 								Partners
@@ -113,10 +135,12 @@ const Dashboard = () => {
 							<option value={2}>2</option>
 						</select>
 					</fieldset>
+					{/* show the cancel button if the user is already on the partner's list otherwise show request to get added to the list */}
 					<Button
-						type='submit'
-						value='Request'
+						type={idExistsIndex >= 0 ? 'button' : 'submit'}
+						value={idExistsIndex >= 0 ? 'Cancel' : 'Request'}
 						className='border-none bg-dark-blue px-2 rounded-md py-1 ml-2 text-body'
+						handleClick={idExistsIndex >= 0 ? handleRemovalFromList : () => {}}
 					/>
 				</form>
 			</div>
@@ -137,6 +161,30 @@ const Dashboard = () => {
 					Leaderboard
 				</Link>
 			</p>
+
+			<div>
+				{showPopup && (
+					<>
+						<div className='bg-blur opacity-90 fixed z-[10] inset-0 h-screen' />
+						<div className='fixed transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-3/4 md:w-fit z-[20] rounded-xl p-[2rem] bg-bar flex flex-col text-body'>
+							<Button
+								value={<TfiClose />}
+								handleClick={() => setShowPopup(false)}
+								style='self-end text-2xl'
+							/>
+							<p className='py-5 tracking-wider'>
+								Ensure your profile is updated with your latest contact details
+								so others can contact you
+							</p>
+							<Button
+								value={'view profile'}
+								handleClick={() => navigate('/profile')}
+								style='border w-fit self-center p-2 capitalize bg-yellow text-black hover:bg-body'
+							/>
+						</div>
+					</>
+				)}
+			</div>
 		</div>
 	);
 };

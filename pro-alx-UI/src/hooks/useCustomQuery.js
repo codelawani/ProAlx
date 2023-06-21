@@ -20,7 +20,7 @@ const getQueryFunction = (endpoint, method = 'get') => {
 
 /**
  * useCustomQuery - This is a custom hook for making queries using tanstack query.
- * @param {array} queryKey - A unique key to identify the query.
+ * @param {array} queryKey - A unique firstKey to identify the query.
  * @param {string} endpoint - The endpoint to make request to.
  * @param {object} others - additional options to be passed to useQuery.
  * @returns {object} an object containing the query results.
@@ -71,17 +71,21 @@ const getMutateFn = (endpoint, method) => {
  * useCustomMutation - This is a custom hook that uses useMutation to handle sending data to server.
  * @param {string} endpoint - The endpoint to make request to.
  * @param {string} method - The http verb/method to be used i.e post, put.
+ * @param {array} firstKey - query key to update the cache of a previous query.
+ * @param {array} secondKey - query key to update the cache of another previous query.
  * @param {object} others - additional options to be passed to useMutation.
  * @returns {object} an object containing the mutate function and other results.
  */
 export const useCustomMutation = ({
 	endpoint,
 	method,
-	key = [],
+	firstKey = [],
+	secondKey = [],
 	...others
 }) => {
 	const { mutationFn } = getMutateFn(endpoint, method);
 	const queryClient = useQueryClient();
+	const { user } = useUser();
 
 	const results = useMutation({
 		mutationFn,
@@ -91,16 +95,30 @@ export const useCustomMutation = ({
 			return err;
 		},
 		onSuccess: data => {
-			if (key.length > 0) {
-				queryClient.setQueryData(key, prev => {
-					const newData = prev.data.map(item => {
-						if (item.id === data.data.id) {
-							return { ...data.data };
-						}
-						return item;
-					});
+			if (firstKey.length > 0) {
+				queryClient.setQueryData(firstKey, prev => {
+					let newData;
+					// check if payload returned is empty {} (user wants to leave the list)
+					if (Object.keys(data.data).length === 0) {
+						newData = prev.data.filter(item => item.id !== user.id);
+					} else {
+						// add the payload returned to the front of the previous list (user requested for a partner)
+						newData = [data.data, ...prev.data];
+					}
 					return { ...prev, data: newData };
 				});
+
+				// if another state needs to be updated as well, the query key is passed as secondKey(user profile)
+				if (secondKey.length > 0) {
+					queryClient.setQueryData(secondKey, prev => {
+						if (prev) {
+							return {
+								...prev,
+								data: { ...prev?.data, user: { ...data.data } },
+							};
+						}
+					});
+				}
 				return data;
 			}
 		},
