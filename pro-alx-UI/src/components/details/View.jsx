@@ -27,7 +27,6 @@ export const ImageName = ({ name, photo_url, cohort_number }) => {
           <div className='text-sm'>{`Cohort ${cohort_number}`}</div>
         )}
       </div>
-
     </div>
   );
 };
@@ -84,7 +83,8 @@ export const Details = ({ user }) => {
           <a
             href={`https://wa.me/${user.whatsapp}`}
             className='text-blue-500 hover:underline'
-            target='_blank' rel='noreferrer'
+            target='_blank'
+            rel='noreferrer'
             title='chat on whatsapp or try a call'
           >
             {user.whatsapp}
@@ -105,11 +105,11 @@ export const Details = ({ user }) => {
       </span>
       <span className='capitalize'>
         {`most active time - ${
-          user?.most_active_time ? user?.most_active_time : 'not available'
-        }`}
+					user?.most_active_time ? user?.most_active_time : 'not available'
+				}`}
       </span>
       {user?.requested_partners && (
-        <p className='py-4 border-y my-3 dark:border-gray-700 text-blue-900 border-gray-500'>
+        <p className='py-4 border-y my-3 dark:border-gray-700  border-gray-500 text-blue-950 dark:text-blue-100 '>
           <span>
             {`${user?.name} currently needs ${user?.requested_partners} Partner(s) for the ${user?.requested_project} team project`}
           </span>

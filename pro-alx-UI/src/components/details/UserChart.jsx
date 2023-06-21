@@ -150,7 +150,7 @@ const UserChart = ({ value, isGithubData = false }) => {
           <Bar
             dataKey='coding'
             barSize={30}
-            fill={theme === 'dark' ? 'rgb(10,10,50)' : '#9CA2D2'}
+            fill={theme === 'dark' ? 'rgb(10,30,100)' : '#9CA2D2'}
           />
         </BarChart>
       </div>

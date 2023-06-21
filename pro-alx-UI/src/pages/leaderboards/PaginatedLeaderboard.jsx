@@ -5,13 +5,13 @@ import { useCustomQuery } from '../../hooks/useCustomQuery';
 import { IoMdFunnel } from 'react-icons/io';
 
 // add pagination to the leaderboard table
-const PaginatedBoardList = withPagination(BoardList, 15);
+const PaginatedBoardList = withPagination(BoardList, 30);
 
 const Leaderboards = () => {
   // filter the leaderboard list using cohort number
   // if no value is entered use the general leaderboard list
   const [filterKey, setFilterKey] = useState('');
-  const { value, refetch } = useCustomQuery({
+  const { value } = useCustomQuery({
     queryKey: ['leaderboard', filterKey],
     endpoint: `${
 			filterKey ? `cohorts/${filterKey}/leaderboard` : '/users/leaderboard'
@@ -23,9 +23,9 @@ const Leaderboards = () => {
     ...item,
     rank: index + 1
   }));
+
   const handleSubmit = e => {
     e.preventDefault();
-    refetch();
   };
 
   return (
