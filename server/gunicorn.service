@@ -1,0 +1,13 @@
+[Unit]
+Description=Starts and stops the proalx gunicorn web server
+After=network.target
+
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/.local/bin/gunicorn --bind 0.0.0.0:5000 api.v1.app:app --access-logfile /var/log/gunicorn/access.log --log-file /var/log/gunicorn/error.log
+WorkingDirectory=/home/ubuntu/ProAlx/backend
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
