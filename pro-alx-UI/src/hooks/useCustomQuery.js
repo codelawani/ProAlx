@@ -11,11 +11,11 @@ import { handleLogout } from '../utils/githubOauth';
  * @returns {object} an object with a function property.
  */
 const getQueryFunction = (endpoint, method = 'get') => {
-	return {
-		queryFn: () => {
-			return api[method](endpoint);
-		},
-	};
+  return {
+    queryFn: () => {
+      return api[method](endpoint);
+    }
+  };
 };
 
 /**
@@ -26,31 +26,31 @@ const getQueryFunction = (endpoint, method = 'get') => {
  * @returns {object} an object containing the query results.
  */
 export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
-	// get a query function using the endpoint
-	const { queryFn } = getQueryFunction(endpoint);
-	const { setIsLoggedIn, setUser, updateLoading } = useUser();
-	const results = useQuery({
-		queryKey: queryKey,
-		queryFn,
-		...others,
-		onError: err => {
-			// log user out when token is no longer authorized
-			if (err.response.status === 401) {
-				toast.error('session expired. Login again');
-				handleLogout(setIsLoggedIn, setUser, updateLoading);
-				return;
-			}
-			toast.error('An error occurred');
-			return err;
-		},
-		onSettled: () => {
-			return;
-		},
-	});
-	return {
-		...results,
-		value: results?.data?.data,
-	};
+  // get a query function using the endpoint
+  const { queryFn } = getQueryFunction(endpoint);
+  const { setIsLoggedIn, setUser, updateLoading } = useUser();
+  const results = useQuery({
+    queryKey,
+    queryFn,
+    ...others,
+    onError: err => {
+      // log user out when token is no longer authorized
+      if (err.response.status === 401) {
+        toast.error('session expired. Login again');
+        handleLogout(setIsLoggedIn, setUser, updateLoading);
+        return;
+      }
+      toast.error('An error occurred');
+      return err;
+    },
+    onSettled: () => {
+
+    }
+  });
+  return {
+    ...results,
+    value: results?.data?.data
+  };
 };
 
 /**
@@ -60,11 +60,11 @@ export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
  * @returns {object} an object with a function property.
  */
 const getMutateFn = (endpoint, method) => {
-	return {
-		mutationFn: body => {
-			return api[method](endpoint, body);
-		},
-	};
+  return {
+    mutationFn: body => {
+      return api[method](endpoint, body);
+    }
+  };
 };
 
 /**
@@ -77,57 +77,63 @@ const getMutateFn = (endpoint, method) => {
  * @returns {object} an object containing the mutate function and other results.
  */
 export const useCustomMutation = ({
-	endpoint,
-	method,
-	firstKey = [],
-	secondKey = [],
-	...others
+  endpoint,
+  method,
+  firstKey = [],
+  secondKey = [],
+  ...others
 }) => {
-	const { mutationFn } = getMutateFn(endpoint, method);
-	const queryClient = useQueryClient();
-	const { user } = useUser();
+  const { mutationFn } = getMutateFn(endpoint, method);
+  const queryClient = useQueryClient();
+  const { setIsLoggedIn, setUser, updateLoading, user } = useUser();
 
-	const results = useMutation({
-		mutationFn,
-		others,
-		onError: err => {
-			toast.error('Error making request.');
-			return err;
-		},
-		onSuccess: data => {
-			if (firstKey.length > 0) {
-				queryClient.setQueryData(firstKey, prev => {
-					let newData;
-					// check if payload returned is empty {} (user wants to leave the list)
-					if (Object.keys(data.data).length === 0) {
-						newData = prev.data.filter(item => item.id !== user.id);
-					} else {
-						// add the payload returned to the front of the previous list (user requested for a partner)
-						newData = [data.data, ...prev.data];
-					}
-					return { ...prev, data: newData };
-				});
+  const results = useMutation({
+    mutationFn,
+    others,
+    onError: err => {
+      // log user out when token is no longer authorized
+      if (err.response.status === 401) {
+        toast.error('session expired. Login again');
+        handleLogout(setIsLoggedIn, setUser, updateLoading);
+        return;
+      }
+      toast.error('Error making request.');
+      return err;
+    },
+    onSuccess: data => {
+      if (firstKey.length > 0) {
+        queryClient.setQueryData(firstKey, prev => {
+          let newData;
+          // check if payload returned is empty {} (user wants to leave the list)
+          if (Object.keys(data.data).length === 0) {
+            newData = prev.data.filter(item => item.id !== user.id);
+          } else {
+            // add the payload returned to the front of the previous list (user requested for a partner)
+            newData = [data.data, ...prev.data];
+          }
+          return { ...prev, data: newData };
+        });
 
-				// if another state needs to be updated as well, the query key is passed as secondKey(user profile)
-				if (secondKey.length > 0) {
-					queryClient.setQueryData(secondKey, prev => {
-						if (prev) {
-							return {
-								...prev,
-								data: { ...prev?.data, user: { ...data.data } },
-							};
-						}
-					});
-				}
-				return data;
-			}
-		},
-		onSettled: () => {
-			return;
-		},
-	});
-	return {
-		...results,
-		value: results?.data?.data,
-	};
+        // if another state needs to be updated as well, the query key is passed as secondKey(user profile)
+        if (secondKey.length > 0) {
+          queryClient.setQueryData(secondKey, prev => {
+            if (prev) {
+              return {
+                ...prev,
+                data: { ...prev?.data, user: { ...data.data } }
+              };
+            }
+          });
+        }
+        return data;
+      }
+    },
+    onSettled: () => {
+
+    }
+  });
+  return {
+    ...results,
+    value: results?.data?.data
+  };
 };
