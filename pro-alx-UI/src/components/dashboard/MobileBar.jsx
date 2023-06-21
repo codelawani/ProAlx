@@ -41,9 +41,9 @@ const MobileBar = ({ handleClick }) => {
             alt='profile photo'
             className='rounded-full w-10'
           />
-          <span className='font-mono text-sm font-bold uppercase'>
+          {/* <span className='font-mono text-sm font-bold uppercase'>
             {user.name}
-          </span>
+          </span> */}
         </div>
       </div>
     </>

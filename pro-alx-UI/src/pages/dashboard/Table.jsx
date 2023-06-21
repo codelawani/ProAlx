@@ -6,7 +6,7 @@ const Table = ({ data }) => {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  const handleNavigation = (id) => {
+  const handleNavigation = id => {
     const url = user.id === id ? '/profile' : `/user/${id}`;
     navigate(url);
   };
@@ -39,27 +39,24 @@ const Table = ({ data }) => {
                 alt={row.name}
                 className='w-8 flex-none h-8 block rounded-full'
               />
-              <span className='text-blue-600 group-hover:text-white hover:underline truncate'>
+              <span className=' group-hover:text-white hover:underline truncate'>
                 <span className=''>{row.name}</span>
               </span>
             </td>
             <td className='col-span-2 align-middle'>
               {row?.waka_week_daily_average
-                ? formatTotalHours(row.waka_week_daily_average)
-                : '-'}
+							  ? formatTotalHours(row.waka_week_daily_average)
+							  : '-'}
             </td>
-            <td className='col-span-2 truncate'>
-              {row.requested_project}
-            </td>
+            <td className='col-span-2 truncate'>{row.requested_project}</td>
             <td className='sm:col-span-2 sm: text-center hidden sm:table-cell'>
               {row?.waka_week_total_seconds
-                ? formatTotalHours(row.waka_week_total_seconds)
-                : '-'}
+							  ? formatTotalHours(row.waka_week_total_seconds)
+							  : '-'}
             </td>
           </tr>
         ))}
       </tbody>
-
     </table>
   );
 };

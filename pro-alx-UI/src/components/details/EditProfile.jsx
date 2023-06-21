@@ -17,7 +17,8 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
       timezone: user?.timezone,
       whatsapp: user?.whatsapp,
       email: user?.email,
-      most_active_time: user?.most_active_time
+      most_active_time: user?.most_active_time,
+      twitter_username: user?.twitter_username
     }
   });
 
@@ -118,6 +119,15 @@ const EditProfile = ({ handleClick = () => {}, user, refetch }) => {
             type='text'
             className='dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500'
             id='timezone'
+          />
+        </div>
+        <div className={fieldStyle}>
+          <label htmlFor='twitter_username'>Twitter Username</label>
+          <input
+            {...register('twitter_username')}
+            type='text'
+            className='dark:bg-blur rounded-md p-2 w-full outline-none focus:border-2 focus:border-blue-500'
+            id='twitter_username'
           />
         </div>
         <div className={fieldStyle}>

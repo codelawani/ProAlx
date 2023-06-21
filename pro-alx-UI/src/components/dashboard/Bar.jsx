@@ -55,7 +55,7 @@ const Bar = () => {
                 alt='profile photo'
                 className='rounded-full w-10  border border-blur'
               />
-              <span className='truncate'>{user.name}</span>
+              {/* <span className='truncate'>{user.name}</span> */}
             </div>
           </div>
         </div>

@@ -1,30 +1,15 @@
-import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import PropTypes from 'prop-types';
 import { useUser } from '../hooks/customContexts';
-import localDataMgr from '../utils/localDataMgr';
 import { BiLogOut } from 'react-icons/bi';
-import { handleAuth } from '../utils/githubOauth';
+import { handleAuth, handleLogout } from '../utils/githubOauth';
 const LoginWithGithub = ({ style = 'text-white', handleClick = () => {} }) => {
-  const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, updateLoading, setUser } = useUser();
-  // clean up user state and local storage
-  const clearUser = () => {
-    localDataMgr.clear();
-    setIsLoggedIn(false);
-    setUser('');
-    navigate('/');
-    updateLoading(false);
-  };
-  const handleLogout = () => {
-    updateLoading(true);
-    clearUser();
-  };
 
   // control what happens when login/logout button is clicked depending on if user is logged in
   const handleButtonEvent = () => {
     if (isLoggedIn) {
-      handleLogout();
+      handleLogout(setIsLoggedIn, setUser, updateLoading);
     } else {
       handleAuth(updateLoading);
     }
