@@ -40,8 +40,7 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           script: |
             cd ProAlx
-            git switch dev
-            git pull
+            git pull origin dev
             sudo systemctl restart palx_backend.service
 
       - name: Set private key permissions
