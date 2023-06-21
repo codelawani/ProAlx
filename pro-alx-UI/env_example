@@ -1,0 +1,7 @@
+VITE_API_URL=http://localhost:5000/api/v1
+VITE_PROALX=http://localhost:5173
+# This ouath apps were created for testing purposes only
+# You can also use your own oauth apps
+VITE_WAKA_ID=WYDECeannaKHvq0PJ8D71nnl
+VITE_GITHUB_ID=28582d0c26fdac64cd0e
+VITE_GITHUB_SECRET=eefba575f1ba31fbfd0502f0a68a3464c1e2bb9f

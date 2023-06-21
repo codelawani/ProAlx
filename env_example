@@ -1,0 +1,22 @@
+JWT_SECRET_KEY=xxxxxxxxxxxxxxxxxxx #u can generate a secret key here https://randomkeygen.com/
+# dev - These oauth apps were created for testing purposes
+# You can also use your own Oauth apps
+GITHUB_ID=28582d0c26fdac64cd0e
+GITHUB_SECRET=eefba575f1ba31fbfd0502f0a68a3464c1e2bb9f
+WAKATIME_ID=WYDECeannaKHvq0PJ8D71nnl
+WAKATIME_SECRET=waka_sec_kiN2R3Coq5yTcxTE5gvd4P5PDDhg7g4zcwTX9Ts7mcogMIC7stItaC4OlH4htwTTBp1R1O5auzj4ory3
+
+PROALX=http://localhost:5173
+
+DB_ENV=dev
+# database dev
+DB_PASSWORD=pwd
+DB_USERNAME=dev
+DB_NAME=pro_alx
+DB_HOST=localhost
+
+# database test
+TEST_DB_USERNAME=tester
+TEST_DB_PASSWORD=test_pwd
+TEST_DB_NAME=test
+TEST_DB_HOST=localhost
