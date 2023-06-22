@@ -43,9 +43,7 @@ export const useCustomQuery = ({ queryKey, endpoint, ...others }) => {
       toast.error('An error occurred');
       return err;
     },
-    onSettled: () => {
-
-    }
+    onSettled: () => {}
   });
   return {
     ...results,
@@ -116,11 +114,21 @@ export const useCustomMutation = ({
 
         // if another state needs to be updated as well, the query key is passed as secondKey(user profile)
         if (secondKey.length > 0) {
+          // check if the payload returned is an empty object
+          const isDataEmpty = Object.keys(data.data).length === 0;
+
           queryClient.setQueryData(secondKey, prev => {
             if (prev) {
+              const updatedUserData = isDataEmpty
+                ? {
+                    ...prev.data.user,
+                    requested_project: '',
+                    requested_partners: 0
+								  }
+                : { ...data.data };
               return {
                 ...prev,
-                data: { ...prev?.data, user: { ...data.data } }
+                data: { ...prev?.data, user: updatedUserData }
               };
             }
           });
@@ -128,9 +136,7 @@ export const useCustomMutation = ({
         return data;
       }
     },
-    onSettled: () => {
-
-    }
+    onSettled: () => {}
   });
   return {
     ...results,
