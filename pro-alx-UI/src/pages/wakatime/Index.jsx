@@ -1,16 +1,21 @@
+import { useNavigate } from 'react-router-dom';
 import dashboard from '../../assets/stats.png';
 import Button from '../../components/Button';
 import { guides } from './data';
 import { useUser } from '../../hooks/customContexts';
+import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
 const WakatimeGuide = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
+
   // get client id from .env file
   const { VITE_WAKA_ID: CLIENT_ID, VITE_PROALX: URL } = import.meta.env;
+
   // wakatime button style
   const style =
-		'hover:bg-primary py-2 hover:text-white hover:border-white dark: text-lg uppercase font-mono font-bold text-blue-500 shadow-sm px-1 lg:px-2 shadow-sky-900 self-center w-2/4 md:w-fit bg-yellow';
+		'hover:bg-primary py-2 hover:text-white hover:border-white text-lg capitalize font-mono font-bold text-blue-500 shadow-sm px-1 lg:px-2 shadow-sky-900 self-center w-fit bg-yellow';
 
   // redirect user to wakatime OAuth endpoint for OAuth authorization of the app
   const handleConnect = () => {
@@ -21,13 +26,30 @@ const WakatimeGuide = () => {
     window.location.assign(`https://wakatime.com/oauth/authorize?${query}`);
   };
 
-  const pStyles = 'py-3 px-2';
+  const pStyles =
+		'py-3 md:py-5 leading-8 text-center tracking-wider md:text-left';
   return (
-    <div className='mt-5'>
-      <h2 className='font-semibold text-2xl uppercase font-mono'>
-        why use wakatime?
-      </h2>
-      <img src={dashboard} alt='wakatime dashboard' />
+    <div className='mt-5 dark:bg-black dark:text-main py-8 px-5 md:px-10 lg:px-40'>
+      <div className='flex items-center py-3 justify-between md:pb-10'>
+        <h2 className='font-semibold text-xl uppercase font-mono'>
+          why use wakatime?
+        </h2>
+        <Button
+          value={
+            <span className='flex items-center text-lg '>
+              <MdOutlineArrowBackIosNew style={{ fontSize: '1.3rem' }} />
+              go back
+            </span>
+					}
+          handleClick={() => navigate(-1)}
+          style='p-1 rounded-lg hover:bg-main shadow-ul text-dark  dark:text-body hover:text-dark dark:hover:text-dark dark:bg-inherit dark:hover:bg-main'
+        />
+      </div>
+
+      <img
+        src={dashboard}
+        alt='a snapshot showing a preview of wakatime dashboard and vscode screen with wakatime plugin enabled'
+      />
       <div>
         <p className={pStyles}>
           WakaTime helps you measure and track your learning progress over time.
@@ -72,15 +94,18 @@ const WakatimeGuide = () => {
               title={`view ${name} guide`}
               key={id}
               className='capitalize hover:underline w-fit text-blue-500'
-            >{`set up ${name}`}
+            >
+              {`set up ${name}`}
             </a>
           ))}
         </div>
-        <Button
-          value='connect wakatime'
-          style={style}
-          handleClick={handleConnect}
-        />
+        {user && (
+          <Button
+            value='connect wakatime'
+            style={style}
+            handleClick={handleConnect}
+          />
+        )}
       </div>
     </div>
   );

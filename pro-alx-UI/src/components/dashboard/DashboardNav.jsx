@@ -1,5 +1,6 @@
 import { MdHome, MdLeaderboard } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
+import { SiWakatime } from 'react-icons/si';
 import PropTypes from 'prop-types';
 
 const DashboardNav = ({ handleClick = () => {} }) => {
@@ -27,6 +28,16 @@ const DashboardNav = ({ handleClick = () => {} }) => {
           </NavLink>
         </li>
 
+        <li className='relative group flex w-fit'>
+          <NavLink
+            to='guide'
+            className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            onClick={handleClick}
+          >
+            <SiWakatime style={{ fontSize: '1.5rem' }} />
+            <span className=''>Setup Wakatime</span>
+          </NavLink>
+        </li>
         {/* <li className='relative group flex w-fit'>
 					<NavLink
 						to='settings'

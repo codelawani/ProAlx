@@ -41,6 +41,10 @@ const router = createBrowserRouter([
         path: '',
         element: <Home />,
         index: true
+      },
+      {
+        path: 'guide',
+        element: <WakatimeGuide />
       }
     ]
   },
@@ -65,10 +69,6 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile />
-      },
-      {
-        path: 'guide',
-        element: <WakatimeGuide />
       }
     ]
   }

@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/nav/Header';
@@ -8,8 +8,10 @@ import { useTheme, useUser } from './hooks/customContexts';
 function App () {
   const { theme } = useTheme();
   const { user } = useUser();
+  const location = useLocation();
 
-  if (user) return <Navigate to='/dashboard' replace />;
+  // allow logged in user to view wakatime guide
+  if (user && location.pathname !== '/guide') { return <Navigate to='/dashboard' replace />; }
 
   return (
     <div className={`${theme} dark:bg-dark`}>

@@ -1,5 +1,6 @@
 // import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const NavLinks = ({ color = 'dark', handleClick = () => {} }) => {
   const scrollToSection = id => {
@@ -24,6 +25,12 @@ const NavLinks = ({ color = 'dark', handleClick = () => {} }) => {
         onClick={() => scrollToSection('about')}
       >
         About Us
+      </li>
+      <li
+        className='px-2 py-2 rounded-md active:outline-none transform active:scale-x-[0.8] mr-2 hover:scale-x-[1.05] transition ease-in-out hover:bg-yellow hover:text-dark'
+        onClick={handleClick}
+      >
+        <Link to='guide'>Wakatime</Link>
       </li>
     </ul>
   );
