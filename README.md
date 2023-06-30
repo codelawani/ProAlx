@@ -24,10 +24,6 @@ By connecting with fellow developers on ProAlx, you gain access to a vibrant com
 - Discover the interests and hobbies of other students beyond coding.
 - Create a supportive community and forge connections on a deeper level.
 
-### Manage Your Connections, Your Way
-- Seamlessly handle connection requests from students outside your cohort.
-- Accept or decline requests based on your preferences and expand your professional network strategically.
-
 ### Cohort Insights Unleashed
 - Access detailed information about students in your own cohort.
 - Collaborate, network, and learn from your peers, fueling your growth as a coder.
