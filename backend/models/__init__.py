@@ -4,6 +4,7 @@ import time
 load_dotenv(find_dotenv())
 API = getenv('API', 'http://localhost:5000/api/v1')
 DB_ENV = getenv('DB_ENV', 'dev')  # dev is default
+DB = "postgresql+psycopg2"
 print('Current DB_ENV:', DB_ENV)
 print('Initialising Database...')
 time.sleep(3)
