@@ -99,6 +99,7 @@ def post_cohort():
         if not request.get_json():
             abort(400, description="Not a JSON")
         data = request.get_json()
+        print(data)
         instance = Cohort(**data)
         storage.new(instance)
         return jsonify(instance.to_dict()), 201

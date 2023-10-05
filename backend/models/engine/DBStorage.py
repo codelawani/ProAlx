@@ -7,7 +7,7 @@ from models.partner_request import PartnerRequest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME
+from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB, DB_URI
 from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError
 from .DBExceptions import DatabaseException, error_handler
@@ -18,11 +18,13 @@ classes = {"User": User, "Cohort": Cohort,
            'PartnerRequest': PartnerRequest}
 log_msg = "\nPlease check the logs for more details."
 
-DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/{}".format(DB_USERNAME,
-                                                           DB_PASSWORD,
-                                                           DB_HOST,
-                                                           DB_NAME
-                                                           )
+DATABASE_URI = "{}://{}:{}@{}/{}".format(DB, DB_USERNAME,
+                                         DB_PASSWORD,
+                                         DB_HOST,
+                                         DB_NAME
+                                         )
+DATABASE_URI = DB_URI if DB_URI else DATABASE_URI
+print(DATABASE_URI)
 
 
 class DBStorage:
@@ -197,9 +199,9 @@ class DBStorage:
     @error_handler
     def clear_github_session(self, id):
         """
-        This function clears the Github session of a given user by setting their `github_session` attribute to False. 
-        It takes in two parameters - self and id. The `self` parameter refers to the instance of the class that calls 
-        this method, and the `id` parameter refers to the id of the user whose Github session needs to be cleared. 
+        This function clears the Github session of a given user by setting their `github_session` attribute to False.
+        It takes in two parameters - self and id. The `self` parameter refers to the instance of the class that calls
+        this method, and the `id` parameter refers to the id of the user whose Github session needs to be cleared.
         This function does not return any value.
         """
         user = self.get(User, id)
@@ -296,7 +298,7 @@ class DBStorage:
     def get_cohort_leaderboard(self, n):
         """
         Decorated function to get the leaderboard of users in a specified cohort based on the total number of seconds
-        spent coding on Wakatime. Filters necessary data and handles errors. 
+        spent coding on Wakatime. Filters necessary data and handles errors.
 
         :param n: an integer representing the cohort number
         :type n: int
