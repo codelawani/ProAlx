@@ -7,7 +7,7 @@ from models.partner_request import PartnerRequest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB
+from models import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB, DB_URI
 from sqlalchemy.orm import defer, load_only
 from sqlalchemy.exc import SQLAlchemyError
 from .DBExceptions import DatabaseException, error_handler
@@ -19,10 +19,12 @@ classes = {"User": User, "Cohort": Cohort,
 log_msg = "\nPlease check the logs for more details."
 
 DATABASE_URI = "{}://{}:{}@{}/{}".format(DB, DB_USERNAME,
-                                                           DB_PASSWORD,
-                                                           DB_HOST,
-                                                           DB_NAME
-                                                           )
+                                         DB_PASSWORD,
+                                         DB_HOST,
+                                         DB_NAME
+                                         )
+DATABASE_URI = DB_URI if DB_URI else DATABASE_URI
+print(DATABASE_URI)
 
 
 class DBStorage:

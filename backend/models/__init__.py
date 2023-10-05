@@ -18,6 +18,7 @@ else:
     DB_PASSWORD = getenv('DB_PASSWORD')
     DB_NAME = getenv('DB_NAME')
     DB_HOST = getenv('DB_HOST')
+    DB_URI = getenv('DB_URI')
 
 storage_type = getenv('STORAGE_TYPE', 'db')
 # db storage is default
